@@ -1,6 +1,6 @@
 * Init 
 ** Sources 
-#+begin_src elisp :tangle yes
+#+BEGIN_SRC elisp :tangle yes
   (package-initialize)
   (setq package-archives
       '(("gnu" . "http://elpa.gnu.org/packages/")
@@ -8,21 +8,18 @@
         ("melpa" . "http://melpa.milkbox.net/packages/")
         ("melpa-stable" . "http://stable.melpa.org/packages/")))
 
-#+end_src
-
-#+RESULTS:
-
+#+END_SRC
 ** Use-package
-#+begin_src elisp :tangle yes
+#+BEGIN_SRC elisp :tangle yes
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
   (package-install 'use-package))
 (eval-when-compile
   (require 'use-package))
 (setq use-package-always-ensure t)
-#+end_src
+#+END_SRC
 ** El-get
-#+begin_src elisp :tangle no
+#+BEGIN_SRC elisp :tangle no
   (add-to-list 'load-path "~/.emacs.d/el-get/el-get")
 
   (unless (require 'el-get nil 'noerror)
@@ -34,7 +31,7 @@
 
   (add-to-list 'el-get-recipe-path "~/.emacs.d/el-get-user/recipes")
   (setq el-get-user-package-directory "~/.emacs.d/el-get-init-files")
-#+end_src
+#+END_SRC
 
 ** Global
    
@@ -44,12 +41,12 @@
 #+END_SRC
 
 * Personal info
-#+begin_src elisp :tangle yes
+#+BEGIN_SRC elisp :tangle yes
 (setq user-full-name "Andrew Sanchez"
       user-mail-address "inbox.asanchez@gmail.com")
-#+end_src
+#+END_SRC
 * Buffers
-#+begin_src elisp :tangle yes
+#+BEGIN_SRC elisp :tangle yes
   (evil-leader/set-key
     "bd" 'kill-this-buffer)
 #+end_src
@@ -57,7 +54,7 @@
 #+RESULTS:
 
 * Evil
-#+begin_src elisp :tangle yes
+#+BEGIN_SRC elisp :tangle yes
   (use-package evil-leader
     :config
     (global-evil-leader-mode)
@@ -75,19 +72,19 @@
       :config
       (global-evil-surround-mode 1))
 
-#+end_src
+#+END_SRC
 
 #+RESULTS:
 : t
 
 ** Exclude list
-#+begin_src elisp :tangle yes
+#+BEGIN_SRC elisp :tangle yes
 (add-to-list 'evil-emacs-state-modes 'dired-mode)
-#+end_src
+#+END_SRC
 
 * Helm
   Also check out [[https://github.com/abo-abo/swiper][ivy and swiper]]
-#+begin_src elisp :tangle yes
+#+BEGIN_SRC elisp :tangle yes
   (use-package helm
       :init
       (require 'helm-config)
@@ -108,27 +105,28 @@
 
   (use-package helm-descbinds
     :bind (("C-h b" . helm-descbinds)))
-#+end_src
+#+END_SRC
 
 #+RESULTS:
   
 * Hydra
-#+begin_src elisp  :tangle yes
+#+BEGIN_SRC elisp :tangle yes
 (use-package hydra)
-#+end_src
+#+END_SRC
 ** zoom
-#+begin_src elisp :tangle yes
+#+BEGIN_SRC elisp :tangle yes
 (defhydra hydra-zoom (global-map "C-=")
   "zoom"
   ("g" text-scale-increase "in")
   ("l" text-scale-decrease "out"))
-#+end_src
+#+END_SRC
 
 #+RESULTS:
 : hydra-zoom/body
 
 * Org-mode
-#+begin_src elisp :tangle yes
+** Config
+#+BEGIN_SRC elisp :tangle yes
   (use-package org
     :load-path "~/.emacs.d/packages/org-mode/lisp"
     :config
@@ -161,7 +159,7 @@
 ** Hydras
 *** Clock
    
- #+BEGIN_SRC elisp :tangle yes
+#+BEGIN_SRC elisp :tangle yes
 
    (defhydra hydra-org-clock (:color blue :hint nil)
        "
@@ -204,18 +202,18 @@
 
 * Windows and frames
 ** Save space by not showing the toolbar
-#+begin_src elisp  :tangle yes
+#+BEGIN_SRC elisp :tangle yes
 (tool-bar-mode -1)
-#+end_src
+#+END_SRC
 
 ** Full screen
-#+begin_src elisp :tangle yes
+#+BEGIN_SRC elisp :tangle yes
 (custom-set-variables
  '(initial-frame-alist (quote ((fullscreen . maximized)))))
-#+end_src
+#+END_SRC
 
 ** Golden ratio mode
-#+begin_src elisp :tangle yes
+#+BEGIN_SRC elisp :tangle yes
   (use-package golden-ratio
     :config
     (golden-ratio-mode 1)
@@ -226,36 +224,40 @@
 		 'evil-window-down
 		 'evil-window-up))
 #+end_src
+#+END_SRC
 ** winner mode
 Undo and redo window configuration
 Use =C-c <left>= and =C-c <right>= to switch between window configurations.
 #+begin_src elisp :tangle yes
 (use-package winner)
 #+end_src
+#+END_SRC
 
 * Backups
-#+begin_src elisp :tangle yes
+#+BEGIN_SRC elisp :tangle yes
+;; Special dir for backups
 (setq backup-directory-alist '(("." . "~/.emacs.d/backups")))
-#+end_src
+#+END_SRC
 
 * Magit
-#+begin_src elisp :tangle yes
+Not sure why these aren't working
+
+:config (setq magit-git-executable '("~/usr/bin/git"))
+'(magit-git-executable "~/usr/bin/git")
+
+#+BEGIN_SRC elisp :tangle yes
     (use-package magit
       :config
       (evil-leader/set-key
-	"gs" 'magit-status))
-
-  ;; Not sure why these aren't working
-  ;; :config (setq magit-git-executable '("~/usr/bin/git"))
-  ;; '(magit-git-executable "~/usr/bin/git")
-#+end_src
+        "gs" 'magit-status))
+#+END_SRC
 
 #+RESULTS:
 : t
 
 * Better defaults
 Also look at sensible-defaults
-#+begin_src elisp :tangle yes
+#+BEGIN_SRC elisp :tangle yes
 (show-paren-mode 1)
 (menu-bar-mode -1)
 (when (fboundp 'tool-bar-mode)
@@ -271,26 +273,26 @@ Also look at sensible-defaults
 (require 'saveplace)
 (setq-default save-place t)
 (fset 'yes-or-no-p 'y-or-n-p)
-#+end_src
+#+END_SRC
 
 #+RESULTS:
 : y-or-n-p
 
 * Tramp
   This doesn't actually seem to be faster...
-#+begin_src elisp
+#+BEGIN_SRC elisp :tangle no
 (setq tramp-default-method "ssh")
-#+end_src
+#+END_SRC
 
 * Which-key
   Also check out [[https://github.com/nonsequitur/smex][smex]] 
-#+begin_src elisp :tangle yes
+#+BEGIN_SRC elisp :tangle yes
 (use-package which-key
     :config
     (which-key-mode))
-#+end_src
+#+END_SRC
 * Python
-#+begin_src elisp :tangle yes
+#+BEGIN_SRC elisp :tangle yes
   (use-package python
     :config
     (setq python-shell-exec-path '("~/anaconda3/bin/python")))
@@ -299,18 +301,18 @@ Also look at sensible-defaults
   (add-hook 'python-mode-hook
 	    'anaconda-mode
 	    'anaconda-eldoc-mode)
-#+end_src
+#+END_SRC
 
 * Exec-path-from-shell
   Doesn't seem to work for me :(
-#+begin_src elisp
+#+BEGIN_SRC elisp
 (use-package exec-path-from-shell)
 (when (memq window-system '(mac ns x))
   (exec-path-from-shell-initialize))
-#+end_src
+#+END_SRC
 
 * Smartparens
-#+begin_src elisp :tangle yes
+#+BEGIN_SRC elisp :tangle yes
   (use-package smartparens
       :init
       (require 'smartparens-config)
@@ -322,10 +324,10 @@ Also look at sensible-defaults
       (add-hook 'lisp-mode-hook             #'smartparens-mode)
       (add-hook 'lisp-interaction-mode-hook #'smartparens-mode)
       (add-hook 'scheme-mode-hook           #'smartparens-mode))
-#+end_src
+#+END_SRC
 
 * Projectile
-#+begin_src elisp :tangle yes
+#+BEGIN_SRC elisp :tangle yes
 
     (use-package projectile
       :init
@@ -339,18 +341,18 @@ Also look at sensible-defaults
       (require 'helm-projectile)
       (helm-projectile-on))
 
-#+end_src
-
-#+RESULTS:
-: t
+#+END_SRC
 
 * Yasnippet
-#+begin_src elisp :tangle yes
   (use-package yasnippet :load-path "~/.emacs.d/packages/yasnippet"
     :config
     (require 'yasnippet)
     (yas-global-mode 1))
-#+end_src
+#+BEGIN_SRC elisp :tangle yes
+#+END_SRC
+
+#+RESULTS:
+: hydra-yasnippet/body
 
 * Themes and fonts
 #+BEGIN_SRC elisp :tangle yes
