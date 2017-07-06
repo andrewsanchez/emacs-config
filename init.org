@@ -224,11 +224,17 @@
     (add-to-list 'golden-ratio-extra-commands 'evil-window-up))
 #+end_src
 #+END_SRC
-** winner mode
+** Winner mode
 Undo and redo window configuration
-Use =C-c <left>= and =C-c <right>= to switch between window configurations.
 #+begin_src elisp :tangle yes
-(use-package winner)
+  (use-package winner
+    :config
+    (winner-mode 1)
+    (evil-leader/set-key
+      "wu" 'winner-undo
+      "wr" 'winner-redo))
+#+end_src
+
 #+end_src
 #+END_SRC
 
