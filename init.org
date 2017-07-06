@@ -235,6 +235,12 @@ Undo and redo window configuration
       "wr" 'winner-redo))
 #+end_src
 
+** Zoom
+#+begin_src elisp :tangle yes
+(defhydra hydra-zoom (global-map "C-=")
+  "zoom"
+  ("g" text-scale-increase "in")
+  ("l" text-scale-decrease "out"))
 #+end_src
 #+END_SRC
 
