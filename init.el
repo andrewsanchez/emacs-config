@@ -148,7 +148,11 @@
 (use-package golden-ratio
   :config
   (golden-ratio-mode 1)
-  (add-to-list 'golden-ratio-extra-commands 'evil-window-next))
+  (add-to-list 'golden-ratio-extra-commands 'evil-window-next)
+  (add-to-list 'golden-ratio-extra-commands 'evil-window-right)
+  (add-to-list 'golden-ratio-extra-commands 'evil-window-left)
+  (add-to-list 'golden-ratio-extra-commands 'evil-window-down)
+  (add-to-list 'golden-ratio-extra-commands 'evil-window-up))
 
 (use-package winner)
 
