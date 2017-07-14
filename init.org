@@ -98,17 +98,7 @@
 #+BEGIN_SRC elisp :tangle yes
 (use-package hydra)
 #+END_SRC
-** zoom
-#+BEGIN_SRC elisp :tangle yes
-(defhydra hydra-zoom (global-map "C-=")
-  "zoom"
-  ("g" text-scale-increase "in")
-  ("l" text-scale-decrease "out"))
-#+END_SRC
-
-#+RESULTS:
-: hydra-zoom/body
-
+#+end_src
 * Org-mode
 ** Config
 #+BEGIN_SRC elisp :tangle yes
@@ -224,12 +214,17 @@ Undo and redo window configuration
 
 ** Zoom
 #+begin_src elisp :tangle yes
-(defhydra hydra-zoom (global-map "C-=")
-  "zoom"
-  ("g" text-scale-increase "in")
-  ("l" text-scale-decrease "out"))
+  (use-package zoom-frm)
+  (defhydra hydra-zoom (global-map "C-=")
+    "zoom"
+    ("g" text-scale-increase)
+    ("l" text-scale-decrease)
+    ("i" zoom-in)
+    ("o" zoom-out))
 #+end_src
-#+END_SRC
+
+#+RESULTS:
+: hydra-zoom/body
 
 * Backups
 #+BEGIN_SRC elisp :tangle yes

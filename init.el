@@ -69,11 +69,6 @@
 
 (use-package hydra)
 
-(defhydra hydra-zoom (global-map "C-=")
-  "zoom"
-  ("g" text-scale-increase "in")
-  ("l" text-scale-decrease "out"))
-
 (use-package org
   :load-path "~/.emacs.d/packages/org-mode/lisp"
   :config
@@ -144,6 +139,14 @@
   (add-to-list 'golden-ratio-extra-commands 'evil-window-next))
 
 (use-package winner)
+
+(use-package zoom-frm)
+(defhydra hydra-zoom (global-map "C-=")
+  "zoom"
+  ("g" text-scale-increase)
+  ("l" text-scale-decrease)
+  ("i" zoom-in)
+  ("o" zoom-out))
 
 (setq backup-directory-alist '(("." . "~/.emacs.d/backups")))
 
