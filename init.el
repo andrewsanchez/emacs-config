@@ -283,6 +283,11 @@ _s_: show doc
   "-*-Source Code Pro-normal-normal-normal-*-*-*-*-*-m-0-iso10646-1")
 (set-face-attribute 'default nil :height 140)
 
+(use-package company
+  :config
+  (global-company-mode)
+  (add-to-list 'company-backends 'company-anaconda))
+
 
 (use-package company)
 (eval-after-load "company"
