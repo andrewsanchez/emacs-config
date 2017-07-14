@@ -1,45 +1,21 @@
-* Init 
+* Packages
 ** Sources 
-#+BEGIN_SRC elisp :tangle yes
+#+begin_src elisp :tangle yes
   (package-initialize)
   (setq package-archives
       '(("gnu" . "http://elpa.gnu.org/packages/")
         ("marmalade" . "http://marmalade-repo.org/packages/")
         ("melpa" . "http://melpa.milkbox.net/packages/")
         ("melpa-stable" . "http://stable.melpa.org/packages/")))
-
-#+END_SRC
+#+end_src
 ** Use-package
-#+BEGIN_SRC elisp :tangle yes
+#+begin_src elisp :tangle yes
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
   (package-install 'use-package))
 (eval-when-compile
   (require 'use-package))
 (setq use-package-always-ensure t)
-#+END_SRC
-** El-get
-#+BEGIN_SRC elisp :tangle no
-  (add-to-list 'load-path "~/.emacs.d/el-get/el-get")
-
-  (unless (require 'el-get nil 'noerror)
-    (with-current-buffer
-        (url-retrieve-synchronously
-         "https://raw.githubusercontent.com/dimitri/el-get/master/el-get-install.el")
-      (goto-char (point-max))
-      (eval-print-last-sexp)))
-
-  (add-to-list 'el-get-recipe-path "~/.emacs.d/el-get-user/recipes")
-  (setq el-get-user-package-directory "~/.emacs.d/el-get-init-files")
-#+END_SRC
-
-** Global
-   
-#+BEGIN_SRC elisp :tangle yes
-  (add-hook 'after-init-hook
-	    'global-company-mode)
-#+END_SRC
-
 * Personal info
 #+BEGIN_SRC elisp :tangle yes
 (setq user-full-name "Andrew Sanchez"
