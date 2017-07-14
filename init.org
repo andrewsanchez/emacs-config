@@ -16,19 +16,28 @@
 (eval-when-compile
   (require 'use-package))
 (setq use-package-always-ensure t)
+#+end_src
+* Vanilla emacs bindings
+#+begin_src elisp :tangle yes
+  (evil-leader/set-key
+    "!" 'shell-command)
+#+end_src
 * Personal info
-#+BEGIN_SRC elisp :tangle yes
+#+begin_src elisp :tangle yes
 (setq user-full-name "Andrew Sanchez"
       user-mail-address "inbox.asanchez@gmail.com")
-#+END_SRC
-* Buffers
-#+BEGIN_SRC elisp :tangle yes
-  (evil-leader/set-key
-    "bd" 'kill-this-buffer)
 #+end_src
-
-#+RESULTS:
-
+* Buffers
+#+begin_src elisp :tangle yes
+  (evil-leader/set-key
+    "bd" 'kill-this-buffer
+    "bs" (lambda ()
+	   (interactive)
+	   (pop-to-buffer "*scratch*"))
+    "fd" (lambda ()
+	     (interactive)
+	     (find-file "~/projects/emacs-config/init.org")))
+#+end_src
 * Evil
 #+BEGIN_SRC elisp :tangle yes
   (use-package evil-leader
