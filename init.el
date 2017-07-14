@@ -154,7 +154,12 @@
   (add-to-list 'golden-ratio-extra-commands 'evil-window-down)
   (add-to-list 'golden-ratio-extra-commands 'evil-window-up))
 
-(use-package winner)
+(use-package winner
+  :config
+  (winner-mode 1)
+  (evil-leader/set-key
+    "wu" 'winner-undo
+    "wr" 'winner-redo))
 
 (use-package zoom-frm)
 (defhydra hydra-zoom (global-map "C-=")
