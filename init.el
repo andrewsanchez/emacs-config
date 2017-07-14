@@ -85,10 +85,18 @@
   (setq org-refile-targets '((nil :maxlevel . 5)
 			     (org-agenda-files :maxlevel . 4)))
   (setq org-outline-path-complete-in-steps nil)
-  (setq org-refile-use-outline-path 'file)
   (setq org-refile-allow-creating-parent-nodes 'confirm)
   (setq org-src-fontify-natively t)
   (setq org-agenda-files '("/Users/andrew/org/gtd.org"))
+  (setq org-agenda-custom-commands
+	'(("w" "work" tags-todo "TODO=\"TODO\"+category=\"work\"")))
+
+  (use-package org-pomodoro
+    :config
+    (setq org-pomodoro-length 30)
+    (setq org-pomodoro-start-sound "/Users/andrew/Music/Miscellaneous/Timer_Sounds/mindfullness_bell.mp3")
+    (setq org-pomodoro-finish-sound "/Users/andrew/Music/Miscellaneous/Timer_Sounds/mindfullness_bell.mp3")
+    (setq org-pomodoro-start-sound-p t))
   ;; Hydras
   (evil-leader/set-key-for-mode 'org-mode
     "h" 'hydra-org-headings/body))
