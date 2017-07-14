@@ -75,8 +75,9 @@
   (setq org-hide-leading-stars t)
   (setq org-default-notes-file "/Users/andrew/org/notes.org")
   (setq org-capture-templates
-      '(("t" "TODO" entry (file+headline "/Users/andrew/org/gtd.org" "Tasks")
-	  "* TODO %? \nAdded:  %U\n" :empty-lines 1)
+	'(
+	  ("t" "TODO" entry (file+headline "/Users/andrew/org/gtd.org" "Tasks")
+	  "* TODO %? \n%U\n" :empty-lines 1)
 	  ("j" "Journal" entry (file+datetree "/Users/andrew/org/journal.org")
 	  "* %?\nEntered on %U\n")
 	  ("n" "Note" entry (file+headline "/Users/andrew/org/notes.org" "Notes")
