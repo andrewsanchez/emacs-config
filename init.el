@@ -237,9 +237,8 @@ _s_: show doc
     (add-hook 'scheme-mode-hook           #'smartparens-mode))
 
 (use-package projectile
-  :init
-  (projectile-mode)
   :config
+  (projectile-mode)
   (evil-leader/set-key
   "p" 'projectile-command-map))
 
