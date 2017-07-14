@@ -114,12 +114,14 @@
 	    _i_n         _e_dit   _g_oto entry
 	    _c_ontinue   _q_uit   _d_isplay
 	    _o_ut        ^ ^      _r_eport
+	    _p_omodoro
     "
     ("i" org-clock-in)
     ("o" org-clock-out)
     ("c" org-clock-in-last)
     ("e" org-clock-modify-effort-estimate)
     ("q" org-clock-cancel)
+    ("p" org-pomodoro)
     ("g" org-clock-goto)
     ("d" org-clock-display)
     ("r" org-clock-report)
