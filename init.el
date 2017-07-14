@@ -303,6 +303,10 @@ _s_: show doc
     "wp" 'google-translate-at-point
     "ww" 'google-translate-smooth-translate))
 
+(use-package linum-relative
+  :config
+  (linum-relative-global-mode))
+
 
 (use-package company)
 (eval-after-load "company"
