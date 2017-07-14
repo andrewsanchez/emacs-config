@@ -288,6 +288,13 @@ _s_: show doc
   (global-company-mode)
   (add-to-list 'company-backends 'company-anaconda))
 
+(use-package helm-wordnet
+  :load-path "packages/helm-wordnet"
+  :config
+  (setq helm-wordnet-prog "/usr/local/bin/wn"))
+  (evil-leader/set-key
+    "wd" 'helm-wordnet)
+
 
 (use-package company)
 (eval-after-load "company"
