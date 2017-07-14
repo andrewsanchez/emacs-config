@@ -198,13 +198,31 @@
     (which-key-mode))
 
 (use-package python
-  :config
-  (setq python-shell-exec-path '("~/anaconda3/bin/python")))
+    :config
+    (setq python-shell-exec-path '("~/anaconda3/bin/python"))
+    (evil-leader/set-key-for-mode 'python-mode
+      "a" 'hydra-anaconda/body))
 
-(use-package anaconda-mode)
-(add-hook 'python-mode-hook
-	  'anaconda-mode
-	  'anaconda-eldoc-mode)
+  (use-package anaconda-mode)
+  (add-hook 'python-mode-hook
+	    'anaconda-mode
+	    'anaconda-eldoc-mode)
+
+  (defhydra hydra-anaconda (:color blue :hint nil)
+"
+^Anaconda^
+----------
+_d_: find definitions
+_a_: find assignments
+_r_: find references
+_b_: go back
+_s_: show doc
+"
+      ("d" anaconda-mode-find-definitions)
+      ("a" anaconda-mode-find-assignments)
+      ("r" anaconda-mode-find-references)
+      ("b" anaconda-mode-go-back)
+      ("s" anaconda-mode-show-doc))
 
 (use-package smartparens
     :init
