@@ -1,5 +1,4 @@
 (package-initialize)
-(add-to-list 'load-path "/Users/andrew/projects/emacs/packages/org-mode/lisp")
 (setq package-archives
     '(("gnu" . "http://elpa.gnu.org/packages/")
       ("marmalade" . "http://marmalade-repo.org/packages/")
@@ -70,7 +69,7 @@
   ("l" text-scale-decrease "out"))
 
 (use-package org
-  :load-path "/Users/andrew/projects/emacs/packages/org-mode/lisp"
+  :load-path "~/.emacs.d/packages/org-mode/lisp"
   :config
   (setq org-hide-leading-stars t)
   (setq org-default-notes-file "/Users/andrew/org/notes.org")
