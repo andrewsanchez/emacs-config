@@ -169,14 +169,13 @@
   ("i" zoom-in)
   ("o" zoom-out))
 
+;; Special dir for backups
 (setq backup-directory-alist '(("." . "~/.emacs.d/backups")))
 
 (use-package magit
-    :bind ("C-x g" . magit-status))
-
-;; Not sure why these aren't working
-;; :config (setq magit-git-executable '("~/usr/bin/git"))
-;; '(magit-git-executable "~/usr/bin/git")
+  :config
+  (evil-leader/set-key
+    "gs" 'magit-status))
 
 (show-paren-mode 1)
 (menu-bar-mode -1)
