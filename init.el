@@ -12,14 +12,20 @@
   (require 'use-package))
 (setq use-package-always-ensure t)
 
-(add-hook 'after-init-hook
-	  'global-company-mode)
+(evil-leader/set-key
+  "!" 'shell-command)
 
 (setq user-full-name "Andrew Sanchez"
       user-mail-address "inbox.asanchez@gmail.com")
 
 (evil-leader/set-key
-  "bd" 'kill-this-buffer)
+  "bd" 'kill-this-buffer
+  "bs" (lambda ()
+	 (interactive)
+	 (pop-to-buffer "*scratch*"))
+  "fd" (lambda ()
+	   (interactive)
+	   (find-file "~/projects/emacs-config/init.org")))
 
 (use-package evil-leader
   :config
