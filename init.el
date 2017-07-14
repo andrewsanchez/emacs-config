@@ -295,6 +295,14 @@ _s_: show doc
   (evil-leader/set-key
     "wd" 'helm-wordnet)
 
+(use-package google-translate
+  :config
+  (setq google-translate-default-source-language "nl")
+  (setq google-translate-default-target-language "en")
+  (evil-leader/set-key
+    "wp" 'google-translate-at-point
+    "ww" 'google-translate-smooth-translate))
+
 
 (use-package company)
 (eval-after-load "company"
