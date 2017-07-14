@@ -281,6 +281,8 @@ _s_: show doc
 (load-theme 'solarized-dark t)
 (set-face-attribute 'default t :font 
   "-*-Source Code Pro-normal-normal-normal-*-*-*-*-*-m-0-iso10646-1")
+(set-face-attribute 'default nil :height 140)
+
 
 (use-package company)
 (eval-after-load "company"
