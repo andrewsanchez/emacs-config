@@ -39,7 +39,7 @@
 	     (find-file "~/projects/emacs-config/init.org")))
 #+end_src
 * Evil
-#+BEGIN_SRC elisp :tangle yes
+#+begin_src elisp :tangle yes
   (use-package evil-leader
     :config
     (global-evil-leader-mode)
@@ -56,20 +56,16 @@
     (use-package evil-surround
       :config
       (global-evil-surround-mode 1))
-
-#+END_SRC
-
-#+RESULTS:
-: t
+#+end_src
 
 ** Exclude list
-#+BEGIN_SRC elisp :tangle yes
+#+begin_src elisp :tangle yes
 (add-to-list 'evil-emacs-state-modes 'dired-mode)
-#+END_SRC
+#+end_src
 
 * Helm
   Also check out [[https://github.com/abo-abo/swiper][ivy and swiper]]
-#+BEGIN_SRC elisp :tangle yes
+#+begin_src elisp :tangle yes
   (use-package helm
       :init
       (require 'helm-config)
@@ -90,18 +86,15 @@
 
   (use-package helm-descbinds
     :bind (("C-h b" . helm-descbinds)))
-#+END_SRC
-
-#+RESULTS:
+#+end_src
   
 * Hydra
-#+BEGIN_SRC elisp :tangle yes
+#+begin_src elisp :tangle yes
 (use-package hydra)
-#+END_SRC
 #+end_src
 * Org-mode
 ** Config
-#+BEGIN_SRC elisp :tangle yes
+#+begin_src elisp :tangle yes
   (use-package org
     :load-path "~/.emacs.d/packages/org-mode/lisp"
     :config
@@ -110,7 +103,7 @@
     (setq org-capture-templates
 	  '(
 	    ("t" "TODO" entry (file+headline "/Users/andrew/org/gtd.org" "Tasks")
-	    "* TODO %? \nAdded:  %U\n" :empty-lines 1)
+	    "* TODO %? \n%U\n" :empty-lines 1)
 	    ("j" "Journal" entry (file+datetree "/Users/andrew/org/journal.org")
 	    "* %?\nEntered on %U\n")
 	    ("n" "Note" entry (file+headline "/Users/andrew/org/notes.org" "Notes")
@@ -118,10 +111,18 @@
     (setq org-refile-targets '((nil :maxlevel . 5)
 			       (org-agenda-files :maxlevel . 4)))
     (setq org-outline-path-complete-in-steps nil)
-    (setq org-refile-use-outline-path 'file)
     (setq org-refile-allow-creating-parent-nodes 'confirm)
     (setq org-src-fontify-natively t)
     (setq org-agenda-files '("/Users/andrew/org/gtd.org"))
+    (setq org-agenda-custom-commands
+	  '(("w" "work" tags-todo "TODO=\"TODO\"+category=\"work\"")))
+
+    (use-package org-pomodoro
+      :config
+      (setq org-pomodoro-length 30)
+      (setq org-pomodoro-start-sound "/Users/andrew/Music/Miscellaneous/Timer_Sounds/mindfullness_bell.mp3")
+      (setq org-pomodoro-finish-sound "/Users/andrew/Music/Miscellaneous/Timer_Sounds/mindfullness_bell.mp3")
+      (setq org-pomodoro-start-sound-p t))
     ;; Hydras
     (evil-leader/set-key-for-mode 'org-mode
       "h" 'hydra-org-headings/body))
@@ -131,35 +132,41 @@
        "oc" 'org-capture
        "ot" 'hydra-org-clock/body)
 
-#+END_SRC
+#+end_src
+
+#+RESULTS:
 
 ** Hydras
 *** Clock
-   
-#+BEGIN_SRC elisp :tangle yes
+#+begin_src elisp :tangle yes
 
-   (defhydra hydra-org-clock (:color blue :hint nil)
-       "
+  (defhydra hydra-org-clock (:color blue :hint nil)
+      "
 
-       Clock   In/out^     ^Edit^   ^Summary     (_?_)
-       -----------------------------------------
-	       _i_n         _e_dit   _g_oto entry
-	       _c_ontinue   _q_uit   _d_isplay
-	       _o_ut        ^ ^      _r_eport
-       "
-       ("i" org-clock-in)
-       ("o" org-clock-out)
-       ("c" org-clock-in-last)
-       ("e" org-clock-modify-effort-estimate)
-       ("q" org-clock-cancel)
-       ("g" org-clock-goto)
-       ("d" org-clock-display)
-       ("r" org-clock-report)
-       ("?" (org-info "Clocking commands")))
- #+END_SRC
+      Clock   In/out^     ^Edit^   ^Summary     (_?_)
+      -----------------------------------------
+	      _i_n         _e_dit   _g_oto entry
+	      _c_ontinue   _q_uit   _d_isplay
+	      _o_ut        ^ ^      _r_eport
+	      _p_omodoro
+      "
+      ("i" org-clock-in)
+      ("o" org-clock-out)
+      ("c" org-clock-in-last)
+      ("e" org-clock-modify-effort-estimate)
+      ("q" org-clock-cancel)
+      ("p" org-pomodoro)
+      ("g" org-clock-goto)
+      ("d" org-clock-display)
+      ("r" org-clock-report)
+      ("?" (org-info "Clocking commands")))
+#+end_src
+
+#+RESULTS:
+: hydra-org-clock/body
+
 *** Headings and trees
-#+BEGIN_SRC elisp :tangle yes
-
+#+begin_src elisp :tangle yes
     (defhydra hydra-org-headings ()
     "Headings"
 	("t" org-todo "org-todo")
@@ -172,25 +179,22 @@
 	("J" org-forward-heading-same-level "org-forward-heading-same-level")
 	("k" outline-previous-visible-heading "outline-previous-visible-heading")
 	("j" outline-next-visible-heading "outline-next-visible-heading"))
-#+END_SRC
-
-#+RESULTS:
-: hydra-org-headings/body
-
+#+end_src
 * Windows and frames
-** Save space by not showing the toolbar
-#+BEGIN_SRC elisp :tangle yes
+** Toolbar
+   Save space by not showing the toolbar
+#+begin_src elisp :tangle yes
 (tool-bar-mode -1)
-#+END_SRC
+#+end_src
 
 ** Full screen
-#+BEGIN_SRC elisp :tangle yes
+#+begin_src elisp :tangle yes
 (custom-set-variables
  '(initial-frame-alist (quote ((fullscreen . maximized)))))
-#+END_SRC
+#+end_src
 
 ** Golden ratio mode
-#+BEGIN_SRC elisp :tangle yes
+#+begin_src elisp :tangle yes
   (use-package golden-ratio
     :config
     (golden-ratio-mode 1)
@@ -200,7 +204,6 @@
     (add-to-list 'golden-ratio-extra-commands 'evil-window-down)
     (add-to-list 'golden-ratio-extra-commands 'evil-window-up))
 #+end_src
-#+END_SRC
 ** Winner mode
 Undo and redo window configuration
 #+begin_src elisp :tangle yes
@@ -227,10 +230,10 @@ Undo and redo window configuration
 : hydra-zoom/body
 
 * Backups
-#+BEGIN_SRC elisp :tangle yes
+#+begin_src elisp :tangle yes
 ;; Special dir for backups
 (setq backup-directory-alist '(("." . "~/.emacs.d/backups")))
-#+END_SRC
+#+end_src
 
 * Magit
 Not sure why these aren't working
@@ -238,19 +241,16 @@ Not sure why these aren't working
 :config (setq magit-git-executable '("~/usr/bin/git"))
 '(magit-git-executable "~/usr/bin/git")
 
-#+BEGIN_SRC elisp :tangle yes
+#+begin_src elisp :tangle yes
     (use-package magit
       :config
       (evil-leader/set-key
         "gs" 'magit-status))
-#+END_SRC
-
-#+RESULTS:
-: t
+#+end_src
 
 * Better defaults
 Also look at sensible-defaults
-#+BEGIN_SRC elisp :tangle yes
+#+begin_src elisp :tangle yes
 (show-paren-mode 1)
 (menu-bar-mode -1)
 (when (fboundp 'tool-bar-mode)
@@ -266,27 +266,23 @@ Also look at sensible-defaults
 (require 'saveplace)
 (setq-default save-place t)
 (fset 'yes-or-no-p 'y-or-n-p)
-#+END_SRC
-
-#+RESULTS:
-: y-or-n-p
-
+#+end_src
 * Tramp
   This doesn't actually seem to be faster...
-#+BEGIN_SRC elisp :tangle no
+#+begin_src elisp :tangle no
 (setq tramp-default-method "ssh")
-#+END_SRC
+#+end_src
 
 * Which-key
   Also check out [[https://github.com/nonsequitur/smex][smex]] 
-#+BEGIN_SRC elisp :tangle yes
+#+begin_src elisp :tangle yes
 (use-package which-key
     :config
     (which-key-mode))
-#+END_SRC
+#+end_src
 * Python
-#+BEGIN_SRC elisp :tangle yes
-  (use-package python
+#+begin_src elisp :tangle yes
+(use-package python
     :config
     (setq python-shell-exec-path '("~/anaconda3/bin/python"))
     (evil-leader/set-key-for-mode 'python-mode
@@ -316,14 +312,14 @@ _s_: show doc
 
 * Exec-path-from-shell
   Doesn't seem to work for me :(
-#+BEGIN_SRC elisp
+#+begin_src elisp :tangle no
 (use-package exec-path-from-shell)
 (when (memq window-system '(mac ns x))
   (exec-path-from-shell-initialize))
-#+END_SRC
+#+end_src
 
 * Smartparens
-#+BEGIN_SRC elisp :tangle yes
+#+begin_src elisp :tangle yes
   (use-package smartparens
       :init
       (require 'smartparens-config)
@@ -335,15 +331,14 @@ _s_: show doc
       (add-hook 'lisp-mode-hook             #'smartparens-mode)
       (add-hook 'lisp-interaction-mode-hook #'smartparens-mode)
       (add-hook 'scheme-mode-hook           #'smartparens-mode))
-#+END_SRC
+#+end_src
 
 * Projectile
-#+BEGIN_SRC elisp :tangle yes
+#+begin_src elisp :tangle yes
 
     (use-package projectile
-      :init
-      (projectile-mode)
       :config
+      (projectile-mode)
       (evil-leader/set-key
       "p" 'projectile-command-map))
 
@@ -352,39 +347,105 @@ _s_: show doc
       (require 'helm-projectile)
       (helm-projectile-on))
 
-#+END_SRC
+#+end_src
 
 * Yasnippet
-  (use-package yasnippet :load-path "~/.emacs.d/packages/yasnippet"
+#+begin_src elisp :tangle yes
+  (use-package yasnippet
+    :load-path "~/.emacs.d/packages/yasnippet"
     :config
     (require 'yasnippet)
-    (yas-global-mode 1))
-#+BEGIN_SRC elisp :tangle yes
-#+END_SRC
+    (yas-global-mode 1)
+    (evil-leader/set-key
+      "y" 'hydra-yasnippet/body))
 
-#+RESULTS:
-: hydra-yasnippet/body
+  (defhydra hydra-yasnippet (:color blue :hint nil)
+    "
+		^YASnippets^
+  --------------------------------------------
+    Modes:    Load/Visit:    Actions:
+
+   _g_lobal  _d_irectory    _i_nsert
+   _m_inor   _f_ile         _t_ryout
+   _e_xtra   _l_ist         _n_ew
+	   _a_ll
+  "
+    ("d" yas-load-directory)
+    ("e" yas-activate-extra-mode)
+    ("i" yas-insert-snippet)
+    ("f" yas-visit-snippet-file :color blue)
+    ("n" yas-new-snippet)
+    ("t" yas-tryout-snippet)
+    ("l" yas-describe-tables)
+    ("g" yas/global-mode)
+    ("m" yas/minor-mode)
+    ("a" yas-reload-all))
+#+end_src
 
 * Themes and fonts
-#+BEGIN_SRC elisp :tangle yes
+#+begin_src elisp :tangle yes
 (use-package solarized-theme)
 (load-theme 'solarized-dark t)
 (set-face-attribute 'default t :font 
   "-*-Source Code Pro-normal-normal-normal-*-*-*-*-*-m-0-iso10646-1")
-#+END_SRC
-
-#+RESULTS:
+(set-face-attribute 'default nil :height 140)
+#+end_src
 
 * Completion
 
-#+BEGIN_SRC elisp :tangle yes
-  (use-package company)
-  (eval-after-load "company"
-    '(add-to-list 'company-backends 'company-anaconda))
-#+END_SRC
+#+begin_src elisp :tangle yes
+  (use-package company
+    :config
+    (global-company-mode)
+    (add-to-list 'company-backends 'company-anaconda))
+#+end_src
+* Future
+** TODO Create list for globally enabled packages
+* Words
+** Wordnut
+#+begin_src elisp :tangle no
+  (use-package wordnut
+    :load-path "packages/wordnut"
+    :config
+    (require 'wordnut)
+    (setq wordnut-cmd "/usr/local/bin/wn"))
+#+end_src
 
 #+RESULTS:
 : t
 
-* Future
-** TODO Create list for globally enabled packages
+** Helm-wordnet
+#+begin_src elisp :tangle yes
+  (use-package helm-wordnet
+    :load-path "packages/helm-wordnet"
+    :config
+    (setq helm-wordnet-prog "/usr/local/bin/wn"))
+    (evil-leader/set-key
+      "wd" 'helm-wordnet)
+#+end_src
+
+** Google translate
+#+begin_src elisp :tangle yes
+  (use-package google-translate
+    :config
+    (setq google-translate-default-source-language "nl")
+    (setq google-translate-default-target-language "en")
+    (evil-leader/set-key
+      "wp" 'google-translate-at-point
+      "ww" 'google-translate-smooth-translate))
+#+end_src
+* Display
+#+begin_src elisp :tangle yes
+  (use-package linum-relative
+    :config
+    (linum-relative-global-mode))
+#+end_src
+
+#+RESULTS:
+: t
+
+* Test
+#+begin_src elisp :tangle yes
+#+end_src
+
+#+RESULTS:
