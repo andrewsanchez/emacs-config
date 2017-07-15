@@ -308,6 +308,3 @@ _s_: show doc
   (linum-relative-global-mode))
 
 
-(use-package company)
-(eval-after-load "company"
-  '(add-to-list 'company-backends 'company-anaconda))
