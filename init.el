@@ -37,6 +37,11 @@
   (use-package evil-surround
     :config
     (global-evil-surround-mode 1))
+(use-package evil-lisp-state
+    :init (setq evil-lisp-state-global t)
+    :config (evil-lisp-state-leader "<SPC> k"))
+
+  (use-package bind-map)
 
 (add-to-list 'evil-emacs-state-modes 'dired-mode)
 
