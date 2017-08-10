@@ -389,5 +389,7 @@ _k_: kill        _s_: split                   _{_: wrap with { }
 (use-package linum-relative
     :config
     (linum-relative-global-mode))
+(use-package flycheck
+  :init (global-flycheck-mode))
 
 
