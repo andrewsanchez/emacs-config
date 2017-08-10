@@ -217,40 +217,106 @@
     :config
     (setq python-shell-exec-path '("~/anaconda3/bin/python"))
     (evil-leader/set-key-for-mode 'python-mode
-      "a" 'hydra-anaconda/body))
-
-  (use-package anaconda-mode)
-  (add-hook 'python-mode-hook
-	    'anaconda-mode
-	    'anaconda-eldoc-mode)
-
+      "a" 'hydra-anaconda/body)
   (defhydra hydra-anaconda (:color blue :hint nil)
-"
-^Anaconda^
-----------
-_d_: find definitions
-_a_: find assignments
-_r_: find references
-_b_: go back
-_s_: show doc
-"
+  "
+  ^Anaconda^
+  ----------
+  _d_: find definitions
+  _a_: find assignments
+  _r_: find references
+  _b_: go back
+  _s_: show doc
+  "
       ("d" anaconda-mode-find-definitions)
       ("a" anaconda-mode-find-assignments)
       ("r" anaconda-mode-find-references)
       ("b" anaconda-mode-go-back)
-      ("s" anaconda-mode-show-doc))
+      ("s" anaconda-mode-show-doc)
+      ("y" yapfify-buffer)))
+
+(use-package yapfify)
+(use-package anaconda-mode)
+(add-hook 'python-mode-hook
+	'anaconda-mode
+	'anaconda-eldoc-mode)
+
+(defun python-shell-completion-native-try ()
+  "Return non-nil if can trigger native completion."
+  (let ((python-shell-completion-native-enable t)
+        (python-shell-completion-native-output-timeout
+          python-shell-completion-native-try-output-timeout))
+     (python-shell-completion-native-get-completions
+      (get-buffer-process (current-buffer))
+      nil "_")))
 
 (use-package smartparens
-    :init
-    (require 'smartparens-config)
     :config
+    ;; (evil-leader/set-key
+    ;; 	"k" 'hydra-smartparens/body)
+
     (autoload 'smartparens-mode "paredit" "Turn on pseudo-structural editing of Lisp code." t)
     (add-hook 'emacs-lisp-mode-hook       #'smartparens-mode)
     (add-hook 'eval-expression-minibuffer-setup-hook #'smartparens-mode)
     (add-hook 'ielm-mode-hook             #'smartparens-mode)
     (add-hook 'lisp-mode-hook             #'smartparens-mode)
     (add-hook 'lisp-interaction-mode-hook #'smartparens-mode)
-    (add-hook 'scheme-mode-hook           #'smartparens-mode))
+    (add-hook 'scheme-mode-hook           #'smartparens-mode)
+    (add-hook 'python-mode-hook           #'smartparens-mode)
+  :init
+  (require 'smartparens-config)
+  (defhydra hydra-smartparens (:hint nil)
+    "
+Sexps (quit with _q_)
+
+^Nav^            ^Barf/Slurp^                 ^Depth^
+^---^------------^----------^-----------------^-----^-----------------
+_f_: forward     _<left>_:    slurp forward   _R_:      splice
+_b_: backward    _<right>_:   barf forward    _r_:      raise
+_u_: backward ↑  _C-<left>_:  slurp backward  _<up>_:   raise backward
+_d_: forward ↓   _C-<right>_: barf backward   _<down>_: raise forward
+_p_: backward ↓
+_n_: forward ↑
+
+^Kill^           ^Misc^                       ^Wrap^
+^----^-----------^----^-----------------------^----^------------------
+_w_: copy        _j_: join                    _(_: wrap with ( )
+_k_: kill        _s_: split                   _{_: wrap with { }
+^^               _t_: transpose               _'_: wrap with ' '
+^^               _c_: convolute               _\"_: wrap with \" \"
+^^               _i_: indent defun"
+    ("q" nil)
+    ;; Wrapping
+    ("(" (lambda (a) (interactive "P") (sp-wrap-with-pair "(")))
+    ("{" (lambda (a) (interactive "P") (sp-wrap-with-pair "{")))
+    ("'" (lambda (a) (interactive "P") (sp-wrap-with-pair "'")))
+    ("\"" (lambda (a) (interactive "P") (sp-wrap-with-pair "\"")))
+    ;; Navigation
+    ("f" sp-forward-sexp )
+    ("b" sp-backward-sexp)
+    ("u" sp-backward-up-sexp)
+    ("d" sp-down-sexp)
+    ("p" sp-backward-down-sexp)
+    ("n" sp-up-sexp)
+    ;; Kill/copy
+    ("w" sp-copy-sexp)
+    ("k" sp-kill-sexp)
+    ;; Misc
+    ("t" sp-transpose-sexp)
+    ("j" sp-join-sexp)
+    ("s" sp-split-sexp)
+    ("c" sp-convolute-sexp)
+    ("i" sp-indent-defun)
+    ;; Depth changing
+    ("R" sp-splice-sexp)
+    ("r" sp-splice-sexp-killing-around)
+    ("<up>" sp-splice-sexp-killing-backward)
+    ("<down>" sp-splice-sexp-killing-forward)
+    ;; Barfing/slurping
+    ("<right>" sp-forward-slurp-sexp)
+    ("<left>" sp-forward-barf-sexp)
+    ("C-<left>" sp-backward-barf-sexp)
+    ("C-<right>" sp-backward-slurp-sexp)))
 
 (use-package projectile
   :config
