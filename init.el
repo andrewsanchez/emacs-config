@@ -335,7 +335,7 @@ _k_: kill        _s_: split                   _{_: wrap with { }
   (require 'yasnippet)
   (yas-global-mode 1)
   (evil-leader/set-key
-    "y" 'hydra-yasnippet/body))
+    "y" 'hydra-yasnippet/body)
 
 (defhydra hydra-yasnippet (:color blue :hint nil)
   "
@@ -357,7 +357,7 @@ _k_: kill        _s_: split                   _{_: wrap with { }
   ("l" yas-describe-tables)
   ("g" yas/global-mode)
   ("m" yas/minor-mode)
-  ("a" yas-reload-all))
+  ("a" yas-reload-all)))
 
 (use-package solarized-theme)
 (load-theme 'solarized-dark t)
