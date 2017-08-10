@@ -44,6 +44,7 @@
   (use-package bind-map)
 
 (add-to-list 'evil-emacs-state-modes 'dired-mode)
+(add-to-list 'evil-emacs-state-modes 'flycheck-error-list-mode)
 
 (evil-leader/set-key
   "!" 'shell-command)
