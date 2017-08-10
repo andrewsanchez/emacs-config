@@ -1,3 +1,11 @@
+* Custom set variables
+#+begin_src elisp :tangle yes
+(custom-set-variables
+ '(custom-safe-themes
+   (quote
+    ("d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" default)))
+ '(initial-frame-alist (quote ((fullscreen . maximized)))))
+#+end_src
 * Packages
 ** Sources 
 #+begin_src elisp :tangle yes
@@ -17,15 +25,70 @@
   (require 'use-package))
 (setq use-package-always-ensure t)
 #+end_src
+* Personal info
+#+begin_src elisp :tangle yes
+(setq user-full-name "Andrew Sanchez"
+      user-mail-address "inbox.asanchez@gmail.com")
+#+end_src
+* Evil
+#+begin_src elisp :tangle yes
+  (use-package evil-leader
+    :config
+    (global-evil-leader-mode)
+    (evil-leader/set-leader "<SPC>"))
+
+  (use-package evil
+      :config
+      (evil-mode 1))
+
+  (use-package evil-nerd-commenter
+      :config
+      (evilnc-default-hotkeys))
+
+  (use-package evil-surround
+      :config
+      (global-evil-surround-mode 1))
+
+(use-package evil-lisp-state
+    :init (setq evil-lisp-state-global t)
+    :config (evil-lisp-state-leader "<SPC> k"))
+
+  (use-package bind-map) 
+#+end_src
+
+#+RESULTS:
+
+** Exclude list
+#+begin_src elisp :tangle yes
+  (add-to-list 'evil-emacs-state-modes 'dired-mode)
+  (add-to-list 'evil-emacs-state-modes 'flycheck-error-list-mode)
+#+end_src
+
+#+RESULTS:
+| flycheck-error-list-mode | dired-mode | archive-mode | bbdb-mode | biblio-selection-mode | bookmark-bmenu-mode | bookmark-edit-annotation-mode | browse-kill-ring-mode | bzr-annotate-mode | calc-mode | cfw:calendar-mode | completion-list-mode | Custom-mode | custom-theme-choose-mode | debugger-mode | delicious-search-mode | desktop-menu-blist-mode | desktop-menu-mode | doc-view-mode | dvc-bookmarks-mode | dvc-diff-mode | dvc-info-buffer-mode | dvc-log-buffer-mode | dvc-revlist-mode | dvc-revlog-mode | dvc-status-mode | dvc-tips-mode | ediff-mode | ediff-meta-mode | efs-mode | Electric-buffer-menu-mode | emms-browser-mode | emms-mark-mode | emms-metaplaylist-mode | emms-playlist-mode | ess-help-mode | etags-select-mode | fj-mode | gc-issues-mode | gdb-breakpoints-mode | gdb-disassembly-mode | gdb-frames-mode | gdb-locals-mode | gdb-memory-mode | gdb-registers-mode | gdb-threads-mode | gist-list-mode | git-commit-mode | git-rebase-mode | gnus-article-mode | gnus-browse-mode | gnus-group-mode | gnus-server-mode | gnus-summary-mode | google-maps-static-mode | ibuffer-mode | jde-javadoc-checker-report-mode | magit-cherry-mode | magit-diff-mode | magit-log-mode | magit-log-select-mode | magit-popup-mode | magit-popup-sequence-mode | magit-process-mode | magit-reflog-mode | magit-refs-mode | magit-revision-mode | magit-stash-mode | magit-stashes-mode | magit-status-mode | magit-mode | magit-branch-manager-mode | magit-commit-mode | magit-key-mode | magit-rebase-mode | magit-wazzup-mode | mh-folder-mode | monky-mode | mu4e-main-mode | mu4e-headers-mode | mu4e-view-mode | notmuch-hello-mode | notmuch-search-mode | notmuch-show-mode | occur-mode | org-agenda-mode | package-menu-mode | pdf-outline-buffer-mode | pdf-view-mode | proced-mode | rcirc-mode | rebase-mode | recentf-dialog-mode | reftex-select-bib-mode | reftex-select-label-mode | reftex-toc-mode | sldb-mode | slime-inspector-mode | slime-thread-control-mode | slime-xref-mode | sr-buttons-mode | sr-mode | sr-tree-mode | sr-virtual-mode | tar-mode | tetris-mode | tla-annotate-mode | tla-archive-list-mode | tla-bconfig-mode | tla-bookmarks-mode | tla-branch-list-mode | tla-browse-mode | tla-category-list-mode | tla-changelog-mode | tla-follow-symlinks-mode | tla-inventory-file-mode | tla-inventory-mode | tla-lint-mode | tla-logs-mode | tla-revision-list-mode | tla-revlog-mode | tla-tree-lint-mode | tla-version-list-mode | twittering-mode | urlview-mode | vc-annotate-mode | vc-dir-mode | vc-git-log-view-mode | vc-hg-log-view-mode | vc-svn-log-view-mode | vm-mode | vm-summary-mode | w3m-mode | wab-compilation-mode | xgit-annotate-mode | xgit-changelog-mode | xgit-diff-mode | xgit-revlog-mode | xhg-annotate-mode | xhg-log-mode | xhg-mode | xhg-mq-mode | xhg-mq-sub-mode | xhg-status-extra-mode |
+
 * Vanilla emacs bindings
 #+begin_src elisp :tangle yes
   (evil-leader/set-key
     "!" 'shell-command)
 #+end_src
-* Personal info
+
+* Modeline
+Display a more compact mode line
+
 #+begin_src elisp :tangle yes
-(setq user-full-name "Andrew Sanchez"
-      user-mail-address "inbox.asanchez@gmail.com")
+    (use-package smart-mode-line
+      :init
+      (setq sml/no-confirm-load-theme t)
+      :config
+      (sml/setup))
+  (display-time-mode 1)
+#+end_src
+
+#+RESULTS:
+: t
+
+#+begin_src emacs-lisp
 #+end_src
 * Buffers
 #+begin_src elisp :tangle yes
@@ -38,31 +101,6 @@
 	     (interactive)
 	     (find-file "~/projects/emacs-config/init.org")))
 #+end_src
-* Evil
-#+begin_src elisp :tangle yes
-  (use-package evil-leader
-    :config
-    (global-evil-leader-mode)
-    (evil-leader/set-leader "<SPC>"))
-
-    (use-package evil
-      :config
-      (evil-mode 1))
-
-    (use-package evil-nerd-commenter
-        :config
-        (evilnc-default-hotkeys))
-
-    (use-package evil-surround
-      :config
-      (global-evil-surround-mode 1))
-#+end_src
-
-** Exclude list
-#+begin_src elisp :tangle yes
-(add-to-list 'evil-emacs-state-modes 'dired-mode)
-#+end_src
-
 * Helm
   Also check out [[https://github.com/abo-abo/swiper][ivy and swiper]]
 #+begin_src elisp :tangle yes
@@ -93,29 +131,71 @@
 (use-package hydra)
 #+end_src
 * Org-mode
-** Config
+
 #+begin_src elisp :tangle yes
   (use-package org
     :load-path "~/.emacs.d/packages/org-mode/lisp"
+    :init
+    (evil-leader/set-key
+	"oa" 'org-agenda
+	"oc" 'org-capture
+	"ot" 'hydra-org-clock/body)
     :config
     (setq org-hide-leading-stars t)
     (setq org-default-notes-file "/Users/andrew/org/notes.org")
+    (setq org-todo-keywords
+      '((sequence "TODO" "NEXT" "|" "DONE")))
     (setq org-capture-templates
-	  '(
-	    ("t" "TODO" entry (file+headline "/Users/andrew/org/gtd.org" "Tasks")
+	  '(("t" "TODO" entry (file+headline "/Users/andrew/org/gtd.org" "Tasks")
 	    "* TODO %? \n%U\n" :empty-lines 1)
 	    ("j" "Journal" entry (file+datetree "/Users/andrew/org/journal.org")
 	    "* %?\nEntered on %U\n")
 	    ("n" "Note" entry (file+headline "/Users/andrew/org/notes.org" "Notes")
 	    "* %i\n")))
-    (setq org-refile-targets '((nil :maxlevel . 5)
-			       (org-agenda-files :maxlevel . 4)))
+    (setq org-refile-targets '((nil :maxlevel . 3)
+			       (org-agenda-files :maxlevel . 3)))
     (setq org-outline-path-complete-in-steps nil)
     (setq org-refile-allow-creating-parent-nodes 'confirm)
     (setq org-src-fontify-natively t)
     (setq org-agenda-files '("/Users/andrew/org/gtd.org"))
     (setq org-agenda-custom-commands
-	  '(("w" "work" tags-todo "TODO=\"TODO\"+category=\"work\"")))
+	  '(("w" "work" tags-todo "TODO=\"TODO\"+category=\"pmi\"")))
+    (evil-leader/set-key-for-mode 'org-mode
+      "h" 'hydra-org-headings/body)
+    ;; Hydras
+    (defhydra hydra-org-headings ()
+      "Headings"
+	  ("t" org-todo "org-todo")
+	  (":" org-set-tags-command "org-set-tags-command")
+	  ("n" org-narrow-to-subtree "org-narrow-to-subtree")
+	  ("w" widen "widen")
+	  ("l" org-demote-subtree "org-demote-subtree")
+	  ("h" org-promote-subtree "org-promote-subtree")
+	  ("K" org-backward-heading-same-level "org-backward-heading-same-level")
+	  ("J" org-forward-heading-same-level "org-forward-heading-same-level")
+	  ("k" outline-previous-visible-heading "outline-previous-visible-heading")
+	  ("j" outline-next-visible-heading "outline-next-visible-heading"))
+
+    (defhydra hydra-org-clock (:color blue :hint nil)
+	"
+
+	Clock   In/out^     ^Edit^   ^Summary     (_?_)
+	-----------------------------------------
+		_i_n         _e_dit   _g_oto entry
+		_c_ontinue   _q_uit   _d_isplay
+		_o_ut        ^ ^      _r_eport
+		_p_omodoro
+	"
+	("i" org-clock-in)
+	("o" org-clock-out)
+	("c" org-clock-in-last)
+	("e" org-clock-modify-effort-estimate)
+	("q" org-clock-cancel)
+	("p" org-pomodoro)
+	("g" org-clock-goto)
+	("d" org-clock-display)
+	("r" org-clock-report)
+	("?" (org-info "Clocking commands"))))
 
     (use-package org-pomodoro
       :config
@@ -123,76 +203,17 @@
       (setq org-pomodoro-start-sound "/Users/andrew/Music/Miscellaneous/Timer_Sounds/mindfullness_bell.mp3")
       (setq org-pomodoro-finish-sound "/Users/andrew/Music/Miscellaneous/Timer_Sounds/mindfullness_bell.mp3")
       (setq org-pomodoro-start-sound-p t))
-    ;; Hydras
-    (evil-leader/set-key-for-mode 'org-mode
-      "h" 'hydra-org-headings/body))
-
-   (evil-leader/set-key
-       "oa" 'org-agenda
-       "oc" 'org-capture
-       "ot" 'hydra-org-clock/body)
-
 #+end_src
 
 #+RESULTS:
+: t
 
-** Hydras
-*** Clock
-#+begin_src elisp :tangle yes
-
-  (defhydra hydra-org-clock (:color blue :hint nil)
-      "
-
-      Clock   In/out^     ^Edit^   ^Summary     (_?_)
-      -----------------------------------------
-	      _i_n         _e_dit   _g_oto entry
-	      _c_ontinue   _q_uit   _d_isplay
-	      _o_ut        ^ ^      _r_eport
-	      _p_omodoro
-      "
-      ("i" org-clock-in)
-      ("o" org-clock-out)
-      ("c" org-clock-in-last)
-      ("e" org-clock-modify-effort-estimate)
-      ("q" org-clock-cancel)
-      ("p" org-pomodoro)
-      ("g" org-clock-goto)
-      ("d" org-clock-display)
-      ("r" org-clock-report)
-      ("?" (org-info "Clocking commands")))
-#+end_src
-
-#+RESULTS:
-: hydra-org-clock/body
-
-*** Headings and trees
-#+begin_src elisp :tangle yes
-    (defhydra hydra-org-headings ()
-    "Headings"
-	("t" org-todo "org-todo")
-	(":" org-set-tags-command "org-set-tags-command")
-	("n" org-narrow-to-subtree "org-narrow-to-subtree")
-	("w" widen "widen")
-	("l" org-demote-subtree "org-demote-subtree")
-	("h" org-promote-subtree "org-promote-subtree")
-	("K" org-backward-heading-same-level "org-backward-heading-same-level")
-	("J" org-forward-heading-same-level "org-forward-heading-same-level")
-	("k" outline-previous-visible-heading "outline-previous-visible-heading")
-	("j" outline-next-visible-heading "outline-next-visible-heading"))
-#+end_src
 * Windows and frames
 ** Toolbar
    Save space by not showing the toolbar
 #+begin_src elisp :tangle yes
 (tool-bar-mode -1)
 #+end_src
-
-** Full screen
-#+begin_src elisp :tangle yes
-(custom-set-variables
- '(initial-frame-alist (quote ((fullscreen . maximized)))))
-#+end_src
-
 ** Golden ratio mode
 #+begin_src elisp :tangle yes
   (use-package golden-ratio
@@ -273,42 +294,62 @@ Also look at sensible-defaults
 (setq tramp-default-method "ssh")
 #+end_src
 
-* Which-key
+* Binding related
   Also check out [[https://github.com/nonsequitur/smex][smex]] 
 #+begin_src elisp :tangle yes
-(use-package which-key
-    :config
-    (which-key-mode))
+  (use-package which-key
+      :config
+      (which-key-mode))
 #+end_src
+
+#+RESULTS:
+
 * Python
 #+begin_src elisp :tangle yes
-(use-package python
-    :config
-    (setq python-shell-exec-path '("~/anaconda3/bin/python"))
-    (evil-leader/set-key-for-mode 'python-mode
-      "a" 'hydra-anaconda/body))
+  (use-package python
+      :config
+      (setq python-shell-exec-path '("~/anaconda3/bin/python"))
+      (evil-leader/set-key-for-mode 'python-mode
+	"a" 'hydra-anaconda/body)
+    (defhydra hydra-anaconda (:color blue :hint nil)
+    "
+    ^Anaconda^
+    ----------
+    _d_: find definitions
+    _a_: find assignments
+    _r_: find references
+    _b_: go back
+    _s_: show doc
+    "
+	("d" anaconda-mode-find-definitions)
+	("a" anaconda-mode-find-assignments)
+	("r" anaconda-mode-find-references)
+	("b" anaconda-mode-go-back)
+	("s" anaconda-mode-show-doc)
+	("y" yapfify-buffer)))
 
+  (use-package yapfify)
   (use-package anaconda-mode)
   (add-hook 'python-mode-hook
-	    'anaconda-mode
-	    'anaconda-eldoc-mode)
+	  'anaconda-mode
+	  'anaconda-eldoc-mode)
 
-  (defhydra hydra-anaconda (:color blue :hint nil)
-"
-^Anaconda^
-----------
-_d_: find definitions
-_a_: find assignments
-_r_: find references
-_b_: go back
-_s_: show doc
-"
-      ("d" anaconda-mode-find-definitions)
-      ("a" anaconda-mode-find-assignments)
-      ("r" anaconda-mode-find-references)
-      ("b" anaconda-mode-go-back)
-      ("s" anaconda-mode-show-doc))
 #+end_src
+** Fix faulty completion bug
+   Source:  https://github.com/jorgenschaefer/elpy/issues/887
+   Fixes this error message:
+   Warning (python): Your ‘python-shell-interpreter’ doesn’t seem to support readline, yet ‘python-shell-completion-native’ was t and "ipython3" is not part of the ‘python-shell-completion-native-disabled-interpreters’ list. Native completions have been disabled locally.
+
+ #+begin_src elisp :tangle yes
+ (defun python-shell-completion-native-try ()
+   "Return non-nil if can trigger native completion."
+   (let ((python-shell-completion-native-enable t)
+         (python-shell-completion-native-output-timeout
+           python-shell-completion-native-try-output-timeout))
+      (python-shell-completion-native-get-completions
+       (get-buffer-process (current-buffer))
+       nil "_")))
+ #+end_src
 
 * Exec-path-from-shell
   Doesn't seem to work for me :(
@@ -321,17 +362,76 @@ _s_: show doc
 * Smartparens
 #+begin_src elisp :tangle yes
   (use-package smartparens
-      :init
-      (require 'smartparens-config)
       :config
+      ;; (evil-leader/set-key
+      ;; 	"k" 'hydra-smartparens/body)
+
       (autoload 'smartparens-mode "paredit" "Turn on pseudo-structural editing of Lisp code." t)
       (add-hook 'emacs-lisp-mode-hook       #'smartparens-mode)
       (add-hook 'eval-expression-minibuffer-setup-hook #'smartparens-mode)
       (add-hook 'ielm-mode-hook             #'smartparens-mode)
       (add-hook 'lisp-mode-hook             #'smartparens-mode)
       (add-hook 'lisp-interaction-mode-hook #'smartparens-mode)
-      (add-hook 'scheme-mode-hook           #'smartparens-mode))
+      (add-hook 'scheme-mode-hook           #'smartparens-mode)
+      (add-hook 'python-mode-hook           #'smartparens-mode)
+    :init
+    (require 'smartparens-config)
+    (defhydra hydra-smartparens (:hint nil)
+      "
+  Sexps (quit with _q_)
+
+  ^Nav^            ^Barf/Slurp^                 ^Depth^
+  ^---^------------^----------^-----------------^-----^-----------------
+  _f_: forward     _<left>_:    slurp forward   _R_:      splice
+  _b_: backward    _<right>_:   barf forward    _r_:      raise
+  _u_: backward ↑  _C-<left>_:  slurp backward  _<up>_:   raise backward
+  _d_: forward ↓   _C-<right>_: barf backward   _<down>_: raise forward
+  _p_: backward ↓
+  _n_: forward ↑
+
+  ^Kill^           ^Misc^                       ^Wrap^
+  ^----^-----------^----^-----------------------^----^------------------
+  _w_: copy        _j_: join                    _(_: wrap with ( )
+  _k_: kill        _s_: split                   _{_: wrap with { }
+  ^^               _t_: transpose               _'_: wrap with ' '
+  ^^               _c_: convolute               _\"_: wrap with \" \"
+  ^^               _i_: indent defun"
+      ("q" nil)
+      ;; Wrapping
+      ("(" (lambda (a) (interactive "P") (sp-wrap-with-pair "(")))
+      ("{" (lambda (a) (interactive "P") (sp-wrap-with-pair "{")))
+      ("'" (lambda (a) (interactive "P") (sp-wrap-with-pair "'")))
+      ("\"" (lambda (a) (interactive "P") (sp-wrap-with-pair "\"")))
+      ;; Navigation
+      ("f" sp-forward-sexp )
+      ("b" sp-backward-sexp)
+      ("u" sp-backward-up-sexp)
+      ("d" sp-down-sexp)
+      ("p" sp-backward-down-sexp)
+      ("n" sp-up-sexp)
+      ;; Kill/copy
+      ("w" sp-copy-sexp)
+      ("k" sp-kill-sexp)
+      ;; Misc
+      ("t" sp-transpose-sexp)
+      ("j" sp-join-sexp)
+      ("s" sp-split-sexp)
+      ("c" sp-convolute-sexp)
+      ("i" sp-indent-defun)
+      ;; Depth changing
+      ("R" sp-splice-sexp)
+      ("r" sp-splice-sexp-killing-around)
+      ("<up>" sp-splice-sexp-killing-backward)
+      ("<down>" sp-splice-sexp-killing-forward)
+      ;; Barfing/slurping
+      ("<right>" sp-forward-slurp-sexp)
+      ("<left>" sp-forward-barf-sexp)
+      ("C-<left>" sp-backward-barf-sexp)
+      ("C-<right>" sp-backward-slurp-sexp)))
 #+end_src
+
+#+RESULTS:
+: t
 
 * Projectile
 #+begin_src elisp :tangle yes
@@ -357,7 +457,7 @@ _s_: show doc
     (require 'yasnippet)
     (yas-global-mode 1)
     (evil-leader/set-key
-      "y" 'hydra-yasnippet/body))
+      "y" 'hydra-yasnippet/body)
 
   (defhydra hydra-yasnippet (:color blue :hint nil)
     "
@@ -379,7 +479,7 @@ _s_: show doc
     ("l" yas-describe-tables)
     ("g" yas/global-mode)
     ("m" yas/minor-mode)
-    ("a" yas-reload-all))
+    ("a" yas-reload-all)))
 #+end_src
 
 * Themes and fonts
@@ -436,13 +536,21 @@ _s_: show doc
 #+end_src
 * Display
 #+begin_src elisp :tangle yes
-  (use-package linum-relative
+(use-package linum-relative
     :config
     (linum-relative-global-mode))
+(setq column-number-mode t)
 #+end_src
 
 #+RESULTS:
 : t
+* Flycheck
+#+begin_src elisp :tangle yes
+  (use-package flycheck
+    :init (global-flycheck-mode))
+#+end_src
+
+#+RESULTS:
 
 * Test
 #+begin_src elisp :tangle yes
