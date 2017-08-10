@@ -90,25 +90,67 @@
 
 (use-package org
   :load-path "~/.emacs.d/packages/org-mode/lisp"
+  :init
+  (evil-leader/set-key
+      "oa" 'org-agenda
+      "oc" 'org-capture
+      "ot" 'hydra-org-clock/body)
   :config
   (setq org-hide-leading-stars t)
   (setq org-default-notes-file "/Users/andrew/org/notes.org")
+  (setq org-todo-keywords
+    '((sequence "TODO" "NEXT" "|" "DONE")))
   (setq org-capture-templates
-	'(
-	  ("t" "TODO" entry (file+headline "/Users/andrew/org/gtd.org" "Tasks")
+	'(("t" "TODO" entry (file+headline "/Users/andrew/org/gtd.org" "Tasks")
 	  "* TODO %? \n%U\n" :empty-lines 1)
 	  ("j" "Journal" entry (file+datetree "/Users/andrew/org/journal.org")
 	  "* %?\nEntered on %U\n")
 	  ("n" "Note" entry (file+headline "/Users/andrew/org/notes.org" "Notes")
 	  "* %i\n")))
-  (setq org-refile-targets '((nil :maxlevel . 5)
-			     (org-agenda-files :maxlevel . 4)))
+  (setq org-refile-targets '((nil :maxlevel . 3)
+			     (org-agenda-files :maxlevel . 3)))
   (setq org-outline-path-complete-in-steps nil)
   (setq org-refile-allow-creating-parent-nodes 'confirm)
   (setq org-src-fontify-natively t)
   (setq org-agenda-files '("/Users/andrew/org/gtd.org"))
   (setq org-agenda-custom-commands
-	'(("w" "work" tags-todo "TODO=\"TODO\"+category=\"work\"")))
+	'(("w" "work" tags-todo "TODO=\"TODO\"+category=\"pmi\"")))
+  (evil-leader/set-key-for-mode 'org-mode
+    "h" 'hydra-org-headings/body)
+  ;; Hydras
+  (defhydra hydra-org-headings ()
+    "Headings"
+	("t" org-todo "org-todo")
+	(":" org-set-tags-command "org-set-tags-command")
+	("n" org-narrow-to-subtree "org-narrow-to-subtree")
+	("w" widen "widen")
+	("l" org-demote-subtree "org-demote-subtree")
+	("h" org-promote-subtree "org-promote-subtree")
+	("K" org-backward-heading-same-level "org-backward-heading-same-level")
+	("J" org-forward-heading-same-level "org-forward-heading-same-level")
+	("k" outline-previous-visible-heading "outline-previous-visible-heading")
+	("j" outline-next-visible-heading "outline-next-visible-heading"))
+
+  (defhydra hydra-org-clock (:color blue :hint nil)
+      "
+
+      Clock   In/out^     ^Edit^   ^Summary     (_?_)
+      -----------------------------------------
+	      _i_n         _e_dit   _g_oto entry
+	      _c_ontinue   _q_uit   _d_isplay
+	      _o_ut        ^ ^      _r_eport
+	      _p_omodoro
+      "
+      ("i" org-clock-in)
+      ("o" org-clock-out)
+      ("c" org-clock-in-last)
+      ("e" org-clock-modify-effort-estimate)
+      ("q" org-clock-cancel)
+      ("p" org-pomodoro)
+      ("g" org-clock-goto)
+      ("d" org-clock-display)
+      ("r" org-clock-report)
+      ("?" (org-info "Clocking commands"))))
 
   (use-package org-pomodoro
     :config
@@ -116,53 +158,8 @@
     (setq org-pomodoro-start-sound "/Users/andrew/Music/Miscellaneous/Timer_Sounds/mindfullness_bell.mp3")
     (setq org-pomodoro-finish-sound "/Users/andrew/Music/Miscellaneous/Timer_Sounds/mindfullness_bell.mp3")
     (setq org-pomodoro-start-sound-p t))
-  ;; Hydras
-  (evil-leader/set-key-for-mode 'org-mode
-    "h" 'hydra-org-headings/body))
-
- (evil-leader/set-key
-     "oa" 'org-agenda
-     "oc" 'org-capture
-     "ot" 'hydra-org-clock/body)
-
-(defhydra hydra-org-clock (:color blue :hint nil)
-    "
-
-    Clock   In/out^     ^Edit^   ^Summary     (_?_)
-    -----------------------------------------
-	    _i_n         _e_dit   _g_oto entry
-	    _c_ontinue   _q_uit   _d_isplay
-	    _o_ut        ^ ^      _r_eport
-	    _p_omodoro
-    "
-    ("i" org-clock-in)
-    ("o" org-clock-out)
-    ("c" org-clock-in-last)
-    ("e" org-clock-modify-effort-estimate)
-    ("q" org-clock-cancel)
-    ("p" org-pomodoro)
-    ("g" org-clock-goto)
-    ("d" org-clock-display)
-    ("r" org-clock-report)
-    ("?" (org-info "Clocking commands")))
-
-(defhydra hydra-org-headings ()
-"Headings"
-    ("t" org-todo "org-todo")
-    (":" org-set-tags-command "org-set-tags-command")
-    ("n" org-narrow-to-subtree "org-narrow-to-subtree")
-    ("w" widen "widen")
-    ("l" org-demote-subtree "org-demote-subtree")
-    ("h" org-promote-subtree "org-promote-subtree")
-    ("K" org-backward-heading-same-level "org-backward-heading-same-level")
-    ("J" org-forward-heading-same-level "org-forward-heading-same-level")
-    ("k" outline-previous-visible-heading "outline-previous-visible-heading")
-    ("j" outline-next-visible-heading "outline-next-visible-heading"))
 
 (tool-bar-mode -1)
-
-(custom-set-variables
- '(initial-frame-alist (quote ((fullscreen . maximized)))))
 
 (use-package golden-ratio
   :config
