@@ -22,21 +22,22 @@
       user-mail-address "inbox.asanchez@gmail.com")
 
 (use-package evil-leader
-  :config
-  (global-evil-leader-mode)
-  (evil-leader/set-leader "<SPC>"))
+    :config
+    (global-evil-leader-mode)
+    (evil-leader/set-leader "<SPC>"))
 
   (use-package evil
-    :config
-    (evil-mode 1))
+      :config
+      (evil-mode 1))
 
   (use-package evil-nerd-commenter
       :config
       (evilnc-default-hotkeys))
 
   (use-package evil-surround
-    :config
-    (global-evil-surround-mode 1))
+      :config
+      (global-evil-surround-mode 1))
+
 (use-package evil-lisp-state
     :init (setq evil-lisp-state-global t)
     :config (evil-lisp-state-leader "<SPC> k"))
@@ -386,7 +387,7 @@ _k_: kill        _s_: split                   _{_: wrap with { }
     "ww" 'google-translate-smooth-translate))
 
 (use-package linum-relative
-  :config
-  (linum-relative-global-mode))
+    :config
+    (linum-relative-global-mode))
 
 
