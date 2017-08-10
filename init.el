@@ -389,6 +389,8 @@ _k_: kill        _s_: split                   _{_: wrap with { }
 (use-package linum-relative
     :config
     (linum-relative-global-mode))
+(setq column-number-mode t)
+
 (use-package flycheck
   :init (global-flycheck-mode))
 
