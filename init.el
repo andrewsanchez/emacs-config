@@ -44,12 +44,25 @@
   (use-package bind-map)
 
 (add-to-list 'evil-emacs-state-modes 'dired-mode)
+
+(evil-leader/set-key
+  "!" 'shell-command)
+
 (use-package smart-mode-line
     :init
     (setq sml/no-confirm-load-theme t)
     :config
     (sml/setup))
 (display-time-mode 1)
+
+(evil-leader/set-key
+  "bd" 'kill-this-buffer
+  "bs" (lambda ()
+	 (interactive)
+	 (pop-to-buffer "*scratch*"))
+  "fd" (lambda ()
+	   (interactive)
+	   (find-file "~/projects/emacs-config/init.org")))
 
 (use-package helm
     :init
