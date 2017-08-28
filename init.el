@@ -122,76 +122,80 @@
   (setq org-todo-keywords
     '((sequence "NEXT" "TODO" "|" "DONE")))
   (setq org-capture-templates
-	'(("t" "TODO" entry (file+headline "/Users/andrew/org/agenda/gtd.org" "Tasks")
-	   "* TODO %? \n%U\n" :empty-lines 1)
-	  ("n" "NEXT" entry (file+headline "/Users/andrew/org/agenda/gtd.org" "Tasks")
-	  "* NEXT %? \n%U\n" :empty-lines 1)
-	  ("p" "Plan" entry (file+headline "/Users/andrew/org/agenda/gtd.org" "Plans")
-	  "* %?\n")
-	  ("j" "Journal" entry (file+datetree "/Users/andrew/org/agenda/journal.org")
-	  "* %?\nEntered on %U\n")
-	  ("n" "Note or Project" entry (file+headline "/Users/andrew/agenda/gtd.org" "Notes")
-	   "* %i\n")))
+        '(("t" "TODO" entry (file+headline "/Users/andrew/org/agenda/gtd.org" "Tasks")
+           "* TODO %? \n%U\n" :empty-lines 1)
+          ("n" "NEXT" entry (file+headline "/Users/andrew/org/agenda/gtd.org" "Tasks")
+           "* NEXT %? \n%U\n" :empty-lines 1)
+          ("h" "New Headline" entry (file+headline "/Users/andrew/agenda/gtd.org" "Notes")
+             "* %?\n")
+          ("p" "Plan" entry (file+headline "/Users/andrew/org/agenda/gtd.org" "Plans")
+          "* %?\n")
+          ("j" "Journal" entry (file+datetree "/Users/andrew/org/agenda/journal.org")
+          "* %?\nEntered on %U\n")))
   (setq org-refile-targets '((nil :maxlevel . 3)
-			     (org-agenda-files :maxlevel . 2)))
+                             (org-agenda-files :maxlevel . 2)))
   (setq org-outline-path-complete-in-steps nil)
   (setq org-refile-allow-creating-parent-nodes 'confirm)
   (setq org-src-fontify-natively t)
   (setq org-agenda-files '("~/org/agenda"))
   (setq org-agenda-custom-commands
-      '(("!" "ASAP" tags "asap")
-	  ("n" . "Next")
-	  ("np" "Next PMI" tags-todo "TODO=\"NEXT\"+category=\"PMI\""
-	   ((org-agenda-overriding-header "Next PMI")))
-	  ("na" "Next ABB" tags-todo "TODO=\"NEXT\"+category=\"ABB\""
-	   ((org-agenda-overriding-header "Next ABB")))
-	  ("nm" "Next Miscellaneous" tags-todo "TODO=\"NEXT\"+category=\"misc\""
-	   ((org-agenda-overriding-header "Next Miscellaneous")))
-	  ("a" . "All")
-	  ;("am" "All Miscellaneous" tags-todo "TODO={TODO\\|NEXT}+category=\"misc\"")
-	  ("am" "All Miscellaneous"
-	  ((tags-todo "TODO=\"NEXT\"+category=\"misc\"")
-	  (tags-todo "TODO=\"TODO\"+category=\"misc\"")
-	  (tags-todo "TODO=\"DONE\"+category=\"misc\""))
-	  ((org-agenda-overriding-header "All Miscellaneous")))
-	  ("ap" "All PMI"
-	  ((tags-todo "TODO=\"NEXT\"+category=\"PMI\"")
-	  (tags-todo "TODO=\"TODO\"+category=\"PMI\"")
-	  (tags-todo "TODO=\"DONE\"+category=\"PMI\""))
-	  ((org-agenda-overriding-header "All PMI")))
-	  ("aa" "ALL"
-	  ((tags-todo "TODO=\"NEXT\"")
-	  (tags-todo "TODO=\"TODO\"")
-	  (tags-todo "TODO=\"DONE\""))
-	  ((org-agenda-overriding-header "All")))))
+      '(("!" "ASAP" tags "asap") 
+          ("n" . "Next")
+          ("np" "Next PMI" tags-todo "TODO=\"NEXT\"+category=\"PMI\""
+           ((org-agenda-overriding-header "Next PMI")))
+          ("na" "Next ABB" tags-todo "TODO=\"NEXT\"+category=\"ABB\""
+           ((org-agenda-overriding-header "Next ABB")))
+          ("nm" "Next Miscellaneous" tags-todo "TODO=\"NEXT\"+category=\"misc\""
+           ((org-agenda-overriding-header "Next Miscellaneous")))
+          ("a" . "All")
+          ;("am" "All Miscellaneous" tags-todo "TODO={TODO\\|NEXT}+category=\"misc\"")
+          ("am" "All Miscellaneous"
+          ((tags-todo "TODO=\"NEXT\"+category=\"misc\"")
+          (tags-todo "TODO=\"TODO\"+category=\"misc\"")
+          (tags-todo "TODO=\"DONE\"+category=\"misc\""))
+          ((org-agenda-overriding-header "All Miscellaneous")))
+          ("ap" "All PMI"
+          ((tags-todo "TODO=\"NEXT\"+category=\"PMI\"")
+          (tags-todo "TODO=\"TODO\"+category=\"PMI\"")
+          (tags-todo "TODO=\"DONE\"+category=\"PMI\""))
+          ((org-agenda-overriding-header "All PMI")))
+          ("aa" "ALL"
+          ((tags-todo "TODO=\"NEXT\"")
+          (tags-todo "TODO=\"TODO\"")
+          (tags-todo "TODO=\"DONE\""))
+          ((org-agenda-overriding-header "All")))))
+          ;; ("t" "test"
+          ;;  ((tags-todo "TODO=\"NEXT\"+category=\"misc\"")
+          ;;   (tags-todo "TODO=\"TODO\"+category=\"misc\"")))))
+  ;;(evil-leader/set-key-for-mode 'org-mode "m" 'org-mode-map)
   (evil-leader/set-key-for-mode 'org-mode
     "h" 'hydra-org-headings/body)
   ;; Hydras
   (defhydra hydra-org-headings ()
     "Headings"
-	("t" org-todo "org-todo")
-	(":" org-set-tags-command "org-set-tags-command")
-	("n" org-narrow-to-subtree "org-narrow-to-subtree")
-	("w" widen "widen")
-	("s" org-sort)
-	("l" org-demote-subtree "org-demote-subtree")
-	("h" org-promote-subtree "org-promote-subtree")
-	("K" outline-up-heading "org-backward-heading-same-level")
-	("J" org-forward-heading-same-level "org-forward-heading-same-level")
-	("k" outline-previous-visible-heading "outline-previous-visible-heading")
-	("j" outline-next-visible-heading "outline-next-visible-heading")
-	("*" org-toggle-heading "org-toggle-heading")
-	("r" org-refile "org-refile"))
+        ("t" org-todo "org-todo")
+        (":" org-set-tags-command "org-set-tags-command")
+        ("n" org-narrow-to-subtree "org-narrow-to-subtree")
+        ("w" widen "widen")
+        ("s" org-sort)
+        ("l" org-demote-subtree "org-demote-subtree")
+        ("h" org-promote-subtree "org-promote-subtree")
+        ("K" outline-up-heading "org-backward-heading-same-level")
+        ("J" org-forward-heading-same-level "org-forward-heading-same-level")
+        ("k" outline-previous-visible-heading "outline-previous-visible-heading")
+        ("j" outline-next-visible-heading "outline-next-visible-heading")
+        ("*" org-toggle-heading "org-toggle-heading")
+        ("r" org-refile "org-refile"))
 
   (defhydra hydra-org-clock (:color blue :hint nil)
       "
 
       Clock   In/out^     ^Edit^   ^Summary     (_?_)
       -----------------------------------------
-	      _i_n         _e_dit   _g_oto entry
-	      _c_ontinue   _q_uit   _d_isplay
-	      _o_ut        ^ ^      _r_eport
-	      _p_omodoro
+              _i_n         _e_dit   _g_oto entry
+              _c_ontinue   _q_uit   _d_isplay
+              _o_ut        ^ ^      _r_eport
+              _p_omodoro
       "
       ("i" org-clock-in)
       ("o" org-clock-out)
@@ -463,5 +467,3 @@ _k_: kill        _s_: split                   _{_: wrap with { }
   (deft-find-file "/Users/andrew/org/agenda/gtd.org")
   (deft-find-file "/Users/andrew/org/agenda/PMI.org")
   (deft-find-file "/Users/andrew/org/agenda/projects.org"))
-
-
