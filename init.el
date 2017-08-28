@@ -137,7 +137,7 @@
   (setq org-outline-path-complete-in-steps nil)
   (setq org-refile-allow-creating-parent-nodes 'confirm)
   (setq org-src-fontify-natively t)
-  (setq org-agenda-files '("/Users/andrew/org/gtd.org"))
+  (setq org-agenda-files '("~/org/agenda"))
   (setq org-agenda-custom-commands
       '(("!" "ASAP" tags "asap")
 	  ("n" . "Next")
