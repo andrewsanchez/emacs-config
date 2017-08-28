@@ -454,4 +454,14 @@ _k_: kill        _s_: split                   _{_: wrap with { }
 (use-package flycheck
   :init (global-flycheck-mode))
 
+(use-package deft
+  :config
+  (setq deft-directory "~/org")
+  (setq deft-extensions '("txt" "org"))
+  (setq deft-recursive t)
+  (setq deft-use-filename-as-title t)
+  (deft-find-file "/Users/andrew/org/agenda/gtd.org")
+  (deft-find-file "/Users/andrew/org/agenda/PMI.org")
+  (deft-find-file "/Users/andrew/org/agenda/projects.org"))
+
 
