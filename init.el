@@ -139,7 +139,31 @@
   (setq org-src-fontify-natively t)
   (setq org-agenda-files '("/Users/andrew/org/gtd.org"))
   (setq org-agenda-custom-commands
-	'(("w" "work" tags-todo "TODO=\"TODO\"+category=\"pmi\"")))
+      '(("!" "ASAP" tags "asap")
+	  ("n" . "Next")
+	  ("np" "Next PMI" tags-todo "TODO=\"NEXT\"+category=\"PMI\""
+	   ((org-agenda-overriding-header "Next PMI")))
+	  ("na" "Next ABB" tags-todo "TODO=\"NEXT\"+category=\"ABB\""
+	   ((org-agenda-overriding-header "Next ABB")))
+	  ("nm" "Next Miscellaneous" tags-todo "TODO=\"NEXT\"+category=\"misc\""
+	   ((org-agenda-overriding-header "Next Miscellaneous")))
+	  ("a" . "All")
+	  ;("am" "All Miscellaneous" tags-todo "TODO={TODO\\|NEXT}+category=\"misc\"")
+	  ("am" "All Miscellaneous"
+	  ((tags-todo "TODO=\"NEXT\"+category=\"misc\"")
+	  (tags-todo "TODO=\"TODO\"+category=\"misc\"")
+	  (tags-todo "TODO=\"DONE\"+category=\"misc\""))
+	  ((org-agenda-overriding-header "All Miscellaneous")))
+	  ("ap" "All PMI"
+	  ((tags-todo "TODO=\"NEXT\"+category=\"PMI\"")
+	  (tags-todo "TODO=\"TODO\"+category=\"PMI\"")
+	  (tags-todo "TODO=\"DONE\"+category=\"PMI\""))
+	  ((org-agenda-overriding-header "All PMI")))
+	  ("aa" "ALL"
+	  ((tags-todo "TODO=\"NEXT\"")
+	  (tags-todo "TODO=\"TODO\"")
+	  (tags-todo "TODO=\"DONE\""))
+	  ((org-agenda-overriding-header "All")))))
   (evil-leader/set-key-for-mode 'org-mode
     "h" 'hydra-org-headings/body)
   ;; Hydras
