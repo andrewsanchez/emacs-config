@@ -279,13 +279,18 @@
   _r_: find references
   _b_: go back
   _s_: show doc
+  _y_: yapfify-buffer
+  _v_: pythonic-activate
+  _V_: pythonic-deactivate
   "
       ("d" anaconda-mode-find-definitions)
       ("a" anaconda-mode-find-assignments)
       ("r" anaconda-mode-find-references)
       ("b" anaconda-mode-go-back)
       ("s" anaconda-mode-show-doc)
-      ("y" yapfify-buffer)))
+      ("y" yapfify-buffer)
+      ("v" pythonic-activate)
+      ("V" pythonic-deactivate)))
 
 (use-package yapfify)
 (use-package anaconda-mode)
