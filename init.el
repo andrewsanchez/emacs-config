@@ -421,7 +421,7 @@ _k_: kill        _s_: split                   _{_: wrap with { }
   ("a" yas-reload-all)))
 
 (use-package solarized-theme)
-(load-theme 'solarized-dark t)
+(load-theme 'solarized-light t)
 (set-face-attribute 'default t :font 
   "-*-Source Code Pro-normal-normal-normal-*-*-*-*-*-m-0-iso10646-1")
 (set-face-attribute 'default nil :height 140)
