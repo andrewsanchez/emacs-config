@@ -62,10 +62,10 @@
 #+begin_src elisp :tangle yes
   (add-to-list 'evil-emacs-state-modes 'dired-mode)
   (add-to-list 'evil-emacs-state-modes 'flycheck-error-list-mode)
+  (evil-set-initial-state 'Info-mode 'emacs)
 #+end_src
 
 #+RESULTS:
-| flycheck-error-list-mode | dired-mode | archive-mode | bbdb-mode | biblio-selection-mode | bookmark-bmenu-mode | bookmark-edit-annotation-mode | browse-kill-ring-mode | bzr-annotate-mode | calc-mode | cfw:calendar-mode | completion-list-mode | Custom-mode | custom-theme-choose-mode | debugger-mode | delicious-search-mode | desktop-menu-blist-mode | desktop-menu-mode | doc-view-mode | dvc-bookmarks-mode | dvc-diff-mode | dvc-info-buffer-mode | dvc-log-buffer-mode | dvc-revlist-mode | dvc-revlog-mode | dvc-status-mode | dvc-tips-mode | ediff-mode | ediff-meta-mode | efs-mode | Electric-buffer-menu-mode | emms-browser-mode | emms-mark-mode | emms-metaplaylist-mode | emms-playlist-mode | ess-help-mode | etags-select-mode | fj-mode | gc-issues-mode | gdb-breakpoints-mode | gdb-disassembly-mode | gdb-frames-mode | gdb-locals-mode | gdb-memory-mode | gdb-registers-mode | gdb-threads-mode | gist-list-mode | git-commit-mode | git-rebase-mode | gnus-article-mode | gnus-browse-mode | gnus-group-mode | gnus-server-mode | gnus-summary-mode | google-maps-static-mode | ibuffer-mode | jde-javadoc-checker-report-mode | magit-cherry-mode | magit-diff-mode | magit-log-mode | magit-log-select-mode | magit-popup-mode | magit-popup-sequence-mode | magit-process-mode | magit-reflog-mode | magit-refs-mode | magit-revision-mode | magit-stash-mode | magit-stashes-mode | magit-status-mode | magit-mode | magit-branch-manager-mode | magit-commit-mode | magit-key-mode | magit-rebase-mode | magit-wazzup-mode | mh-folder-mode | monky-mode | mu4e-main-mode | mu4e-headers-mode | mu4e-view-mode | notmuch-hello-mode | notmuch-search-mode | notmuch-show-mode | occur-mode | org-agenda-mode | package-menu-mode | pdf-outline-buffer-mode | pdf-view-mode | proced-mode | rcirc-mode | rebase-mode | recentf-dialog-mode | reftex-select-bib-mode | reftex-select-label-mode | reftex-toc-mode | sldb-mode | slime-inspector-mode | slime-thread-control-mode | slime-xref-mode | sr-buttons-mode | sr-mode | sr-tree-mode | sr-virtual-mode | tar-mode | tetris-mode | tla-annotate-mode | tla-archive-list-mode | tla-bconfig-mode | tla-bookmarks-mode | tla-branch-list-mode | tla-browse-mode | tla-category-list-mode | tla-changelog-mode | tla-follow-symlinks-mode | tla-inventory-file-mode | tla-inventory-mode | tla-lint-mode | tla-logs-mode | tla-revision-list-mode | tla-revlog-mode | tla-tree-lint-mode | tla-version-list-mode | twittering-mode | urlview-mode | vc-annotate-mode | vc-dir-mode | vc-git-log-view-mode | vc-hg-log-view-mode | vc-svn-log-view-mode | vm-mode | vm-summary-mode | w3m-mode | wab-compilation-mode | xgit-annotate-mode | xgit-changelog-mode | xgit-diff-mode | xgit-revlog-mode | xhg-annotate-mode | xhg-log-mode | xhg-mode | xhg-mq-mode | xhg-mq-sub-mode | xhg-status-extra-mode |
 
 * Vanilla emacs bindings
 #+begin_src elisp :tangle yes
@@ -90,17 +90,6 @@ Display a more compact mode line
 
 #+begin_src emacs-lisp
 #+end_src
-* Buffers
-#+begin_src elisp :tangle yes
-  (evil-leader/set-key
-    "bd" 'kill-this-buffer
-    "bs" (lambda ()
-	   (interactive)
-	   (pop-to-buffer "*scratch*"))
-    "fd" (lambda ()
-	     (interactive)
-	     (find-file "~/projects/emacs-config/init.org")))
-#+end_src
 * Helm
   Also check out [[https://github.com/abo-abo/swiper][ivy and swiper]]
 #+begin_src elisp :tangle yes
@@ -108,10 +97,6 @@ Display a more compact mode line
       :init
       (require 'helm-config)
       (evil-leader/set-key
-        "ff" 'helm-find-files
-        "fm" 'helm-multi-files
-        "fb" 'helm-filtered-bookmarks
-        "bb" 'helm-buffers-list
         "sg" 'helm-google-suggest
         "<SPC>" 'helm-M-x
         "sj" 'helm-semantic-or-imenu
@@ -130,72 +115,157 @@ Display a more compact mode line
 #+begin_src elisp :tangle yes
 (use-package hydra)
 #+end_src
-* Org-mode
 
+** Buffers
+#+begin_src elisp :tangle yes
+  (defhydra hydra-buffers (:color blue)
+    "Buffers"
+    ("d" kill-this-buffer "kill buffer")
+    ("s" (lambda ()
+	   (interactive)
+	   (pop-to-buffer "*scratch*"))
+     "scratch")
+    ("b" helm-buffers-list "helm buffers list"))
+
+  (evil-leader/set-key "b" 'hydra-buffers/body)
+#+end_src
+
+#+RESULTS:
+
+** Files
+#+begin_src elisp :tangle yes
+
+  (evil-leader/set-key "f" 'hydra-files/body)
+
+  (defhydra hydra-files (:color blue)
+    "Files"
+
+    ("d" (lambda () (interactive)
+	   (find-file "~/projects/emacs-config/init.org"))
+     "dot-file")
+
+    ("g" (lambda () (interactive)
+	  (find-file "~/org/agenda/gtd.org"))
+     "gtd")
+    ("f" helm-find-files "helm-find-files")
+    ("m" helm-multi-files "helm-multi-files")
+    ("b" helm-filtered-bookmarks "helm-filtered-bookmarks"))
+
+#+end_src
+
+#+RESULTS:
+: hydra-files/body
+
+** Applications
+#+begin_src elisp :tangle yes
+  (defhydra hydra-applications ()
+    "Applications"
+    ("d" deft "deft find file"))
+  (evil-leader/set-key "a" 'hydra-applications/body)
+#+end_src
+
+#+RESULTS:
+
+* Org-mode
 #+begin_src elisp :tangle yes
   (use-package org
     :load-path "~/.emacs.d/packages/org-mode/lisp"
     :init
     (evil-leader/set-key
-	"oa" 'org-agenda
-	"oc" 'org-capture
-	"ot" 'hydra-org-clock/body)
+        "oa" 'org-agenda
+        "oc" 'org-capture
+        "ot" 'hydra-org-clock/body)
     :config
     (setq org-hide-leading-stars t)
     (setq org-default-notes-file "/Users/andrew/org/notes.org")
     (setq org-todo-keywords
-      '((sequence "TODO" "NEXT" "|" "DONE")))
+      '((sequence "NEXT" "TODO" "|" "DONE")))
     (setq org-capture-templates
-	  '(("t" "TODO" entry (file+headline "/Users/andrew/org/gtd.org" "Tasks")
-	    "* TODO %? \n%U\n" :empty-lines 1)
-	    ("j" "Journal" entry (file+datetree "/Users/andrew/org/journal.org")
-	    "* %?\nEntered on %U\n")
-	    ("n" "Note" entry (file+headline "/Users/andrew/org/notes.org" "Notes")
-	    "* %i\n")))
+          '(("t" "TODO" entry (file+headline "/Users/andrew/org/agenda/gtd.org" "Tasks")
+             "* TODO %? \n%U\n" :empty-lines 1)
+            ("n" "NEXT" entry (file+headline "/Users/andrew/org/agenda/gtd.org" "Tasks")
+             "* NEXT %? \n%U\n" :empty-lines 1)
+            ("h" "New Headline" entry (file+headline "/Users/andrew/agenda/gtd.org" "Notes")
+               "* %?\n")
+            ("p" "Plan" entry (file+headline "/Users/andrew/org/agenda/gtd.org" "Plans")
+            "* %?\n")
+            ("j" "Journal" entry (file+datetree "/Users/andrew/org/agenda/journal.org")
+            "* %?\nEntered on %U\n")))
     (setq org-refile-targets '((nil :maxlevel . 3)
-			       (org-agenda-files :maxlevel . 3)))
+                               (org-agenda-files :maxlevel . 2)))
     (setq org-outline-path-complete-in-steps nil)
     (setq org-refile-allow-creating-parent-nodes 'confirm)
     (setq org-src-fontify-natively t)
-    (setq org-agenda-files '("/Users/andrew/org/gtd.org"))
+    (setq org-agenda-files '("~/org/agenda"))
     (setq org-agenda-custom-commands
-	  '(("w" "work" tags-todo "TODO=\"TODO\"+category=\"pmi\"")))
+        '(("!" "ASAP" tags "asap") 
+            ("n" . "Next")
+            ("np" "Next PMI" tags-todo "TODO=\"NEXT\"+category=\"PMI\""
+             ((org-agenda-overriding-header "Next PMI")))
+            ("na" "Next ABB" tags-todo "TODO=\"NEXT\"+category=\"ABB\""
+             ((org-agenda-overriding-header "Next ABB")))
+            ("nm" "Next Miscellaneous" tags-todo "TODO=\"NEXT\"+category=\"misc\""
+             ((org-agenda-overriding-header "Next Miscellaneous")))
+            ("a" . "All")
+            ;("am" "All Miscellaneous" tags-todo "TODO={TODO\\|NEXT}+category=\"misc\"")
+            ("am" "All Miscellaneous"
+            ((tags-todo "TODO=\"NEXT\"+category=\"misc\"")
+            (tags-todo "TODO=\"TODO\"+category=\"misc\"")
+            (tags-todo "TODO=\"DONE\"+category=\"misc\""))
+            ((org-agenda-overriding-header "All Miscellaneous")))
+            ("ap" "All PMI"
+            ((tags-todo "TODO=\"NEXT\"+category=\"PMI\"")
+            (tags-todo "TODO=\"TODO\"+category=\"PMI\"")
+            (tags-todo "TODO=\"DONE\"+category=\"PMI\""))
+            ((org-agenda-overriding-header "All PMI")))
+            ("aa" "ALL"
+            ((tags-todo "TODO=\"NEXT\"")
+            (tags-todo "TODO=\"TODO\"")
+            (tags-todo "TODO=\"DONE\""))
+            ((org-agenda-overriding-header "All")))))
+            ;; ("t" "test"
+            ;;  ((tags-todo "TODO=\"NEXT\"+category=\"misc\"")
+            ;;   (tags-todo "TODO=\"TODO\"+category=\"misc\"")))))
+    ;;(evil-leader/set-key-for-mode 'org-mode "m" 'org-mode-map)
     (evil-leader/set-key-for-mode 'org-mode
       "h" 'hydra-org-headings/body)
     ;; Hydras
     (defhydra hydra-org-headings ()
       "Headings"
-	  ("t" org-todo "org-todo")
-	  (":" org-set-tags-command "org-set-tags-command")
-	  ("n" org-narrow-to-subtree "org-narrow-to-subtree")
-	  ("w" widen "widen")
-	  ("l" org-demote-subtree "org-demote-subtree")
-	  ("h" org-promote-subtree "org-promote-subtree")
-	  ("K" org-backward-heading-same-level "org-backward-heading-same-level")
-	  ("J" org-forward-heading-same-level "org-forward-heading-same-level")
-	  ("k" outline-previous-visible-heading "outline-previous-visible-heading")
-	  ("j" outline-next-visible-heading "outline-next-visible-heading"))
+          ("t" org-todo "org-todo")
+          (":" org-set-tags-command "org-set-tags-command")
+          ("n" org-narrow-to-subtree "org-narrow-to-subtree")
+          ("w" widen "widen")
+          ("s" org-sort)
+          ("l" org-demote-subtree "org-demote-subtree")
+          ("h" org-promote-subtree "org-promote-subtree")
+          ("K" outline-up-heading "org-backward-heading-same-level")
+          ("J" org-forward-heading-same-level "org-forward-heading-same-level")
+          ("k" outline-previous-visible-heading "outline-previous-visible-heading")
+          ("j" outline-next-visible-heading "outline-next-visible-heading")
+          ("*" org-toggle-heading "org-toggle-heading")
+          ("r" org-refile "org-refile"))
 
     (defhydra hydra-org-clock (:color blue :hint nil)
-	"
+        "
 
-	Clock   In/out^     ^Edit^   ^Summary     (_?_)
-	-----------------------------------------
-		_i_n         _e_dit   _g_oto entry
-		_c_ontinue   _q_uit   _d_isplay
-		_o_ut        ^ ^      _r_eport
-		_p_omodoro
-	"
-	("i" org-clock-in)
-	("o" org-clock-out)
-	("c" org-clock-in-last)
-	("e" org-clock-modify-effort-estimate)
-	("q" org-clock-cancel)
-	("p" org-pomodoro)
-	("g" org-clock-goto)
-	("d" org-clock-display)
-	("r" org-clock-report)
-	("?" (org-info "Clocking commands"))))
+        Clock   In/out^     ^Edit^   ^Summary     (_?_)
+        -----------------------------------------
+                _i_n         _e_dit   _g_oto entry
+                _c_ontinue   _q_uit   _d_isplay
+                _o_ut        ^ ^      _r_eport
+                _p_omodoro
+        "
+        ("i" org-clock-in)
+        ("o" org-clock-out)
+        ("c" org-clock-in-last)
+        ("e" org-clock-modify-effort-estimate)
+        ("q" org-clock-cancel)
+        ("p" org-pomodoro)
+        ("g" org-clock-goto)
+        ("d" org-clock-display)
+        ("r" org-clock-report)
+        ("?" (org-info "Clocking commands"))))
 
     (use-package org-pomodoro
       :config
@@ -204,9 +274,6 @@ Display a more compact mode line
       (setq org-pomodoro-finish-sound "/Users/andrew/Music/Miscellaneous/Timer_Sounds/mindfullness_bell.mp3")
       (setq org-pomodoro-start-sound-p t))
 #+end_src
-
-#+RESULTS:
-: t
 
 * Windows and frames
 ** Toolbar
@@ -320,13 +387,18 @@ Also look at sensible-defaults
     _r_: find references
     _b_: go back
     _s_: show doc
+    _y_: yapfify-buffer
+    _v_: pythonic-activate
+    _V_: pythonic-deactivate
     "
 	("d" anaconda-mode-find-definitions)
 	("a" anaconda-mode-find-assignments)
 	("r" anaconda-mode-find-references)
 	("b" anaconda-mode-go-back)
 	("s" anaconda-mode-show-doc)
-	("y" yapfify-buffer)))
+	("y" yapfify-buffer)
+	("v" pythonic-activate)
+	("V" pythonic-deactivate)))
 
   (use-package yapfify)
   (use-package anaconda-mode)
@@ -335,6 +407,10 @@ Also look at sensible-defaults
 	  'anaconda-eldoc-mode)
 
 #+end_src
+
+#+RESULTS:
+| (lambda nil (set (make-local-variable (quote yas-indent-line)) (quote fixed))) | smartparens-mode | anaconda-mode |
+
 ** Fix faulty completion bug
    Source:  https://github.com/jorgenschaefer/elpy/issues/887
    Fixes this error message:
@@ -352,8 +428,7 @@ Also look at sensible-defaults
  #+end_src
 
 * Exec-path-from-shell
-  Doesn't seem to work for me :(
-#+begin_src elisp :tangle no
+#+begin_src elisp :tangle yes
 (use-package exec-path-from-shell)
 (when (memq window-system '(mac ns x))
   (exec-path-from-shell-initialize))
@@ -485,7 +560,7 @@ Also look at sensible-defaults
 * Themes and fonts
 #+begin_src elisp :tangle yes
 (use-package solarized-theme)
-(load-theme 'solarized-dark t)
+(load-theme 'solarized-light t)
 (set-face-attribute 'default t :font 
   "-*-Source Code Pro-normal-normal-normal-*-*-*-*-*-m-0-iso10646-1")
 (set-face-attribute 'default nil :height 140)
@@ -551,9 +626,16 @@ Also look at sensible-defaults
 #+end_src
 
 #+RESULTS:
-
-* Test
+* Deft
 #+begin_src elisp :tangle yes
-#+end_src
+  (use-package deft
+    :config
+    (setq deft-directory "~/org")
+    (setq deft-extensions '("txt" "org"))
+    (setq deft-recursive t)
+    (setq deft-use-filename-as-title t)
+    (deft-find-file "/Users/andrew/org/agenda/gtd.org")
+    (deft-find-file "/Users/andrew/org/agenda/PMI.org")
+    (deft-find-file "/Users/andrew/org/agenda/projects.org"))
 
-#+RESULTS:
+#+end_src
