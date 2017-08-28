@@ -120,7 +120,7 @@
   (setq org-hide-leading-stars t)
   (setq org-default-notes-file "/Users/andrew/org/notes.org")
   (setq org-todo-keywords
-    '((sequence "TODO" "NEXT" "|" "DONE")))
+    '((sequence "NEXT" "TODO" "|" "DONE")))
   (setq org-capture-templates
 	'(("t" "TODO" entry (file+headline "/Users/andrew/org/gtd.org" "Tasks")
 	  "* TODO %? \n%U\n" :empty-lines 1)
