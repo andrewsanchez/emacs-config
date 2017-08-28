@@ -58,23 +58,10 @@
     (sml/setup))
 (display-time-mode 1)
 
-(evil-leader/set-key
-  "bd" 'kill-this-buffer
-  "bs" (lambda ()
-	 (interactive)
-	 (pop-to-buffer "*scratch*"))
-  "fd" (lambda ()
-	   (interactive)
-	   (find-file "~/projects/emacs-config/init.org")))
-
 (use-package helm
     :init
     (require 'helm-config)
     (evil-leader/set-key
-      "ff" 'helm-find-files
-      "fm" 'helm-multi-files
-      "fb" 'helm-filtered-bookmarks
-      "bb" 'helm-buffers-list
       "sg" 'helm-google-suggest
       "<SPC>" 'helm-M-x
       "sj" 'helm-semantic-or-imenu
@@ -89,6 +76,38 @@
   :bind (("C-h b" . helm-descbinds)))
 
 (use-package hydra)
+
+(defhydra hydra-buffers (:color blue)
+  "Buffers"
+  ("d" kill-this-buffer "kill buffer")
+  ("s" (lambda ()
+	 (interactive)
+	 (pop-to-buffer "*scratch*"))
+   "scratch")
+  ("b" helm-buffers-list "helm buffers list"))
+
+(evil-leader/set-key "b" 'hydra-buffers/body)
+
+(evil-leader/set-key "f" 'hydra-files/body)
+
+(defhydra hydra-files (:color blue)
+  "Files"
+
+  ("d" (lambda () (interactive)
+	 (find-file "~/projects/emacs-config/init.org"))
+   "dot-file")
+
+  ("g" (lambda () (interactive)
+	(find-file "~/org/agenda/gtd.org"))
+   "gtd")
+  ("f" helm-find-files "helm-find-files")
+  ("m" helm-multi-files "helm-multi-files")
+  ("b" helm-filtered-bookmarks "helm-filtered-bookmarks"))
+
+(defhydra hydra-applications ()
+  "Applications"
+  ("d" deft "deft find file"))
+(evil-leader/set-key "a" 'hydra-applications/body)
 
 (use-package org
   :load-path "~/.emacs.d/packages/org-mode/lisp"
