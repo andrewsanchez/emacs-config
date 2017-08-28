@@ -173,12 +173,15 @@
 	(":" org-set-tags-command "org-set-tags-command")
 	("n" org-narrow-to-subtree "org-narrow-to-subtree")
 	("w" widen "widen")
+	("s" org-sort)
 	("l" org-demote-subtree "org-demote-subtree")
 	("h" org-promote-subtree "org-promote-subtree")
-	("K" org-backward-heading-same-level "org-backward-heading-same-level")
+	("K" outline-up-heading "org-backward-heading-same-level")
 	("J" org-forward-heading-same-level "org-forward-heading-same-level")
 	("k" outline-previous-visible-heading "outline-previous-visible-heading")
-	("j" outline-next-visible-heading "outline-next-visible-heading"))
+	("j" outline-next-visible-heading "outline-next-visible-heading")
+	("*" org-toggle-heading "org-toggle-heading")
+	("r" org-refile "org-refile"))
 
   (defhydra hydra-org-clock (:color blue :hint nil)
       "
