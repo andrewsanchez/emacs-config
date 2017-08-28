@@ -477,3 +477,7 @@ _k_: kill        _s_: split                   _{_: wrap with { }
   (deft-find-file "/Users/andrew/org/agenda/gtd.org")
   (deft-find-file "/Users/andrew/org/agenda/PMI.org")
   (deft-find-file "/Users/andrew/org/agenda/projects.org"))
+
+(use-package restart-emacs
+  :config
+  (evil-leader/set-key "qr" 'restart-emacs))

@@ -1,10 +1,11 @@
 * Custom set variables
 #+begin_src elisp :tangle yes
-(custom-set-variables
- '(custom-safe-themes
-   (quote
-    ("d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" default)))
- '(initial-frame-alist (quote ((fullscreen . maximized)))))
+  (custom-set-variables
+   '(custom-safe-themes
+     (quote
+      ("8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4"
+       "d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" default)))
+   '(initial-frame-alist (quote ((fullscreen . maximized)))))
 #+end_src
 * Packages
 ** Sources 
@@ -559,13 +560,21 @@ Also look at sensible-defaults
 
 * Themes and fonts
 #+begin_src elisp :tangle yes
-(use-package solarized-theme)
-(load-theme 'solarized-light t)
-(set-face-attribute 'default t :font 
-  "-*-Source Code Pro-normal-normal-normal-*-*-*-*-*-m-0-iso10646-1")
-(set-face-attribute 'default nil :height 140)
+  (use-package solarized-theme
+    :config
+    (evil-leader/set-key "tt" 'toggle-theme))
+  (load-theme 'solarized-light t)
+  (setq active-theme 'solarized-light)
+  (defun toggle-theme ()
+    (interactive)
+    (if (eq active-theme 'solarized-light)
+	(setq active-theme 'solarized-dark)
+      (setq active-theme 'solarized-light))
+    (load-theme active-theme))
+  (set-face-attribute 'default t :font 
+    "-*-Source Code Pro-normal-normal-normal-*-*-*-*-*-m-0-iso10646-1")
+  (set-face-attribute 'default nil :height 140)
 #+end_src
-
 * Completion
 
 #+begin_src elisp :tangle yes
@@ -639,3 +648,12 @@ Also look at sensible-defaults
     (deft-find-file "/Users/andrew/org/agenda/projects.org"))
 
 #+end_src
+* Convenience
+#+begin_src elisp :tangle yes
+  (use-package restart-emacs
+    :config
+    (evil-leader/set-key "qr" 'restart-emacs))
+#+end_src
+
+#+RESULTS:
+: t
