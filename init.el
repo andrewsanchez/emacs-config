@@ -307,6 +307,10 @@
       (get-buffer-process (current-buffer))
       nil "_")))
 
+(use-package exec-path-from-shell)
+(when (memq window-system '(mac ns x))
+  (exec-path-from-shell-initialize))
+
 (use-package smartparens
     :config
     ;; (evil-leader/set-key
