@@ -425,8 +425,17 @@ _k_: kill        _s_: split                   _{_: wrap with { }
   ("m" yas/minor-mode)
   ("a" yas-reload-all)))
 
-(use-package solarized-theme)
+(use-package solarized-theme
+  :config
+  (evil-leader/set-key "tt" 'toggle-theme))
 (load-theme 'solarized-light t)
+(setq active-theme 'solarized-light)
+(defun toggle-theme ()
+  (interactive)
+  (if (eq active-theme 'solarized-light)
+      (setq active-theme 'solarized-dark)
+    (setq active-theme 'solarized-light))
+  (load-theme active-theme))
 (set-face-attribute 'default t :font 
   "-*-Source Code Pro-normal-normal-normal-*-*-*-*-*-m-0-iso10646-1")
 (set-face-attribute 'default nil :height 140)
