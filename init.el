@@ -154,7 +154,7 @@
           ((tags-todo "TODO=\"NEXT\"+category=\"PMI\"")
           (tags-todo "TODO=\"TODO\"+category=\"PMI\"")
           (tags-todo "TODO=\"DONE\"+category=\"PMI\""))
-          ((org-agenda-overriding-header "All PMI")))
+          ((org-agenda-overriding-header "")))
           ("aa" "ALL"
           ((tags-todo "TODO=\"NEXT\"")
           (tags-todo "TODO=\"TODO\"")
