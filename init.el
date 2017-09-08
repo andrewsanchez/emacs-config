@@ -105,11 +105,6 @@
   ("m" helm-multi-files "helm-multi-files")
   ("b" helm-filtered-bookmarks "helm-filtered-bookmarks"))
 
-(defhydra hydra-applications ()
-  "Applications"
-  ("d" deft "deft find file"))
-(evil-leader/set-key "a" 'hydra-applications/body)
-
 (use-package org
   :load-path "~/.emacs.d/packages/org-mode/lisp"
   :init
