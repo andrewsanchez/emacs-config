@@ -158,7 +158,8 @@ Display a more compact mode line
 : hydra-files/body
 
 ** Applications
-#+begin_src elisp :tangle yes
+   interferes with anaconda mode
+#+begin_src elisp :tangle no
   (defhydra hydra-applications ()
     "Applications"
     ("d" deft "deft find file"))
@@ -218,7 +219,7 @@ Display a more compact mode line
             ((tags-todo "TODO=\"NEXT\"+category=\"PMI\"")
             (tags-todo "TODO=\"TODO\"+category=\"PMI\"")
             (tags-todo "TODO=\"DONE\"+category=\"PMI\""))
-            ((org-agenda-overriding-header "All PMI")))
+            ((org-agenda-overriding-header "")))
             ("aa" "ALL"
             ((tags-todo "TODO=\"NEXT\"")
             (tags-todo "TODO=\"TODO\"")
@@ -275,6 +276,9 @@ Display a more compact mode line
       (setq org-pomodoro-finish-sound "/Users/andrew/Music/Miscellaneous/Timer_Sounds/mindfullness_bell.mp3")
       (setq org-pomodoro-start-sound-p t))
 #+end_src
+
+#+RESULTS:
+: t
 
 * Windows and frames
 ** Toolbar
@@ -512,18 +516,23 @@ Also look at sensible-defaults
 * Projectile
 #+begin_src elisp :tangle yes
 
-    (use-package projectile
-      :config
-      (projectile-mode)
-      (evil-leader/set-key
-      "p" 'projectile-command-map))
+  (use-package projectile
+    :load-path "~/.emacs.d/packages/projectile"
+    :config
+    (projectile-mode)
+    (setq projectile-enable-caching t)
+    (evil-leader/set-key
+    "p" 'projectile-command-map))
 
-    (use-package helm-projectile
-      :config
-      (require 'helm-projectile)
-      (helm-projectile-on))
+   (use-package helm-projectile
+     :config
+     (require 'helm-projectile)
+     (helm-projectile-on))
 
 #+end_src
+
+#+RESULTS:
+: t
 
 * Yasnippet
 #+begin_src elisp :tangle yes
@@ -641,6 +650,7 @@ Also look at sensible-defaults
     :config
     (setq deft-directory "~/org")
     (setq deft-extensions '("txt" "org"))
+    (setq deft-default-extension "org")
     (setq deft-recursive t)
     (setq deft-use-filename-as-title t)
     (deft-find-file "/Users/andrew/org/agenda/gtd.org")
@@ -648,6 +658,10 @@ Also look at sensible-defaults
     (deft-find-file "/Users/andrew/org/agenda/projects.org"))
 
 #+end_src
+
+#+RESULTS:
+: t
+
 * Convenience
 #+begin_src elisp :tangle yes
   (use-package restart-emacs
