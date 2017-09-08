@@ -469,6 +469,7 @@ _k_: kill        _s_: split                   _{_: wrap with { }
   :config
   (setq deft-directory "~/org")
   (setq deft-extensions '("txt" "org"))
+  (setq deft-default-extension "org")
   (setq deft-recursive t)
   (setq deft-use-filename-as-title t)
   (deft-find-file "/Users/andrew/org/agenda/gtd.org")
