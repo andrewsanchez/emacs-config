@@ -380,15 +380,17 @@ _k_: kill        _s_: split                   _{_: wrap with { }
     ("C-<right>" sp-backward-slurp-sexp)))
 
 (use-package projectile
+  :load-path "~/.emacs.d/packages/projectile"
   :config
   (projectile-mode)
+  (setq projectile-enable-caching t)
   (evil-leader/set-key
   "p" 'projectile-command-map))
 
-(use-package helm-projectile
-  :config
-  (require 'helm-projectile)
-  (helm-projectile-on))
+ (use-package helm-projectile
+   :config
+   (require 'helm-projectile)
+   (helm-projectile-on))
 
 (use-package yasnippet
   :load-path "~/.emacs.d/packages/yasnippet"
