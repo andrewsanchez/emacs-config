@@ -492,6 +492,39 @@ _k_: kill        _s_: split                   _{_: wrap with { }
 (elfeed-org)
 (use-package elfeed)
 
+(use-package keyfreq
+  :config
+  (require 'keyfreq)
+  (setq keyfreq-excluded-commands
+	'(self-insert-command
+	  abort-recursive-edit
+	  forward-char
+	  backward-char
+	  previous-line
+	  next-line
+	  evil-a-WORD
+	  evil-append
+	  evil-backward-char
+	  evil-backward-word-begin
+	  evil-change
+	  evil-change-line
+	  evil-complete-next
+	  evil-complete-previous
+	  evil-delete
+	  evil-delete-backward-char-and-join
+	  evil-delete-char
+	  evil-delete-line
+	  evil-emacs-state
+	  evil-end-of-line
+	  evil-escape-emacs-state
+	  evil-escape-insert-state
+	  evil-escape-isearch
+	  evil-escape-minibuffer
+	  evil-escape-motion-state
+	  evil-escape-visual-state))
+  (keyfreq-mode 1)
+  (keyfreq-autosave-mode 1))
+
 (use-package restart-emacs
   :config
   (evil-leader/set-key "qr" 'restart-emacs))
