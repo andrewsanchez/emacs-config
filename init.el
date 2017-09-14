@@ -51,6 +51,7 @@
 
 (add-to-list 'evil-emacs-state-modes 'dired-mode)
 (add-to-list 'evil-emacs-state-modes 'flycheck-error-list-mode)
+(add-to-list 'evil-emacs-state-modes 'elfeed-search-mode)
 (evil-set-initial-state 'Info-mode 'emacs)
 
 (evil-leader/set-key
