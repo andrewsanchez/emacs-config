@@ -1,13 +1,11 @@
 (custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
  '(custom-safe-themes
    (quote
     ("8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" "d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" default)))
  '(initial-frame-alist (quote ((fullscreen . maximized))))
- '(send-mail-function (quote smtpmail-send-it)))
+ '(safe-local-variable-values
+   (quote
+    ((projectile-project-test-cmd . "~/anaconda3/envs/genbankfilter/bin/pytest -s test/test_*")))))
 
 (package-initialize)
 (setq package-archives
@@ -22,36 +20,44 @@
 (eval-when-compile
   (require 'use-package))
 (setq use-package-always-ensure t)
+(setq use-package-verbose t)
 
 (setq user-full-name "Andrew Sanchez"
       user-mail-address "inbox.asanchez@gmail.com")
 
 (use-package evil-leader
+  :config
+  (global-evil-leader-mode)
+  (evil-leader/set-leader "<SPC>"))
+
+(use-package evil
     :config
-    (global-evil-leader-mode)
-    (evil-leader/set-leader "<SPC>"))
+    (evil-mode 1))
 
-  (use-package evil
-      :config
-      (evil-mode 1))
+(use-package evil-nerd-commenter
+    :config
+    (evilnc-default-hotkeys))
 
-  (use-package evil-nerd-commenter
-      :config
-      (evilnc-default-hotkeys))
-
-  (use-package evil-surround
-      :config
-      (global-evil-surround-mode 1))
+(use-package evil-surround
+    :config
+    (global-evil-surround-mode 1))
 
 (use-package evil-lisp-state
     :init (setq evil-lisp-state-global t)
     :config (evil-lisp-state-leader "<SPC> k"))
 
-  (use-package bind-map)
+(use-package bind-map) 
+
+(use-package evil-matchit
+  :config
+  (require 'evil-matchit)
+  (global-evil-matchit-mode 1))
 
 (add-to-list 'evil-emacs-state-modes 'dired-mode)
 (add-to-list 'evil-emacs-state-modes 'flycheck-error-list-mode)
 (add-to-list 'evil-emacs-state-modes 'elfeed-search-mode)
+(add-to-list 'evil-emacs-state-modes 'nov-mode)
+(add-to-list 'evil-emacs-state-modes 'gnus-group-mode)
 (evil-set-initial-state 'Info-mode 'emacs)
 
 (evil-leader/set-key
@@ -108,7 +114,8 @@
    "gtd")
   ("f" helm-find-files "helm-find-files")
   ("m" helm-multi-files "helm-multi-files")
-  ("b" helm-filtered-bookmarks "helm-filtered-bookmarks"))
+  ("b" helm-filtered-bookmarks "helm-filtered-bookmarks")
+  ("t" neotree-toggle "neotree-toggle"))
 
 (use-package org
   :load-path "~/.emacs.d/packages/org-mode/lisp"
@@ -122,81 +129,39 @@
   (setq org-default-notes-file "/Users/andrew/org/notes.org")
   (setq org-todo-keywords
     '((sequence "NEXT" "TODO" "|" "DONE")))
-  (setq org-capture-templates
-        '(("t" "TODO" entry (file+headline "/Users/andrew/org/agenda/gtd.org" "Tasks")
-           "* TODO %? \n%U\n" :empty-lines 1)
-          ("n" "NEXT" entry (file+headline "/Users/andrew/org/agenda/gtd.org" "Tasks")
-           "* NEXT %? \n%U\n" :empty-lines 1)
-          ("h" "New Headline" entry (file+headline "/Users/andrew/agenda/gtd.org" "Notes")
-             "* %?\n")
-          ("p" "Plan" entry (file+headline "/Users/andrew/org/agenda/gtd.org" "Plans")
-          "* %?\n")
-          ("j" "Journal" entry (file+datetree "/Users/andrew/org/agenda/journal.org")
-          "* %?\nEntered on %U\n")))
   (setq org-refile-targets '((nil :maxlevel . 3)
-                             (org-agenda-files :maxlevel . 2)))
+			     (org-agenda-files :maxlevel . 2)))
   (setq org-outline-path-complete-in-steps nil)
   (setq org-refile-allow-creating-parent-nodes 'confirm)
   (setq org-src-fontify-natively t)
-  (setq org-agenda-files '("~/org/agenda"))
-  (setq org-agenda-custom-commands
-      '(("!" "ASAP" tags "asap") 
-          ("n" . "Next")
-          ("np" "Next PMI" tags-todo "TODO=\"NEXT\"+category=\"PMI\""
-           ((org-agenda-overriding-header "Next PMI")))
-          ("na" "Next ABB" tags-todo "TODO=\"NEXT\"+category=\"ABB\""
-           ((org-agenda-overriding-header "Next ABB")))
-          ("nm" "Next Miscellaneous" tags-todo "TODO=\"NEXT\"+category=\"misc\""
-           ((org-agenda-overriding-header "Next Miscellaneous")))
-          ("a" . "All")
-          ;("am" "All Miscellaneous" tags-todo "TODO={TODO\\|NEXT}+category=\"misc\"")
-          ("am" "All Miscellaneous"
-          ((tags-todo "TODO=\"NEXT\"+category=\"misc\"")
-          (tags-todo "TODO=\"TODO\"+category=\"misc\"")
-          (tags-todo "TODO=\"DONE\"+category=\"misc\""))
-          ((org-agenda-overriding-header "All Miscellaneous")))
-          ("ap" "All PMI"
-          ((tags-todo "TODO=\"NEXT\"+category=\"PMI\"")
-          (tags-todo "TODO=\"TODO\"+category=\"PMI\"")
-          (tags-todo "TODO=\"DONE\"+category=\"PMI\""))
-          ((org-agenda-overriding-header "")))
-          ("aa" "ALL"
-          ((tags-todo "TODO=\"NEXT\"")
-          (tags-todo "TODO=\"TODO\"")
-          (tags-todo "TODO=\"DONE\""))
-          ((org-agenda-overriding-header "All")))))
-          ;; ("t" "test"
-          ;;  ((tags-todo "TODO=\"NEXT\"+category=\"misc\"")
-          ;;   (tags-todo "TODO=\"TODO\"+category=\"misc\"")))))
-  ;;(evil-leader/set-key-for-mode 'org-mode "m" 'org-mode-map)
   (evil-leader/set-key-for-mode 'org-mode
     "h" 'hydra-org-headings/body)
   ;; Hydras
   (defhydra hydra-org-headings ()
     "Headings"
-        ("t" org-todo "org-todo")
-        (":" org-set-tags-command "org-set-tags-command")
-        ("n" org-narrow-to-subtree "org-narrow-to-subtree")
-        ("w" widen "widen")
-        ("s" org-sort)
-        ("l" org-demote-subtree "org-demote-subtree")
-        ("h" org-promote-subtree "org-promote-subtree")
-        ("K" outline-up-heading "org-backward-heading-same-level")
-        ("J" org-forward-heading-same-level "org-forward-heading-same-level")
-        ("k" outline-previous-visible-heading "outline-previous-visible-heading")
-        ("j" outline-next-visible-heading "outline-next-visible-heading")
-        ("*" org-toggle-heading "org-toggle-heading")
-        ("r" org-refile "org-refile"))
+	("t" org-todo "org-todo")
+	(":" org-set-tags-command "org-set-tags-command")
+	("n" org-narrow-to-subtree "org-narrow-to-subtree")
+	("w" widen "widen")
+	("s" org-sort)
+	("l" org-demote-subtree "org-demote-subtree")
+	("h" org-promote-subtree "org-promote-subtree")
+	("K" outline-up-heading "org-backward-heading-same-level")
+	("J" org-forward-heading-same-level "org-forward-heading-same-level")
+	("k" outline-previous-visible-heading "outline-previous-visible-heading")
+	("j" outline-next-visible-heading "outline-next-visible-heading")
+	("*" org-toggle-heading "org-toggle-heading")
+	("r" org-refile "org-refile"))
 
   (defhydra hydra-org-clock (:color blue :hint nil)
       "
 
       Clock   In/out^     ^Edit^   ^Summary     (_?_)
       -----------------------------------------
-              _i_n         _e_dit   _g_oto entry
-              _c_ontinue   _q_uit   _d_isplay
-              _o_ut        ^ ^      _r_eport
-              _p_omodoro
+	      _i_n         _e_dit   _g_oto entry
+	      _c_ontinue   _q_uit   _d_isplay
+	      _o_ut        ^ ^      _r_eport
+	      _p_omodoro
       "
       ("i" org-clock-in)
       ("o" org-clock-out)
@@ -210,11 +175,74 @@
       ("?" (org-info "Clocking commands"))))
 
   (use-package org-pomodoro
+    :commands org-pomodoro
     :config
-    (setq org-pomodoro-length 30)
-    (setq org-pomodoro-start-sound "/Users/andrew/Music/Miscellaneous/Timer_Sounds/mindfullness_bell.mp3")
-    (setq org-pomodoro-finish-sound "/Users/andrew/Music/Miscellaneous/Timer_Sounds/mindfullness_bell.mp3")
+    (setq mindfulness-bell "/Users/andrew/Music/Miscellaneous/Timer_Sounds/mindfullness_bell.mp3") 
+    (setq mindfulness-chimes "/Users/andrew/Music/Miscellaneous/Timer_Sounds/chimes.mp3") 
+    (setq org-pomodoro-length 15)
+    (setq org-pomodoro-short-break-length .5)
+    (setq org-pomodoro-start-sound mindfulness-bell)
+    (setq org-pomodoro-finished-sound mindfulness-bell)
+    (setq org-pomodoro-short-break-sound mindfulness-bell)
+    (setq org-pomodoro-long-break-sound mindfulness-chimes)
     (setq org-pomodoro-start-sound-p t))
+
+(setq org-babel-load-languages
+      '((emacs-lisp . t) (shell . t)))
+
+(setq org-capture-templates
+      '(("t" "TODO" entry (file+headline "/Users/andrew/org/agenda/gtd.org" "Tasks")
+	 "* TODO %? \n%U\n" :empty-lines 1)
+	("n" "NEXT" entry (file+headline "/Users/andrew/org/agenda/gtd.org" "Tasks")
+	 "* NEXT %? \n%U\n" :empty-lines 1)
+	("h" "New Headline" entry (file+headline "/Users/andrew/agenda/gtd.org" "Notes")
+	   "* %?\n")
+	("p" "Plan" entry (file+headline "/Users/andrew/org/agenda/gtd.org" "Plans")
+	"* %?\n")
+	("j" "Journal" entry (file+datetree "/Users/andrew/org/agenda/journal.org")
+	"* %?\nEntered on %U\n")))
+
+(defun org-archive-done-tasks ()
+  (interactive)
+  (org-map-entries
+   (lambda ()
+     (org-archive-subtree)
+     (setq org-map-continue-from (outline-previous-heading)))
+   "/DONE" 'tree))
+
+     (setq org-agenda-sorting-strategy
+	   '((agenda habit-down timestamp-down priority-down category-keep)
+	    (todo priority-down timestamp-down category-keep)
+	    (tags priority-down timestamp-down category-keep)
+	    (search category-keep timestamp-down)))
+
+     (setq org-agenda-files '("~/org/agenda" "~/org/projects"))
+     (setq org-agenda-custom-commands
+	 '(("!" "ASAP" tags-todo "asap-TODO=\"DONE\"") 
+	     ("n" . "Next")
+	     ("np" "Next PMI" tags-todo "TODO=\"NEXT\"+category=\"PMI\""
+	      ((org-agenda-overriding-header "Next PMI")))
+	     ("na" "Next ABB" tags-todo "TODO=\"NEXT\"+category=\"ABB\""
+	      ((org-agenda-overriding-header "Next ABB")))
+	     ("nm" "Next Miscellaneous" tags-todo "TODO=\"NEXT\"+category=\"misc\""
+	      ((org-agenda-overriding-header "Next Miscellaneous")))
+	     ("A" . "All")
+	     ;("am" "All Miscellaneous" tags-todo "TODO={TODO\\|NEXT}+category=\"misc\"")
+	     ("Am" "All Miscellaneous"
+	     ((tags-todo "TODO=\"NEXT\"+category=\"misc\"")
+	     (tags-todo "TODO=\"TODO\"+category=\"misc\"")
+	     (tags-todo "TODO=\"DONE\"+category=\"misc\""))
+	     ((org-agenda-overriding-header "All Miscellaneous")))
+	     ("Ap" "All PMI"
+	     ((tags-todo "TODO=\"NEXT\"+category=\"PMI\"")
+	     (tags-todo "TODO=\"TODO\"+category=\"PMI\"")
+	     (tags-todo "TODO=\"DONE\"+category=\"PMI\""))
+	     ((org-agenda-overriding-header "")))
+	     ("Aa" "ALL"
+	     ((tags-todo "TODO=\"NEXT\"")
+	     (tags-todo "TODO=\"TODO\"")
+	     (tags-todo "TODO=\"DONE\""))
+	     ((org-agenda-overriding-header "All")))))
 
 (tool-bar-mode -1)
 
@@ -228,8 +256,10 @@
   (add-to-list 'golden-ratio-extra-commands 'evil-window-up))
 
 (use-package winner
+  :commands
+  (winner-undo winner-redo)
   :config
-  (winner-mode 1)
+  (winner-mode)
   (evil-leader/set-key
     "wu" 'winner-undo
     "wr" 'winner-redo))
@@ -246,7 +276,8 @@
 (setq backup-directory-alist '(("." . "~/.emacs.d/backups")))
 
 (use-package magit
-  :config
+  :commands magit-status
+  :init
   (evil-leader/set-key
     "gs" 'magit-status))
 
@@ -271,9 +302,20 @@
     (which-key-mode))
 
 (use-package python
-    :config
-    (setq python-shell-exec-path '("~/anaconda3/bin/python"))
-    (evil-leader/set-key-for-mode 'python-mode
+  :mode ("\\.py\\'" . python-mode)
+  :interpreter ("python" . python-mode)
+  :config
+  ;; (add-hook 'python-mode-hook 'yapf-mode)
+  (add-hook 'python-mode-hook
+	(lambda ()
+	(require 'sphinx-doc)
+	(sphinx-doc-mode t)))
+  (add-hook 'python-mode-hook 'anaconda-mode)
+  (add-hook 'python-mode-hook 'anaconda-eldoc-mode)
+  (add-hook 'before-save-hook 'py-isort-before-save)
+  (require 'py-isort)
+  (setq python-shell-exec-path '("~/anaconda3/bin/python"))
+  (evil-leader/set-key-for-mode 'python-mode
       "a" 'hydra-anaconda/body)
   (defhydra hydra-anaconda (:color blue :hint nil)
   "
@@ -297,11 +339,12 @@
       ("v" pythonic-activate)
       ("V" pythonic-deactivate)))
 
-(use-package yapfify)
-(use-package anaconda-mode)
-(add-hook 'python-mode-hook
-	'anaconda-mode
-	'anaconda-eldoc-mode)
+(use-package anaconda-mode :defer t)
+
+(use-package sphinx-doc :defer t)
+
+(use-package py-isort
+  :commands py-isort-buffer)
 
 (defun python-shell-completion-native-try ()
   "Return non-nil if can trigger native completion."
@@ -312,15 +355,14 @@
       (get-buffer-process (current-buffer))
       nil "_")))
 
+(use-package yapfify :commands yapfify-buffer)
+
 (use-package exec-path-from-shell)
 (when (memq window-system '(mac ns x))
   (exec-path-from-shell-initialize))
 
 (use-package smartparens
     :config
-    ;; (evil-leader/set-key
-    ;; 	"k" 'hydra-smartparens/body)
-
     (autoload 'smartparens-mode "paredit" "Turn on pseudo-structural editing of Lisp code." t)
     (add-hook 'emacs-lisp-mode-hook       #'smartparens-mode)
     (add-hook 'eval-expression-minibuffer-setup-hook #'smartparens-mode)
@@ -402,6 +444,7 @@ _k_: kill        _s_: split                   _{_: wrap with { }
   :config
   (require 'yasnippet)
   (yas-global-mode 1)
+  :init
   (evil-leader/set-key
     "y" 'hydra-yasnippet/body)
 
@@ -448,6 +491,7 @@ _k_: kill        _s_: split                   _{_: wrap with { }
   (add-to-list 'company-backends 'company-anaconda))
 
 (use-package helm-wordnet
+  :commands helm-wordnet
   :load-path "packages/helm-wordnet"
   :config
   (setq helm-wordnet-prog "/usr/local/bin/wn"))
@@ -455,6 +499,7 @@ _k_: kill        _s_: split                   _{_: wrap with { }
     "wd" 'helm-wordnet)
 
 (use-package google-translate
+  :commands (google-translate-at-point google-translate-smooth-translate)
   :config
   (setq google-translate-default-source-language "nl")
   (setq google-translate-default-target-language "en")
@@ -481,16 +526,14 @@ _k_: kill        _s_: split                   _{_: wrap with { }
   (deft-find-file "/Users/andrew/org/agenda/PMI.org")
   (deft-find-file "/Users/andrew/org/agenda/projects.org"))
 
-;; (use-package elfeed-org
-  ;;   :config
-  ;;   (require 'elfeed-org)
-  ;;   (elfeed-org)
-  ;;   (setq rmh-elfeed-org-files (list "~/org/elfeed.org")))
-(use-package elfeed-org)
-(require 'elfeed-org)
-(setq rmh-elfeed-org-files (list "~/org/elfeed.org"))
-(elfeed-org)
-(use-package elfeed)
+(use-package elfeed
+  :commands elfeed
+  :config
+  (require 'elfeed-org)
+  (elfeed-org)
+  (setq rmh-elfeed-org-files (list "~/org/elfeed.org")))
+
+(use-package elfeed-org :defer t)
 
 (use-package keyfreq
   :config
@@ -526,5 +569,21 @@ _k_: kill        _s_: split                   _{_: wrap with { }
   (keyfreq-autosave-mode 1))
 
 (use-package restart-emacs
+  :init
+  (evil-leader/set-key "qr" 'restart-emacs)
+  :commands restart-emacs)
+
+(use-package neotree :load-path "~/.emacs.d/packages/neotree"
+  :commands  neotree-toggle
   :config
-  (evil-leader/set-key "qr" 'restart-emacs))
+  (require 'neotree)
+  (evil-define-key 'normal neotree-mode-map (kbd "TAB") 'neotree-enter)
+  (evil-define-key 'normal neotree-mode-map (kbd "SPC") 'neotree-quick-look)
+  (evil-define-key 'normal neotree-mode-map (kbd "q") 'neotree-hide)
+  (evil-define-key 'normal neotree-mode-map (kbd "RET") 'neotree-enter))
+
+(use-package nov
+  :defer t
+  :init
+  (add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode))
+  )
