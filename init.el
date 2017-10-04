@@ -20,6 +20,7 @@
 (eval-when-compile
   (require 'use-package))
 (setq use-package-always-ensure t)
+(setq use-package-verbose t)
 
 (setq user-full-name "Andrew Sanchez"
       user-mail-address "inbox.asanchez@gmail.com")
