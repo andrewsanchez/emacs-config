@@ -114,7 +114,8 @@
    "gtd")
   ("f" helm-find-files "helm-find-files")
   ("m" helm-multi-files "helm-multi-files")
-  ("b" helm-filtered-bookmarks "helm-filtered-bookmarks"))
+  ("b" helm-filtered-bookmarks "helm-filtered-bookmarks")
+  ("t" neotree-toggle "neotree-toggle"))
 
 (use-package org
   :load-path "~/.emacs.d/packages/org-mode/lisp"
@@ -532,5 +533,11 @@ _k_: kill        _s_: split                   _{_: wrap with { }
   (keyfreq-autosave-mode 1))
 
 (use-package restart-emacs
+(use-package neotree :load-path "~/.emacs.d/packages/neotree"
+  :commands  neotree-toggle
   :config
-  (evil-leader/set-key "qr" 'restart-emacs))
+  (require 'neotree)
+  (evil-define-key 'normal neotree-mode-map (kbd "TAB") 'neotree-enter)
+  (evil-define-key 'normal neotree-mode-map (kbd "SPC") 'neotree-quick-look)
+  (evil-define-key 'normal neotree-mode-map (kbd "q") 'neotree-hide)
+  (evil-define-key 'normal neotree-mode-map (kbd "RET") 'neotree-enter))
