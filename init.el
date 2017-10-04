@@ -48,6 +48,10 @@
 
 (use-package bind-map) 
 
+(use-package evil-matchit
+  :config
+  (require 'evil-matchit)
+  (global-evil-matchit-mode 1))
 
 (add-to-list 'evil-emacs-state-modes 'dired-mode)
 (add-to-list 'evil-emacs-state-modes 'flycheck-error-list-mode)
