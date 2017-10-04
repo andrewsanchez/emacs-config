@@ -256,8 +256,10 @@
   (add-to-list 'golden-ratio-extra-commands 'evil-window-up))
 
 (use-package winner
+  :commands
+  (winner-undo winner-redo)
   :config
-  (winner-mode 1)
+  (winner-mode)
   (evil-leader/set-key
     "wu" 'winner-undo
     "wr" 'winner-redo))
@@ -274,7 +276,8 @@
 (setq backup-directory-alist '(("." . "~/.emacs.d/backups")))
 
 (use-package magit
-  :config
+  :commands magit-status
+  :init
   (evil-leader/set-key
     "gs" 'magit-status))
 
@@ -299,9 +302,20 @@
     (which-key-mode))
 
 (use-package python
-    :config
-    (setq python-shell-exec-path '("~/anaconda3/bin/python"))
-    (evil-leader/set-key-for-mode 'python-mode
+  :mode ("\\.py\\'" . python-mode)
+  :interpreter ("python" . python-mode)
+  :config
+  ;; (add-hook 'python-mode-hook 'yapf-mode)
+  (add-hook 'python-mode-hook
+	(lambda ()
+	(require 'sphinx-doc)
+	(sphinx-doc-mode t)))
+  (add-hook 'python-mode-hook 'anaconda-mode)
+  (add-hook 'python-mode-hook 'anaconda-eldoc-mode)
+  (add-hook 'before-save-hook 'py-isort-before-save)
+  (require 'py-isort)
+  (setq python-shell-exec-path '("~/anaconda3/bin/python"))
+  (evil-leader/set-key-for-mode 'python-mode
       "a" 'hydra-anaconda/body)
   (defhydra hydra-anaconda (:color blue :hint nil)
   "
@@ -325,11 +339,12 @@
       ("v" pythonic-activate)
       ("V" pythonic-deactivate)))
 
-(use-package yapfify)
-(use-package anaconda-mode)
-(add-hook 'python-mode-hook
-	'anaconda-mode
-	'anaconda-eldoc-mode)
+(use-package anaconda-mode :defer t)
+
+(use-package sphinx-doc :defer t)
+
+(use-package py-isort
+  :commands py-isort-buffer)
 
 (defun python-shell-completion-native-try ()
   "Return non-nil if can trigger native completion."
@@ -340,15 +355,14 @@
       (get-buffer-process (current-buffer))
       nil "_")))
 
+(use-package yapfify :commands yapfify-buffer)
+
 (use-package exec-path-from-shell)
 (when (memq window-system '(mac ns x))
   (exec-path-from-shell-initialize))
 
 (use-package smartparens
     :config
-    ;; (evil-leader/set-key
-    ;; 	"k" 'hydra-smartparens/body)
-
     (autoload 'smartparens-mode "paredit" "Turn on pseudo-structural editing of Lisp code." t)
     (add-hook 'emacs-lisp-mode-hook       #'smartparens-mode)
     (add-hook 'eval-expression-minibuffer-setup-hook #'smartparens-mode)
@@ -430,6 +444,7 @@ _k_: kill        _s_: split                   _{_: wrap with { }
   :config
   (require 'yasnippet)
   (yas-global-mode 1)
+  :init
   (evil-leader/set-key
     "y" 'hydra-yasnippet/body)
 
@@ -476,6 +491,7 @@ _k_: kill        _s_: split                   _{_: wrap with { }
   (add-to-list 'company-backends 'company-anaconda))
 
 (use-package helm-wordnet
+  :commands helm-wordnet
   :load-path "packages/helm-wordnet"
   :config
   (setq helm-wordnet-prog "/usr/local/bin/wn"))
@@ -483,6 +499,7 @@ _k_: kill        _s_: split                   _{_: wrap with { }
     "wd" 'helm-wordnet)
 
 (use-package google-translate
+  :commands (google-translate-at-point google-translate-smooth-translate)
   :config
   (setq google-translate-default-source-language "nl")
   (setq google-translate-default-target-language "en")
@@ -509,16 +526,14 @@ _k_: kill        _s_: split                   _{_: wrap with { }
   (deft-find-file "/Users/andrew/org/agenda/PMI.org")
   (deft-find-file "/Users/andrew/org/agenda/projects.org"))
 
-;; (use-package elfeed-org
-  ;;   :config
-  ;;   (require 'elfeed-org)
-  ;;   (elfeed-org)
-  ;;   (setq rmh-elfeed-org-files (list "~/org/elfeed.org")))
-(use-package elfeed-org)
-(require 'elfeed-org)
-(setq rmh-elfeed-org-files (list "~/org/elfeed.org"))
-(elfeed-org)
-(use-package elfeed)
+(use-package elfeed
+  :commands elfeed
+  :config
+  (require 'elfeed-org)
+  (elfeed-org)
+  (setq rmh-elfeed-org-files (list "~/org/elfeed.org")))
+
+(use-package elfeed-org :defer t)
 
 (use-package keyfreq
   :config
@@ -554,6 +569,10 @@ _k_: kill        _s_: split                   _{_: wrap with { }
   (keyfreq-autosave-mode 1))
 
 (use-package restart-emacs
+  :init
+  (evil-leader/set-key "qr" 'restart-emacs)
+  :commands restart-emacs)
+
 (use-package neotree :load-path "~/.emacs.d/packages/neotree"
   :commands  neotree-toggle
   :config
@@ -562,3 +581,9 @@ _k_: kill        _s_: split                   _{_: wrap with { }
   (evil-define-key 'normal neotree-mode-map (kbd "SPC") 'neotree-quick-look)
   (evil-define-key 'normal neotree-mode-map (kbd "q") 'neotree-hide)
   (evil-define-key 'normal neotree-mode-map (kbd "RET") 'neotree-enter))
+
+(use-package nov
+  :defer t
+  :init
+  (add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode))
+  )
