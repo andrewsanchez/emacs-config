@@ -229,6 +229,47 @@
     (setq org-pomodoro-long-break-sound mindfulness-chimes)
     (setq org-pomodoro-start-sound-p t))
 
+(defun org-archive-done-tasks ()
+  (interactive)
+  (org-map-entries
+   (lambda ()
+     (org-archive-subtree)
+     (setq org-map-continue-from (outline-previous-heading)))
+   "/DONE" 'tree))
+
+     (setq org-agenda-sorting-strategy
+	   '((agenda habit-down timestamp-down priority-down category-keep)
+	    (todo priority-down timestamp-down category-keep)
+	    (tags priority-down timestamp-down category-keep)
+	    (search category-keep timestamp-down)))
+
+     (setq org-agenda-files '("~/org/agenda" "~/org/projects"))
+     (setq org-agenda-custom-commands
+	 '(("!" "ASAP" tags-todo "asap-TODO=\"DONE\"") 
+	     ("n" . "Next")
+	     ("np" "Next PMI" tags-todo "TODO=\"NEXT\"+category=\"PMI\""
+	      ((org-agenda-overriding-header "Next PMI")))
+	     ("na" "Next ABB" tags-todo "TODO=\"NEXT\"+category=\"ABB\""
+	      ((org-agenda-overriding-header "Next ABB")))
+	     ("nm" "Next Miscellaneous" tags-todo "TODO=\"NEXT\"+category=\"misc\""
+	      ((org-agenda-overriding-header "Next Miscellaneous")))
+	     ("A" . "All")
+	     ;("am" "All Miscellaneous" tags-todo "TODO={TODO\\|NEXT}+category=\"misc\"")
+	     ("Am" "All Miscellaneous"
+	     ((tags-todo "TODO=\"NEXT\"+category=\"misc\"")
+	     (tags-todo "TODO=\"TODO\"+category=\"misc\"")
+	     (tags-todo "TODO=\"DONE\"+category=\"misc\""))
+	     ((org-agenda-overriding-header "All Miscellaneous")))
+	     ("Ap" "All PMI"
+	     ((tags-todo "TODO=\"NEXT\"+category=\"PMI\"")
+	     (tags-todo "TODO=\"TODO\"+category=\"PMI\"")
+	     (tags-todo "TODO=\"DONE\"+category=\"PMI\""))
+	     ((org-agenda-overriding-header "")))
+	     ("Aa" "ALL"
+	     ((tags-todo "TODO=\"NEXT\"")
+	     (tags-todo "TODO=\"TODO\"")
+	     (tags-todo "TODO=\"DONE\""))
+	     ((org-agenda-overriding-header "All")))))
 (tool-bar-mode -1)
 
 (use-package golden-ratio
