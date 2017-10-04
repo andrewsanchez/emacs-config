@@ -217,10 +217,16 @@
       ("?" (org-info "Clocking commands"))))
 
   (use-package org-pomodoro
+    :commands org-pomodoro
     :config
-    (setq org-pomodoro-length 30)
-    (setq org-pomodoro-start-sound "/Users/andrew/Music/Miscellaneous/Timer_Sounds/mindfullness_bell.mp3")
-    (setq org-pomodoro-finish-sound "/Users/andrew/Music/Miscellaneous/Timer_Sounds/mindfullness_bell.mp3")
+    (setq mindfulness-bell "/Users/andrew/Music/Miscellaneous/Timer_Sounds/mindfullness_bell.mp3") 
+    (setq mindfulness-chimes "/Users/andrew/Music/Miscellaneous/Timer_Sounds/chimes.mp3") 
+    (setq org-pomodoro-length 15)
+    (setq org-pomodoro-short-break-length .5)
+    (setq org-pomodoro-start-sound mindfulness-bell)
+    (setq org-pomodoro-finished-sound mindfulness-bell)
+    (setq org-pomodoro-short-break-sound mindfulness-bell)
+    (setq org-pomodoro-long-break-sound mindfulness-chimes)
     (setq org-pomodoro-start-sound-p t))
 
 (tool-bar-mode -1)
