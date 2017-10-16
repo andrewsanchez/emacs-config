@@ -404,7 +404,6 @@
     (add-hook 'lisp-mode-hook             #'smartparens-mode)
     (add-hook 'lisp-interaction-mode-hook #'smartparens-mode)
     (add-hook 'scheme-mode-hook           #'smartparens-mode)
-    (add-hook 'python-mode-hook           #'smartparens-mode)
   :init
   (require 'smartparens-config)
   (defhydra hydra-smartparens (:hint nil)
