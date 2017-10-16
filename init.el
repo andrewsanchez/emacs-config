@@ -311,23 +311,27 @@
     (which-key-mode))
 
 (use-package python
+  :defer t
   :mode ("\\.py\\'" . python-mode)
   :interpreter ("python" . python-mode)
   :config
-  ;; (add-hook 'python-mode-hook 'yapf-mode)
-  (add-hook 'python-mode-hook
-	(lambda ()
-	(require 'sphinx-doc)
-	(sphinx-doc-mode t)))
-  (add-hook 'python-mode-hook 'anaconda-mode)
-  (add-hook 'python-mode-hook 'anaconda-eldoc-mode)
   (evil-leader/set-key-for-mode 'python-mode "m" 'hydra-python/body)
   (add-hook 'before-save-hook 'py-isort-before-save)
-  (require 'py-isort)
+  (add-hook 'python-mode-hook 'smartparens-mode)
   (setq python-shell-exec-path '("~/anaconda3/bin/python"))
-  (evil-leader/set-key-for-mode 'python-mode
-      "a" 'hydra-anaconda/body)
-  (defhydra hydra-anaconda (:color blue :hint nil)
+  (use-package anaconda-mode
+    :commands hydra-python/body
+    :config
+    (anaconda-mode)
+    (anaconda-eldoc-mode))
+  (use-package sphinx-doc
+    :commands (sphinx-doc)
+    :config
+    (sphinx-doc-mode))
+  (use-package helm-pydoc :commands helm-pydoc)
+  (use-package py-isort :commands py-isort-buffer
+    :config
+    (require 'py-isort))
   (use-package elpy
     :init (with-eval-after-load 'python (elpy-enable))
     :commands elpy-enable
