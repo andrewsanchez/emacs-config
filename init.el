@@ -136,7 +136,7 @@
   (setq org-refile-allow-creating-parent-nodes 'confirm)
   (setq org-src-fontify-natively t)
   (evil-leader/set-key-for-mode 'org-mode
-    "h" 'hydra-org-headings/body)
+    "m" 'hydra-org-headings/body)
   ;; Hydras
   (defhydra hydra-org-headings ()
     "Headings"
@@ -313,6 +313,7 @@
 	(sphinx-doc-mode t)))
   (add-hook 'python-mode-hook 'anaconda-mode)
   (add-hook 'python-mode-hook 'anaconda-eldoc-mode)
+  (evil-leader/set-key-for-mode 'python-mode "m" 'hydra-python/body)
   (add-hook 'before-save-hook 'py-isort-before-save)
   (require 'py-isort)
   (setq python-shell-exec-path '("~/anaconda3/bin/python"))
