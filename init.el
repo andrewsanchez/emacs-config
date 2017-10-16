@@ -350,33 +350,31 @@
       ("w" (venv-workon) "Workon venv…")
       ("q" nil "quit")
       ("Q" (kill-buffer "*compilation*") "quit and kill compilation buffer" :color blue)))
+  (defhydra hydra-python (:color blue :hint nil)
   "
-  ^Anaconda^
-  ----------
-  _d_: find definitions
-  _a_: find assignments
-  _r_: find references
+  ^Navigation^                  ^Elpy^                 ^Formatting^
+  -------------------------------------------------------------------------
+  _d_: find definitions       _w_: venv-workon       _y_: yapfify-buffer
+  _a_: find assignments       _W_: venv-deactivate   _i_: py-isort-buffer
+  _r_: find references        _t_: elpy-test         _f_: flycheck
   _b_: go back
   _s_: show doc
-  _y_: yapfify-buffer
   _v_: pythonic-activate
   _V_: pythonic-deactivate
   "
       ("d" anaconda-mode-find-definitions)
       ("a" anaconda-mode-find-assignments)
-      ("r" anaconda-mode-find-references)
+      ("r" xref-find-references)
       ("b" anaconda-mode-go-back)
       ("s" anaconda-mode-show-doc)
       ("y" yapfify-buffer)
       ("v" pythonic-activate)
-      ("V" pythonic-deactivate)))
-
-(use-package anaconda-mode :defer t)
-
-(use-package sphinx-doc :defer t)
-
-(use-package py-isort
-  :commands py-isort-buffer)
+      ("V" pythonic-deactivate)
+      ("i" py-isort-buffer)
+      ("w" pyvenv-activate)
+      ("W" pyvenv-deactivate)
+      ("f" hydra-flycheck/body)
+      ("t" elpy-hydra/body)))
 
 (defun python-shell-completion-native-try ()
   "Return non-nil if can trigger native completion."
