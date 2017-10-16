@@ -337,9 +337,10 @@
     :init (with-eval-after-load 'python (elpy-enable))
     :commands elpy-enable
     :config
+    (pyvenv-mode)
     (defhydra elpy-hydra (:color red)
       "
-      Elpy in venv: %`pyvenv-virtual-env-name
+      E tlpy in venv: %`pyvenv-virtual-env-name
       "
       ("t" (progn (call-interactively 'elpy-test-pytest-runner) (elpy-nav-errors/body)) "current test, pytest runner" :color blue)
       ("w" (venv-workon) "workon venv…")
