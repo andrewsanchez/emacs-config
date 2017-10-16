@@ -279,10 +279,11 @@
 (setq backup-directory-alist '(("." . "~/.emacs.d/backups")))
 
 (use-package magit
-  :commands magit-status
   :init
-  (evil-leader/set-key
-    "gs" 'magit-status))
+  (evil-leader/set-key "gs" 'magit-status)
+  :commands magit-status
+  :config
+  (setq magit-git-executable "~/usr/bin/git"))
 
 (show-paren-mode 1)
 (menu-bar-mode -1)
