@@ -265,7 +265,9 @@
     "wu" 'winner-undo
     "wr" 'winner-redo))
 
-(use-package zoom-frm)
+(use-package zoom-frm
+  :commands hydra-zoom)
+
 (defhydra hydra-zoom (global-map "C-=")
   "zoom"
   ("g" text-scale-increase)
