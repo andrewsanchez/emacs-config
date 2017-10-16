@@ -629,8 +629,3 @@ _k_: kill        _s_: split                   _{_: wrap with { }
   (evil-define-key 'normal neotree-mode-map (kbd "q") 'neotree-hide)
   (evil-define-key 'normal neotree-mode-map (kbd "RET") 'neotree-enter))
 
-(use-package nov
-  :defer t
-  :init
-  (add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode))
-  )
