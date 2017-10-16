@@ -629,3 +629,5 @@ _k_: kill        _s_: split                   _{_: wrap with { }
   (evil-define-key 'normal neotree-mode-map (kbd "q") 'neotree-hide)
   (evil-define-key 'normal neotree-mode-map (kbd "RET") 'neotree-enter))
 
+(use-package realgud
+  :commands realgud)
