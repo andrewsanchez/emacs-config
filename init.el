@@ -461,16 +461,16 @@ _k_: kill        _s_: split                   _{_: wrap with { }
 
 (use-package projectile
   :load-path "~/.emacs.d/packages/projectile"
+  :init
+  (evil-leader/set-key "p" 'projectile-command-map)
+  :commands projectile-command-map
   :config
   (projectile-mode)
   (setq projectile-enable-caching t)
-  (evil-leader/set-key
-  "p" 'projectile-command-map))
-
- (use-package helm-projectile
-   :config
-   (require 'helm-projectile)
-   (helm-projectile-on))
+  (use-package helm-projectile
+    :config
+    (require 'helm-projectile)
+    (helm-projectile-on)))
 
 (use-package yasnippet
   :load-path "~/.emacs.d/packages/yasnippet"
