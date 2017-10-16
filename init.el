@@ -360,27 +360,25 @@
   "
   ^Navigation^                  ^Elpy^                 ^Formatting^
   -------------------------------------------------------------------------
-  _d_: find definitions       _w_: venv-workon       _y_: yapfify-buffer
-  _a_: find assignments       _W_: venv-deactivate   _i_: py-isort-buffer
-  _r_: find references        _t_: elpy-test         _f_: flycheck
-  _b_: go back
-  _s_: show doc
-  _v_: pythonic-activate
+  _d_: find definitions      _t_: elpy-test           _y_: yapfify-buffer
+  _a_: find assignments      _z_: switch to shell     _i_: py-isort-buffer
+  _r_: find references       _c_: send to shell       _f_: flycheck
+  _s_: show doc              
+  _v_: pythonic-activate     
   _V_: pythonic-deactivate
   "
-      ("d" anaconda-mode-find-definitions)
+      ("d" elpy-goto-definition)
       ("a" anaconda-mode-find-assignments)
       ("r" xref-find-references)
-      ("b" anaconda-mode-go-back)
-      ("s" anaconda-mode-show-doc)
+      ("s" elpy-doc)
       ("y" yapfify-buffer)
-      ("v" pythonic-activate)
-      ("V" pythonic-deactivate)
+      ("v" pyvenv-activate)
+      ("V" pyvenv-deactivate)
       ("i" py-isort-buffer)
-      ("w" pyvenv-activate)
-      ("W" pyvenv-deactivate)
       ("f" hydra-flycheck/body)
-      ("t" elpy-hydra/body)))
+      ("t" elpy-hydra/body)
+      ("z" elpy-shell-switch-to-shell)
+      ("c" elpy-shell-send-region-or-buffer)))
 
 (defun python-shell-completion-native-try ()
   "Return non-nil if can trigger native completion."
