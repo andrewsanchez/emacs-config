@@ -301,6 +301,10 @@
 (setq-default save-place t)
 (fset 'yes-or-no-p 'y-or-n-p)
 
+;; This doesn't actually seem to be faster...
+;; (setq tramp-default-method "ssh")
+(setq tramp-inline-compress-start-size 1000000)
+
 (use-package which-key
     :config
     (which-key-mode))
