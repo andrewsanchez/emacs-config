@@ -546,7 +546,21 @@ _k_: kill        _s_: split                   _{_: wrap with { }
 (setq column-number-mode t)
 
 (use-package flycheck
-  :init (global-flycheck-mode))
+  :init
+  (add-hook 'after-init-hook 'global-flycheck-mode)
+  :config
+  (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc))
+  (defhydra hydra-flycheck
+    (:pre (progn (setq hydra-lv t) (flycheck-list-errors))
+    :post (progn (setq hydra-lv nil) (quit-windows-on "*Flycheck errors*"))
+    :hint nil)
+    "Errors"
+    ("f"  flycheck-error-list-set-filter                            "Filter")
+    ("n"  flycheck-next-error                                       "Next")
+    ("p"  flycheck-previous-error                                   "Previous")
+    ("gg" flycheck-first-error                                      "First")
+    ("G"  (progn (goto-char (point-max)) (flycheck-previous-error)) "Last")
+    ("q"  nil)))
 
 (use-package deft
   :config
