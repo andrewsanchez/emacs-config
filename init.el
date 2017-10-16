@@ -328,6 +328,28 @@
   (evil-leader/set-key-for-mode 'python-mode
       "a" 'hydra-anaconda/body)
   (defhydra hydra-anaconda (:color blue :hint nil)
+  (use-package elpy
+    :init (with-eval-after-load 'python (elpy-enable))
+    :commands elpy-enable
+    :config
+    (defhydra elpy-hydra (:color red)
+      "
+      Elpy in venv: %`pyvenv-virtual-env-name
+      "
+      ("t" (progn (call-interactively 'elpy-test-pytest-runner) (elpy-nav-errors/body)) "current test, pytest runner" :color blue)
+      ("w" (venv-workon) "workon venv…")
+      ("q" nil "quit")
+      ("Q" (kill-buffer "*compilation*") "quit and kill compilation buffer" :color blue))
+    (defhydra elpy-nav-errors (:color red)
+      " Navigate errors "
+      ("n" next-error "next error")
+      ("p" previous-error "previous error")
+      ("s" (progn
+	     (switch-to-buffer-other-window "*compilation*")
+	     (goto-char (point-max))) "switch to compilation buffer" :color blue)
+      ("w" (venv-workon) "Workon venv…")
+      ("q" nil "quit")
+      ("Q" (kill-buffer "*compilation*") "quit and kill compilation buffer" :color blue)))
   "
   ^Anaconda^
   ----------
