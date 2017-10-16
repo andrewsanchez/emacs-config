@@ -576,11 +576,11 @@ _k_: kill        _s_: split                   _{_: wrap with { }
 (use-package elfeed
   :commands elfeed
   :config
-  (require 'elfeed-org)
-  (elfeed-org)
-  (setq rmh-elfeed-org-files (list "~/org/elfeed.org")))
-
-(use-package elfeed-org :defer t)
+  (use-package elfeed-org
+    :config
+    (require 'elfeed-org)
+    (elfeed-org)
+    (setq rmh-elfeed-org-files (list "~/org/elfeed.org"))))
 
 (use-package keyfreq
   :config
