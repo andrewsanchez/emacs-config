@@ -306,6 +306,7 @@
 (setq tramp-inline-compress-start-size 1000000)
 
 (use-package which-key
+    :defer 10
     :config
     (which-key-mode))
 
