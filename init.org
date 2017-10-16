@@ -90,7 +90,7 @@
 Display a more compact mode line
 
 #+begin_src elisp :tangle yes
-    (use-package smart-mode-line
+  (use-package smart-mode-line
       :init
       (setq sml/no-confirm-load-theme t)
       :config
@@ -107,22 +107,25 @@ Display a more compact mode line
   Also check out [[https://github.com/abo-abo/swiper][ivy and swiper]]
 #+begin_src elisp :tangle yes
   (use-package helm
-      :init
-      (require 'helm-config)
-      (evil-leader/set-key
-        "sg" 'helm-google-suggest
-        "<SPC>" 'helm-M-x
-        "sj" 'helm-semantic-or-imenu
-        "ha" 'helm-apropos
-        "ss" 'helm-occur)
-      :bind (("M-y" . helm-show-kill-ring)
-             ("C-h a" . helm-apropos)
-             ("M-x" . helm-M-x)
-             ("C-x b" . helm-buffers-list)))
+	:init
+	(require 'helm-config)
+	(evil-leader/set-key
+	  "sg" 'helm-google-suggest
+	  "<SPC>" 'helm-M-x
+	  "sj" 'helm-semantic-or-imenu
+	  "ha" 'helm-apropos
+	  "ss" 'helm-occur)
+	:commands helm-M-x
+	:bind (("M-y" . helm-show-kill-ring)
+	       ("C-h a" . helm-apropos)
+	       ("M-x" . helm-M-x)
+	       ("C-x b" . helm-buffers-list)))
 
-  (use-package helm-descbinds
-    :bind (("C-h b" . helm-descbinds)))
+    (use-package helm-descbinds
+      :bind (("C-h b" . helm-descbinds)))
 #+end_src
+
+#+RESULTS:
   
 * Hydra
 #+begin_src elisp :tangle yes
@@ -201,7 +204,7 @@ Display a more compact mode line
      (setq org-refile-allow-creating-parent-nodes 'confirm)
      (setq org-src-fontify-natively t)
      (evil-leader/set-key-for-mode 'org-mode
-       "h" 'hydra-org-headings/body)
+       "m" 'hydra-org-headings/body)
      ;; Hydras
      (defhydra hydra-org-headings ()
        "Headings"
@@ -356,7 +359,9 @@ Undo and redo window configuration
 
 ** Zoom
 #+begin_src elisp :tangle yes
-  (use-package zoom-frm)
+  (use-package zoom-frm
+    :commands hydra-zoom)
+
   (defhydra hydra-zoom (global-map "C-=")
     "zoom"
     ("g" text-scale-increase)
@@ -382,10 +387,11 @@ Not sure why these aren't working
 
 #+begin_src elisp :tangle yes
   (use-package magit
-    :commands magit-status
     :init
-    (evil-leader/set-key
-      "gs" 'magit-status))
+    (evil-leader/set-key "gs" 'magit-status)
+    :commands magit-status
+    :config
+    (setq magit-git-executable "~/usr/bin/git"))
 #+end_src
 
 #+RESULTS:
@@ -410,15 +416,17 @@ Also look at sensible-defaults
 (fset 'yes-or-no-p 'y-or-n-p)
 #+end_src
 * Tramp
-  This doesn't actually seem to be faster...
-#+begin_src elisp :tangle no
-(setq tramp-default-method "ssh")
+#+begin_src elisp :tangle yes
+;; This doesn't actually seem to be faster...
+;; (setq tramp-default-method "ssh")
+(setq tramp-inline-compress-start-size 1000000)
 #+end_src
 
 * Binding related
   Also check out [[https://github.com/nonsequitur/smex][smex]] 
 #+begin_src elisp :tangle yes
   (use-package which-key
+      :defer 10
       :config
       (which-key-mode))
 #+end_src
@@ -428,53 +436,80 @@ Also look at sensible-defaults
 * Python
 #+begin_src elisp :tangle yes
   (use-package python
+    :defer t
     :mode ("\\.py\\'" . python-mode)
     :interpreter ("python" . python-mode)
     :config
-    ;; (add-hook 'python-mode-hook 'yapf-mode)
-    (add-hook 'python-mode-hook
-	  (lambda ()
-	  (require 'sphinx-doc)
-	  (sphinx-doc-mode t)))
-    (add-hook 'python-mode-hook 'anaconda-mode)
-    (add-hook 'python-mode-hook 'anaconda-eldoc-mode)
+    (evil-leader/set-key-for-mode 'python-mode "m" 'hydra-python/body)
     (add-hook 'before-save-hook 'py-isort-before-save)
-    (require 'py-isort)
+    (add-hook 'python-mode-hook 'smartparens-mode)
     (setq python-shell-exec-path '("~/anaconda3/bin/python"))
-    (evil-leader/set-key-for-mode 'python-mode
-	"a" 'hydra-anaconda/body)
-    (defhydra hydra-anaconda (:color blue :hint nil)
+    (use-package anaconda-mode
+      :commands hydra-python/body
+      :config
+      (anaconda-mode)
+      (anaconda-eldoc-mode))
+    (use-package sphinx-doc
+      :commands (sphinx-doc)
+      :config
+      (sphinx-doc-mode))
+    (use-package helm-pydoc :commands helm-pydoc)
+    (use-package py-isort :commands py-isort-buffer
+      :config
+      (require 'py-isort))
+    (use-package elpy
+      :init (with-eval-after-load 'python (elpy-enable))
+      :commands elpy-enable
+      :config
+      (defhydra elpy-hydra (:color red)
+	"
+	Elpy in venv: %`pyvenv-virtual-env-name
+	"
+	("t" (progn (call-interactively 'elpy-test-pytest-runner) (elpy-nav-errors/body)) "current test, pytest runner" :color blue)
+	("w" (venv-workon) "workon venv…")
+	("q" nil "quit")
+	("Q" (kill-buffer "*compilation*") "quit and kill compilation buffer" :color blue))
+      (defhydra elpy-nav-errors (:color red)
+	" Navigate errors "
+	("n" next-error "next error")
+	("p" previous-error "previous error")
+	("s" (progn
+	       (switch-to-buffer-other-window "*compilation*")
+	       (goto-char (point-max))) "switch to compilation buffer" :color blue)
+	("w" (venv-workon) "Workon venv…")
+	("q" nil "quit")
+	("Q" (kill-buffer "*compilation*") "quit and kill compilation buffer" :color blue)))
+    (defhydra hydra-python (:color blue :hint nil)
     "
-    ^Anaconda^
-    ----------
-    _d_: find definitions
-    _a_: find assignments
-    _r_: find references
+    ^Navigation^                  ^Elpy^                 ^Formatting^
+    -------------------------------------------------------------------------
+    _d_: find definitions       _w_: venv-workon       _y_: yapfify-buffer
+    _a_: find assignments       _W_: venv-deactivate   _i_: py-isort-buffer
+    _r_: find references        _t_: elpy-test         _f_: flycheck
     _b_: go back
     _s_: show doc
-    _y_: yapfify-buffer
     _v_: pythonic-activate
     _V_: pythonic-deactivate
     "
 	("d" anaconda-mode-find-definitions)
 	("a" anaconda-mode-find-assignments)
-	("r" anaconda-mode-find-references)
+	("r" xref-find-references)
 	("b" anaconda-mode-go-back)
 	("s" anaconda-mode-show-doc)
 	("y" yapfify-buffer)
 	("v" pythonic-activate)
-	("V" pythonic-deactivate)))
+	("V" pythonic-deactivate)
+	("i" py-isort-buffer)
+	("w" pyvenv-activate)
+	("W" pyvenv-deactivate)
+	("f" hydra-flycheck/body)
+	("t" elpy-hydra/body)))
 
-  (use-package anaconda-mode :defer t)
-
-  (use-package sphinx-doc :defer t)
-
-  (use-package py-isort
-    :commands py-isort-buffer)
 
 #+end_src
 
 #+RESULTS:
+: hydra-python/body
 
 ** Fix faulty completion bug
    Source:  https://github.com/jorgenschaefer/elpy/issues/887
@@ -514,7 +549,6 @@ Also look at sensible-defaults
       (add-hook 'lisp-mode-hook             #'smartparens-mode)
       (add-hook 'lisp-interaction-mode-hook #'smartparens-mode)
       (add-hook 'scheme-mode-hook           #'smartparens-mode)
-      (add-hook 'python-mode-hook           #'smartparens-mode)
     :init
     (require 'smartparens-config)
     (defhydra hydra-smartparens (:hint nil)
@@ -579,21 +613,20 @@ Also look at sensible-defaults
 
   (use-package projectile
     :load-path "~/.emacs.d/packages/projectile"
+    :init
+    (evil-leader/set-key "p" 'projectile-command-map)
+    :commands projectile-command-map
     :config
     (projectile-mode)
     (setq projectile-enable-caching t)
-    (evil-leader/set-key
-    "p" 'projectile-command-map))
-
-   (use-package helm-projectile
-     :config
-     (require 'helm-projectile)
-     (helm-projectile-on))
+    (use-package helm-projectile
+      :config
+      (require 'helm-projectile)
+      (helm-projectile-on)))
 
 #+end_src
 
 #+RESULTS:
-: t
 
 * Yasnippet
 #+begin_src elisp :tangle yes
@@ -706,10 +739,25 @@ Also look at sensible-defaults
 * Flycheck
 #+begin_src elisp :tangle yes
   (use-package flycheck
-    :init (global-flycheck-mode))
+    :init
+    (add-hook 'after-init-hook 'global-flycheck-mode)
+    :config
+    (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc))
+    (defhydra hydra-flycheck
+      (:pre (progn (setq hydra-lv t) (flycheck-list-errors))
+      :post (progn (setq hydra-lv nil) (quit-windows-on "*Flycheck errors*"))
+      :hint nil)
+      "Errors"
+      ("f"  flycheck-error-list-set-filter                            "Filter")
+      ("n"  flycheck-next-error                                       "Next")
+      ("p"  flycheck-previous-error                                   "Previous")
+      ("gg" flycheck-first-error                                      "First")
+      ("G"  (progn (goto-char (point-max)) (flycheck-previous-error)) "Last")
+      ("q"  nil)))
 #+end_src
 
 #+RESULTS:
+: t
 * Deft
 #+begin_src elisp :tangle yes
   (use-package deft
@@ -732,11 +780,13 @@ Also look at sensible-defaults
   (use-package elfeed
     :commands elfeed
     :config
-    (require 'elfeed-org)
-    (elfeed-org)
-    (setq rmh-elfeed-org-files (list "~/org/elfeed.org")))
+    (use-package elfeed-org
+      :config
+      (require 'elfeed-org)
+      (elfeed-org)
+      (setq rmh-elfeed-org-files (list "~/org/elfeed.org"))))
 
-  (use-package elfeed-org :defer t)
+
 
 #+end_src
 
@@ -884,14 +934,13 @@ Also look at sensible-defaults
 
 #+RESULTS:
 : t
-
-* Test
+* Debugging
 #+begin_src elisp :tangle yes
-  (use-package nov
-    :defer t
-    :init
-    (add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode))
-    )
+  (use-package realgud
+    :commands realgud)
+#+end_src
+* Test
+#+begin_src elisp :tangle no
 #+end_src  
 
 #+RESULTS:
