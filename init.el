@@ -354,7 +354,7 @@
     (pyvenv-mode)
     (defhydra elpy-hydra (:color red)
       "
-      E tlpy in venv: %`pyvenv-virtual-env-name
+      Elpy in venv: %`pyvenv-virtual-env-name
       "
       ("t" (progn (call-interactively 'elpy-test-pytest-runner) (elpy-nav-errors/body)) "current test, pytest runner" :color blue)
       ("w" (venv-workon) "workon venv…")
