@@ -57,8 +57,9 @@
 (add-to-list 'evil-emacs-state-modes 'dired-mode)
 (add-to-list 'evil-emacs-state-modes 'flycheck-error-list-mode)
 (add-to-list 'evil-emacs-state-modes 'elfeed-search-mode)
-(add-to-list 'evil-emacs-state-modes 'nov-mode)
 (add-to-list 'evil-emacs-state-modes 'gnus-group-mode)
+(add-to-list 'evil-emacs-state-modes 'realgud-short-key-mode)
+(evil-set-initial-state 'realgud-short-key-mode 'emacs)
 (evil-set-initial-state 'Info-mode 'emacs)
 
 (evil-leader/set-key
