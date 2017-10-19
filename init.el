@@ -337,7 +337,8 @@
     :commands hydra-python/body
     :config
     (anaconda-mode)
-    (anaconda-eldoc-mode))
+    (anaconda-eldoc-mode)
+    (add-to-list 'company-backends 'company-anaconda))
   (use-package sphinx-doc
     :commands (sphinx-doc)
     :config
@@ -533,8 +534,7 @@ _k_: kill        _s_: split                   _{_: wrap with { }
 
 (use-package company
   :config
-  (global-company-mode)
-  (add-to-list 'company-backends 'company-anaconda))
+  (global-company-mode))
 
 (use-package helm-wordnet
   :commands helm-wordnet
