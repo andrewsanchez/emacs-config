@@ -643,4 +643,9 @@ _k_: kill        _s_: split                   _{_: wrap with { }
   (evil-define-key 'normal neotree-mode-map (kbd "RET") 'neotree-enter))
 
 (use-package realgud
-  :commands realgud)
+  :commands realgud
+  :config
+  (add-hook 'realgud-short-key-mode-hook
+      (lambda ()
+        (local-set-key "\C-c" realgud:shortkey-mode-map)))
+  (setq realgud:pdb-command-name "python -m pdb"))
