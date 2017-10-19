@@ -120,6 +120,11 @@
   ("b" helm-filtered-bookmarks "helm-filtered-bookmarks")
   ("t" neotree-toggle "neotree-toggle"))
 
+(defhydra hydra-applications ()
+  "Applications"
+  ("d" deft "deft find file"))
+(evil-leader/set-key "a" 'hydra-applications/body)
+
 (use-package org
   :load-path "~/.emacs.d/packages/org-mode/lisp"
   :init
