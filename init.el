@@ -328,6 +328,7 @@
   :mode ("\\.py\\'" . python-mode)
   :interpreter ("python" . python-mode)
   :config
+  (load-library "realgud")
   (evil-leader/set-key-for-mode 'python-mode "m" 'hydra-python/body)
   (add-hook 'before-save-hook 'py-isort-before-save)
   (add-hook 'python-mode-hook 'smartparens-mode)
