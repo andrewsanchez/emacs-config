@@ -76,10 +76,13 @@
   (add-to-list 'evil-emacs-state-modes 'dired-mode)
   (add-to-list 'evil-emacs-state-modes 'flycheck-error-list-mode)
   (add-to-list 'evil-emacs-state-modes 'elfeed-search-mode)
-  (add-to-list 'evil-emacs-state-modes 'nov-mode)
   (add-to-list 'evil-emacs-state-modes 'gnus-group-mode)
+  (add-to-list 'evil-emacs-state-modes 'realgud-short-key-mode)
+  (evil-set-initial-state 'realgud-short-key-mode 'emacs)
   (evil-set-initial-state 'Info-mode 'emacs)
+
 #+end_src
+
 
 * Vanilla emacs bindings
 #+begin_src elisp :tangle yes
@@ -175,8 +178,7 @@ Display a more compact mode line
 : hydra-files/body
 
 ** Applications
-   interferes with anaconda mode
-#+begin_src elisp :tangle no
+#+begin_src elisp :tangle yes
   (defhydra hydra-applications ()
     "Applications"
     ("d" deft "deft find file"))
@@ -187,76 +189,84 @@ Display a more compact mode line
 
 * Org-mode
 #+begin_src elisp :tangle yes
-   (use-package org
-     :load-path "~/.emacs.d/packages/org-mode/lisp"
-     :init
-     (evil-leader/set-key
-	 "oa" 'org-agenda
-	 "oc" 'org-capture
-	 "ot" 'hydra-org-clock/body)
-     :config
-     (setq org-hide-leading-stars t)
-     (setq org-default-notes-file "/Users/andrew/org/notes.org")
-     (setq org-todo-keywords
-       '((sequence "NEXT" "TODO" "|" "DONE")))
-     (setq org-refile-targets '((nil :maxlevel . 3)
-				(org-agenda-files :maxlevel . 2)))
-     (setq org-outline-path-complete-in-steps nil)
-     (setq org-refile-allow-creating-parent-nodes 'confirm)
-     (setq org-src-fontify-natively t)
-     (evil-leader/set-key-for-mode 'org-mode
-       "m" 'hydra-org-headings/body)
-     ;; Hydras
-     (defhydra hydra-org-headings ()
-       "Headings"
-	   ("t" org-todo "org-todo")
-	   (":" org-set-tags-command "org-set-tags-command")
-	   ("n" org-narrow-to-subtree "org-narrow-to-subtree")
-	   ("w" widen "widen")
-	   ("s" org-sort)
-	   ("l" org-demote-subtree "org-demote-subtree")
-	   ("h" org-promote-subtree "org-promote-subtree")
-	   ("K" outline-up-heading "org-backward-heading-same-level")
-	   ("J" org-forward-heading-same-level "org-forward-heading-same-level")
-	   ("k" outline-previous-visible-heading "outline-previous-visible-heading")
-	   ("j" outline-next-visible-heading "outline-next-visible-heading")
-	   ("*" org-toggle-heading "org-toggle-heading")
-	   ("r" org-refile "org-refile"))
+  (use-package org
+    :load-path "~/.emacs.d/packages/org-mode/lisp"
+    :init
+    (evil-leader/set-key
+	"oa" 'org-agenda
+	"oc" 'org-capture
+	"ot" 'hydra-org-clock/body)
+    :config
+    (setq org-hide-leading-stars t)
+    (setq org-default-notes-file "/Users/andrew/org/notes.org")
+    (setq org-todo-keywords
+      '((sequence "NEXT" "TODO" "|" "DONE")))
+    (setq org-refile-targets '((nil :maxlevel . 3)
+			       (org-agenda-files :maxlevel . 2)))
+    (setq org-outline-path-complete-in-steps nil)
+    (setq org-completion-use-ido nil)
+    (setq org-refile-use-outline-path t) 
+    (defun as/verify-refile-target ()
+      "Exclude todo keywords with a done state from refile targets"
+      (not (member (nth 2 (org-heading-components)) org-done-keywords)))
+    (setq org-refile-target-verify-function 'as/verify-refile-target)
+    (setq org-refile-allow-creating-parent-nodes 'confirm)
+    (setq org-src-fontify-natively t)
+    (evil-leader/set-key-for-mode 'org-mode
+      "m" 'hydra-org-headings/body)
+    ;; Hydras
+    (defhydra hydra-org-headings ()
+      "Headings"
+	  ("t" org-todo "org-todo")
+	  (":" org-set-tags-command "org-set-tags-command")
+	  ("n" org-narrow-to-subtree "org-narrow-to-subtree")
+	  ("w" widen "widen")
+	  ("s" org-sort)
+	  ("l" org-demote-subtree "org-demote-subtree")
+	  ("h" org-promote-subtree "org-promote-subtree")
+	  ("K" outline-up-heading "org-backward-heading-same-level")
+	  ("J" org-forward-heading-same-level "org-forward-heading-same-level")
+	  ("k" outline-previous-visible-heading "outline-previous-visible-heading")
+	  ("j" outline-next-visible-heading "outline-next-visible-heading")
+	  ("*" org-toggle-heading "org-toggle-heading")
+	  ("r" org-refile "org-refile"))
 
-     (defhydra hydra-org-clock (:color blue :hint nil)
-	 "
+    (defhydra hydra-org-clock (:color blue :hint nil)
+	"
 
-	 Clock   In/out^     ^Edit^   ^Summary     (_?_)
-	 -----------------------------------------
-		 _i_n         _e_dit   _g_oto entry
-		 _c_ontinue   _q_uit   _d_isplay
-		 _o_ut        ^ ^      _r_eport
-		 _p_omodoro
-	 "
-	 ("i" org-clock-in)
-	 ("o" org-clock-out)
-	 ("c" org-clock-in-last)
-	 ("e" org-clock-modify-effort-estimate)
-	 ("q" org-clock-cancel)
-	 ("p" org-pomodoro)
-	 ("g" org-clock-goto)
-	 ("d" org-clock-display)
-	 ("r" org-clock-report)
-	 ("?" (org-info "Clocking commands"))))
+	Clock   In/out^     ^Edit^   ^Summary     (_?_)
+	-----------------------------------------
+		_i_n         _e_dit   _g_oto entry
+		_c_ontinue   _q_uit   _d_isplay
+		_o_ut        ^ ^      _r_eport
+		_p_omodoro
+	"
+	("i" org-clock-in)
+	("o" org-clock-out)
+	("c" org-clock-in-last)
+	("e" org-clock-modify-effort-estimate)
+	("q" org-clock-cancel)
+	("p" org-pomodoro)
+	("g" org-clock-goto)
+	("d" org-clock-display)
+	("r" org-clock-report)
+	("?" (org-info "Clocking commands"))))
 
-     (use-package org-pomodoro
-       :commands org-pomodoro
-       :config
-       (setq mindfulness-bell "/Users/andrew/Music/Miscellaneous/Timer_Sounds/mindfullness_bell.mp3") 
-       (setq mindfulness-chimes "/Users/andrew/Music/Miscellaneous/Timer_Sounds/chimes.mp3") 
-       (setq org-pomodoro-length 15)
-       (setq org-pomodoro-short-break-length .5)
-       (setq org-pomodoro-start-sound mindfulness-bell)
-       (setq org-pomodoro-finished-sound mindfulness-bell)
-       (setq org-pomodoro-short-break-sound mindfulness-bell)
-       (setq org-pomodoro-long-break-sound mindfulness-chimes)
-       (setq org-pomodoro-start-sound-p t))
+    (use-package org-pomodoro
+      :commands org-pomodoro
+      :config
+      (setq mindfulness-bell "/Users/andrew/Music/Miscellaneous/Timer_Sounds/mindfullness_bell.mp3") 
+      (setq mindfulness-chimes "/Users/andrew/Music/Miscellaneous/Timer_Sounds/chimes.mp3") 
+      (setq org-pomodoro-length 15)
+      (setq org-pomodoro-short-break-length .5)
+      (setq org-pomodoro-start-sound mindfulness-bell)
+      (setq org-pomodoro-finished-sound mindfulness-bell)
+      (setq org-pomodoro-short-break-sound mindfulness-bell)
+      (setq org-pomodoro-long-break-sound mindfulness-chimes)
+      (setq org-pomodoro-start-sound-p t))
 #+end_src
+
+#+RESULTS:
 
 ** Babel
 #+begin_src elisp :tangle yes
@@ -441,6 +451,7 @@ Also look at sensible-defaults
     :mode ("\\.py\\'" . python-mode)
     :interpreter ("python" . python-mode)
     :config
+    (load-library "realgud")
     (evil-leader/set-key-for-mode 'python-mode "m" 'hydra-python/body)
     (add-hook 'before-save-hook 'py-isort-before-save)
     (add-hook 'python-mode-hook 'smartparens-mode)
@@ -449,7 +460,8 @@ Also look at sensible-defaults
       :commands hydra-python/body
       :config
       (anaconda-mode)
-      (anaconda-eldoc-mode))
+      (anaconda-eldoc-mode)
+      (add-to-list 'company-backends 'company-anaconda))
     (use-package sphinx-doc
       :commands (sphinx-doc)
       :config
@@ -686,8 +698,7 @@ Also look at sensible-defaults
 #+begin_src elisp :tangle yes
   (use-package company
     :config
-    (global-company-mode)
-    (add-to-list 'company-backends 'company-anaconda))
+    (global-company-mode))
 #+end_src
 * Words
 ** Wordnut
@@ -936,8 +947,17 @@ Also look at sensible-defaults
 * Debugging
 #+begin_src elisp :tangle yes
   (use-package realgud
-    :commands realgud)
+    :commands realgud
+    :config
+    (add-hook 'realgud-short-key-mode-hook
+        (lambda ()
+          (local-set-key "\C-c" realgud:shortkey-mode-map)))
+    (setq realgud:pdb-command-name "python -m pdb"))
 #+end_src
+
+#+RESULTS:
+: t
+
 * Test
 #+begin_src elisp :tangle no
 #+end_src  
