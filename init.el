@@ -140,6 +140,12 @@
   (setq org-refile-targets '((nil :maxlevel . 3)
 			     (org-agenda-files :maxlevel . 2)))
   (setq org-outline-path-complete-in-steps nil)
+  (setq org-completion-use-ido nil)
+  (setq org-refile-use-outline-path t) 
+  (defun as/verify-refile-target ()
+    "Exclude todo keywords with a done state from refile targets"
+    (not (member (nth 2 (org-heading-components)) org-done-keywords)))
+  (setq org-refile-target-verify-function 'as/verify-refile-target)
   (setq org-refile-allow-creating-parent-nodes 'confirm)
   (setq org-src-fontify-natively t)
   (evil-leader/set-key-for-mode 'org-mode
