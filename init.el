@@ -302,7 +302,7 @@
 (use-package zoom-frm
   :commands hydra-zoom)
 
-(defhydra hydra-zoom (global-map "C-=")
+(defhydra hydra-zoom (global-map "M-=")
   "zoom"
   ("g" text-scale-increase)
   ("l" text-scale-decrease)
