@@ -368,16 +368,23 @@
   (use-package py-isort :commands py-isort-buffer
     :config
     (require 'py-isort))
+  (use-package virtualenvwrapper
+    :config
+    (venv-initialize-interactive-shells)
+    (venv-initialize-eshell)
+    (setq venv-location "/Users/andrew/miniconda3/envs")
+    (setq venv-project-home "/Users/andrew/projects/"))
   (use-package elpy
     :init (with-eval-after-load 'python (elpy-enable))
     :commands elpy-enable
-    :config
+    :config 
+    (elpy-use-ipython)
     (pyvenv-mode)
     (defhydra elpy-hydra (:color red)
       "
       Elpy in venv: %`pyvenv-virtual-env-name
       "
-      ("t" (progn (call-interactively 'elpy-test-pytest-runner) (elpy-nav-errors/body)) "current test, pytest runner" :color blue)
+      ("t" (progn (call-interactively 'elpy-test-pytest-runner) (elpy-nav-errors/body)) "pytest" :color blue)
       ("w" (venv-workon) "workon venv…")
       ("q" nil "quit")
       ("Q" (kill-buffer "*compilation*") "quit and kill compilation buffer" :color blue))
