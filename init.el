@@ -62,7 +62,7 @@
     :init (setq evil-lisp-state-global t)
     :config (evil-lisp-state-leader "<SPC> k"))
 
-(use-package bind-map) 
+;; (use-package bind-map) 
 
 (use-package evil-matchit
   :config
