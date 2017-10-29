@@ -507,11 +507,12 @@ _k_: kill        _s_: split                   _{_: wrap with { }
     ("C-<right>" sp-backward-slurp-sexp)))
 
 (use-package projectile
-  :load-path "~/.emacs.d/packages/projectile"
   :init
-  (evil-leader/set-key "p" 'projectile-command-map)
-  :commands projectile-command-map
+  (evil-leader/set-key "p" 'helm-projectile)
+  :load-path "~/.emacs.d/packages/projectile"
+  :commands helm-projectile
   :config
+  (evil-leader/set-key "p" 'projectile-command-map)
   (projectile-mode)
   (setq projectile-enable-caching t)
   (use-package helm-projectile
