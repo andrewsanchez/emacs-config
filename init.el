@@ -5,7 +5,8 @@
  '(initial-frame-alist (quote ((fullscreen . maximized))))
  '(safe-local-variable-values
    (quote
-    ((projectile-project-test-cmd . "~/anaconda3/envs/genbankfilter/bin/pytest -s test/test_*")))))
+    ((pyvenv-activate . "/Users/andrew/anaconda3/envs/genbank-qc")
+     (projectile-project-test-cmd . "~/anaconda3/envs/genbankfilter/bin/pytest -s test/test_*")))))
 
 (package-initialize)
 (setq package-archives
