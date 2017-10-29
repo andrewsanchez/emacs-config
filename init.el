@@ -91,19 +91,21 @@
 (display-time-mode 1)
 
 (use-package helm
-      :init
-      (require 'helm-config)
-      (evil-leader/set-key
-	"sg" 'helm-google-suggest
-	"<SPC>" 'helm-M-x
-	"sj" 'helm-semantic-or-imenu
-	"ha" 'helm-apropos
-	"ss" 'helm-occur)
-      :commands helm-M-x
-      :bind (("M-y" . helm-show-kill-ring)
-	     ("C-h a" . helm-apropos)
-	     ("M-x" . helm-M-x)
-	     ("C-x b" . helm-buffers-list)))
+  :init
+  (evil-leader/set-key
+      "sg" 'helm-google-suggest
+      "<SPC>" 'helm-M-x
+      "sj" 'helm-semantic-or-imenu
+      "ha" 'helm-apropos
+      "ss" 'helm-occur)
+  :commands
+  (helm-google-suggest helm-M-x helm-semantic-or-imenu helm-apropos helm-occur)
+  :bind (("M-y" . helm-show-kill-ring)
+	 ("C-h a" . helm-apropos)
+	 ("M-x" . helm-M-x)
+	 ("C-x b" . helm-buffers-list))
+  :config
+  (require 'helm-config))
 
   (use-package helm-descbinds
     :bind (("C-h b" . helm-descbinds)))
