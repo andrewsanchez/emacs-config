@@ -684,3 +684,10 @@ _k_: kill        _s_: split                   _{_: wrap with { }
       (lambda ()
         (local-set-key "\C-c" realgud:shortkey-mode-map)))
   (setq realgud:pdb-command-name "python -m pdb"))
+
+(use-package gnugo
+  :commands gnugo
+  :config
+  (add-to-list 'evil-emacs-state-modes 'gnugo-board-mode)
+  (add-hook 'gnugo-start-game-hook 'gnugo-image-display-mode)
+  (setq gnugo-xpms 'gnugo-imgen-create-xpms))
