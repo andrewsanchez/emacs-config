@@ -1,14 +1,15 @@
 #+PROPERTY: header-args: tangle "init.el"
 * Custom set variables
 #+begin_src elisp :tangle yes
-(custom-set-variables
- '(custom-safe-themes
-   (quote
-    ("8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" "d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" default)))
- '(initial-frame-alist (quote ((fullscreen . maximized))))
- '(safe-local-variable-values
-   (quote
-    ((projectile-project-test-cmd . "~/anaconda3/envs/genbankfilter/bin/pytest -s test/test_*")))))
+  (custom-set-variables
+   '(custom-safe-themes
+     (quote
+      ("8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" "d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" default)))
+   '(initial-frame-alist (quote ((fullscreen . maximized))))
+   '(safe-local-variable-values
+     (quote
+      ((pyvenv-activate . "/Users/andrew/anaconda3/envs/genbank-qc")
+       (projectile-project-test-cmd . "~/anaconda3/envs/genbankfilter/bin/pytest -s test/test_*")))))
 
 #+end_src
 * Packages
@@ -39,56 +40,71 @@
 #+end_src
 * Evil
 #+begin_src elisp :tangle yes
-  (use-package evil-leader
-    :config
-    (global-evil-leader-mode)
-    (evil-leader/set-leader "<SPC>"))
-
-  (use-package evil
+    (use-package evil-leader
       :config
-      (evil-mode 1))
+      (global-evil-leader-mode)
+      (evil-leader/set-leader "<SPC>"))
 
-  (use-package evil-nerd-commenter
+    (use-package evil
+	:config
+	(evil-mode 1))
+
+    (use-package evil-nerd-commenter
       :config
-      (evilnc-default-hotkeys))
+      ;; Emacs key bindings
+      (global-set-key (kbd "M-;") 'evilnc-comment-or-uncomment-lines)
+      (global-set-key (kbd "C-c l") 'evilnc-quick-comment-or-uncomment-to-the-line)
+      (global-set-key (kbd "C-c c") 'evilnc-copy-and-comment-lines)
+      (global-set-key (kbd "C-c p") 'evilnc-comment-or-uncomment-paragraphs)
+      (evil-leader/set-key
+	"ci" 'evilnc-comment-or-uncomment-lines
+	"cl" 'evilnc-quick-comment-or-uncomment-to-the-line
+	"ll" 'evilnc-quick-comment-or-uncomment-to-the-line
+	"cc" 'evilnc-copy-and-comment-lines
+	"cp" 'evilnc-comment-or-uncomment-paragraphs
+	"cr" 'comment-or-uncomment-region
+	"cv" 'evilnc-toggle-invert-comment-line-by-line
+	"."  'evilnc-copy-and-comment-operator
+	"\\" 'evilnc-comment-operator))
 
-  (use-package evil-surround
+    (use-package evil-surround
+	:config
+	(global-evil-surround-mode 1))
+
+    (use-package evil-lisp-state
+	:init (setq evil-lisp-state-global t)
+	:config (evil-lisp-state-leader "<SPC> k"))
+
+    ;; (use-package bind-map) 
+
+    (use-package evil-matchit
       :config
-      (global-evil-surround-mode 1))
-
-  (use-package evil-lisp-state
-      :init (setq evil-lisp-state-global t)
-      :config (evil-lisp-state-leader "<SPC> k"))
-
-  (use-package bind-map) 
-
-  (use-package evil-matchit
-    :config
-    (require 'evil-matchit)
-    (global-evil-matchit-mode 1))
+      (require 'evil-matchit)
+      (global-evil-matchit-mode 1))
 #+end_src
-
-#+RESULTS:
-: t
 
 ** Exclude list
 #+begin_src elisp :tangle yes
   (add-to-list 'evil-emacs-state-modes 'dired-mode)
   (add-to-list 'evil-emacs-state-modes 'flycheck-error-list-mode)
   (add-to-list 'evil-emacs-state-modes 'elfeed-search-mode)
-  (add-to-list 'evil-emacs-state-modes 'gnus-group-mode)
   (add-to-list 'evil-emacs-state-modes 'realgud-short-key-mode)
   (evil-set-initial-state 'realgud-short-key-mode 'emacs)
   (evil-set-initial-state 'Info-mode 'emacs)
 
 #+end_src
 
-
-* Vanilla emacs bindings
+* Core
 #+begin_src elisp :tangle yes
+  (use-package expand-region
+    :config
+    (global-set-key (kbd "C-=") 'er/expand-region))
+
   (evil-leader/set-key
     "!" 'shell-command)
 #+end_src
+
+#+RESULTS:
 
 * Modeline
 Display a more compact mode line
@@ -108,22 +124,24 @@ Display a more compact mode line
 #+begin_src emacs-lisp
 #+end_src
 * Helm
-  Also check out [[https://github.com/abo-abo/swiper][ivy and swiper]]
+  Also check out [[https://github.com/abo-abo/swiper][ivy and swiper]] and helm-swiper.
 #+begin_src elisp :tangle yes
   (use-package helm
-	:init
-	(require 'helm-config)
-	(evil-leader/set-key
-	  "sg" 'helm-google-suggest
-	  "<SPC>" 'helm-M-x
-	  "sj" 'helm-semantic-or-imenu
-	  "ha" 'helm-apropos
-	  "ss" 'helm-occur)
-	:commands helm-M-x
-	:bind (("M-y" . helm-show-kill-ring)
-	       ("C-h a" . helm-apropos)
-	       ("M-x" . helm-M-x)
-	       ("C-x b" . helm-buffers-list)))
+    :init
+    (evil-leader/set-key
+	"sg" 'helm-google-suggest
+	"<SPC>" 'helm-M-x
+	"sj" 'helm-semantic-or-imenu
+	"ha" 'helm-apropos
+	"ss" 'helm-occur)
+    :commands
+    (helm-google-suggest helm-M-x helm-semantic-or-imenu helm-apropos helm-occur)
+    :bind (("M-y" . helm-show-kill-ring)
+	   ("C-h a" . helm-apropos)
+	   ("M-x" . helm-M-x)
+	   ("C-x b" . helm-buffers-list))
+    :config
+    (require 'helm-config))
 
     (use-package helm-descbinds
       :bind (("C-h b" . helm-descbinds)))
@@ -270,9 +288,12 @@ Display a more compact mode line
 
 ** Babel
 #+begin_src elisp :tangle yes
-  (setq org-babel-load-languages
-	'((emacs-lisp . t) (shell . t)))
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+  '((emacs-lisp . t) (shell . t)))
 #+end_src
+
+#+RESULTS:
 
 ** Capture
 #+begin_src elisp :tangle yes
@@ -373,7 +394,7 @@ Undo and redo window configuration
   (use-package zoom-frm
     :commands hydra-zoom)
 
-  (defhydra hydra-zoom (global-map "C-=")
+  (defhydra hydra-zoom (global-map "M-=")
     "zoom"
     ("g" text-scale-increase)
     ("l" text-scale-decrease)
@@ -391,15 +412,10 @@ Undo and redo window configuration
 #+end_src
 
 * Magit
-Not sure why these aren't working
-
-:config (setq magit-git-executable '("~/usr/bin/git"))
-'(magit-git-executable "~/usr/bin/git")
 
 #+begin_src elisp :tangle yes
   (use-package magit
-    :init
-    (evil-leader/set-key "gs" 'magit-status)
+    :init (evil-leader/set-key "gs" 'magit-status)
     :commands magit-status
     :config
     (setq magit-git-executable "~/usr/bin/git"))
@@ -455,6 +471,7 @@ Also look at sensible-defaults
     (evil-leader/set-key-for-mode 'python-mode "m" 'hydra-python/body)
     (add-hook 'before-save-hook 'py-isort-before-save)
     (add-hook 'python-mode-hook 'smartparens-mode)
+    (add-hook 'inferior-python-mode-hook 'smartparens-mode)
     (setq python-shell-exec-path '("~/anaconda3/bin/python"))
     (use-package anaconda-mode
       :commands hydra-python/body
@@ -470,16 +487,23 @@ Also look at sensible-defaults
     (use-package py-isort :commands py-isort-buffer
       :config
       (require 'py-isort))
+    (use-package virtualenvwrapper
+      :config
+      (venv-initialize-interactive-shells)
+      (venv-initialize-eshell)
+      (setq venv-location "/Users/andrew/miniconda3/envs")
+      (setq venv-project-home "/Users/andrew/projects/"))
     (use-package elpy
       :init (with-eval-after-load 'python (elpy-enable))
       :commands elpy-enable
-      :config
+      :config 
+      (elpy-use-ipython)
       (pyvenv-mode)
       (defhydra elpy-hydra (:color red)
 	"
 	Elpy in venv: %`pyvenv-virtual-env-name
 	"
-	("t" (progn (call-interactively 'elpy-test-pytest-runner) (elpy-nav-errors/body)) "current test, pytest runner" :color blue)
+	("t" (progn (call-interactively 'elpy-test-pytest-runner) (elpy-nav-errors/body)) "pytest" :color blue)
 	("w" (venv-workon) "workon venv…")
 	("q" nil "quit")
 	("Q" (kill-buffer "*compilation*") "quit and kill compilation buffer" :color blue))
@@ -499,10 +523,12 @@ Also look at sensible-defaults
     -------------------------------------------------------------------------
     _d_: find definitions      _t_: elpy-test           _y_: yapfify-buffer
     _a_: find assignments      _z_: switch to shell     _i_: py-isort-buffer
-    _r_: find references       _c_: send to shell       _f_: flycheck
-    _s_: show doc              
-    _v_: pythonic-activate     
-    _V_: pythonic-deactivate
+    _r_: find references       _c_: send region/buffer  _f_: flycheck
+    _s_: show doc              _C_: send statement
+    _v_: pyvenv-activate     
+    _V_: pyvenv-deactivate
+    _w_: venv-workon
+    _W_: venv-deactivate
     "
 	("d" elpy-goto-definition)
 	("a" anaconda-mode-find-assignments)
@@ -511,11 +537,14 @@ Also look at sensible-defaults
 	("y" yapfify-buffer)
 	("v" pyvenv-activate)
 	("V" pyvenv-deactivate)
+	("w" venv-workon)
+	("W" venv-deactivate)
 	("i" py-isort-buffer)
 	("f" hydra-flycheck/body)
 	("t" elpy-hydra/body)
 	("z" elpy-shell-switch-to-shell)
-	("c" elpy-shell-send-region-or-buffer)))
+	("c" elpy-shell-send-region-or-buffer)
+	("C" elpy-shell-send-current-statement)))
 
 
 #+end_src
@@ -623,11 +652,12 @@ Also look at sensible-defaults
 #+begin_src elisp :tangle yes
 
   (use-package projectile
-    :load-path "~/.emacs.d/packages/projectile"
     :init
-    (evil-leader/set-key "p" 'projectile-command-map)
-    :commands projectile-command-map
+    (evil-leader/set-key "p" 'helm-projectile)
+    :load-path "~/.emacs.d/packages/projectile"
+    :commands helm-projectile
     :config
+    (evil-leader/set-key "p" 'projectile-command-map)
     (projectile-mode)
     (setq projectile-enable-caching t)
     (use-package helm-projectile
@@ -777,6 +807,7 @@ Also look at sensible-defaults
     (setq deft-default-extension "org")
     (setq deft-recursive t)
     (setq deft-use-filename-as-title t)
+    (setq deft-use-filter-string-for-filename t)
     (deft-find-file "/Users/andrew/org/agenda/gtd.org")
     (deft-find-file "/Users/andrew/org/agenda/PMI.org")
     (deft-find-file "/Users/andrew/org/agenda/projects.org"))
@@ -802,34 +833,32 @@ Also look at sensible-defaults
 
 #+RESULTS:
 * Gnus
-#+begin_src elisp :tangle gnus.el
+#+begin_src elisp :tangle ~/.gnus.el
   (use-package gnus
-    :commands gnus)
-
+    :commands gnus
+    :config
+      (add-to-list 'evil-emacs-state-modes 'gnus-group-mode)
       (setq user-mail-address "inbox.asanchez@gmail.com"
 	    user-full-name "Andrew Sanchez")
-
       (setq gnus-select-method
 	    '(nnimap "gmail"
 		     (nnimap-address "imap.gmail.com")
 		     (nnimap-server-port "993")
 		     (nnimap-stream ssl)))
-
       (setq smtpmail-smtp-server "smtp.gmail.com"
 	    smtpmail-smtp-service 587
 	    gnus-ignored-newsgroups "^to\\.\\|^[0-9. ]+\\( \\|$\\)\\|^[\"]\"[#'()]"
 	    gnus-message-archive-group nil)
 	    ;; mml2015-encrypt-to-self 
-
-      ;; Attempt to encrypt all the mails we'll be sending.
+      ;; Attempt to encrypt all outgoin emails
       ;; (add-hook 'message-setup-hook 'mml-secure-message-encrypt)
       (eval-after-load 'gnus-group
       '(progn
 	 (defhydra hydra-gnus-group (:color blue)
 	   "Do?"
-	   ("a" gnus-group-list-active "REMOTE groups A A")
-	   ("l" gnus-group-list-all-groups "LOCAL groups L")
-	   ("c" gnus-topic-catchup-articles "Read all c")
+	   ("l" gnus-group-list-all-groups "List subscribed groups")
+	   ("a" gnus-group-list-active "List groups on servers")
+	   ("c" gnus-group-catchup-all "Read all")
 	   ("G" gnus-group-make-nnir-group "Search server G G")
 	   ("g" gnus-group-get-new-news "Refresh g")
 	   ("s" gnus-group-enter-server-mode "Servers")
@@ -874,17 +903,17 @@ Also look at sensible-defaults
 	 (define-key gnus-article-mode-map "," 'hydra-gnus-article/body)))
 
     (eval-after-load 'message
-      '(progn
+      '(progn (add-hook 'message-mode-hook 'flyspell-mode)
 	 (defhydra hydra-message (:color blue)
 	   "Do?"
 	   ("ca" mml-attach-file "Attach C-c C-a")
 	   ("cc" message-send-and-exit "Send C-c C-c")
 	   ("q" nil "cancel"))
-	 (global-set-key (kbd "C-c C-y") 'hydra-message/body)))
+	 (global-set-key (kbd "C-c C-y") 'hydra-message/body))))
 #+end_src
 
 #+RESULTS:
-: hydra-message/body
+: t
 
 * Keyfreq
 #+begin_src elisp :tangle yes
@@ -957,7 +986,19 @@ Also look at sensible-defaults
 
 #+RESULTS:
 : t
+* Fun
+** Gnugo
+ #+begin_src elisp :tangle yes
+   (use-package gnugo
+     :commands gnugo
+     :config
+     (add-to-list 'evil-emacs-state-modes 'gnugo-board-mode)
+     (add-hook 'gnugo-start-game-hook 'gnugo-image-display-mode)
+     (setq gnugo-xpms 'gnugo-imgen-create-xpms))
+ #+end_src 
 
+ #+RESULTS:
+ : t
 * Test
 #+begin_src elisp :tangle no
 #+end_src  
