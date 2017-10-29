@@ -221,8 +221,9 @@
     (setq org-pomodoro-long-break-sound mindfulness-chimes)
     (setq org-pomodoro-start-sound-p t))
 
-(setq org-babel-load-languages
-      '((emacs-lisp . t) (shell . t)))
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+'((emacs-lisp . t) (shell . t)))
 
 (setq org-capture-templates
       '(("t" "TODO" entry (file+headline "/Users/andrew/org/agenda/gtd.org" "Tasks")
