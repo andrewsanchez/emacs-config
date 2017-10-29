@@ -352,6 +352,7 @@
   (evil-leader/set-key-for-mode 'python-mode "m" 'hydra-python/body)
   (add-hook 'before-save-hook 'py-isort-before-save)
   (add-hook 'python-mode-hook 'smartparens-mode)
+  (add-hook 'inferior-python-mode-hook 'smartparens-mode)
   (setq python-shell-exec-path '("~/anaconda3/bin/python"))
   (use-package anaconda-mode
     :commands hydra-python/body
