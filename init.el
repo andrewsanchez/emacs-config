@@ -76,6 +76,10 @@
 (evil-set-initial-state 'realgud-short-key-mode 'emacs)
 (evil-set-initial-state 'Info-mode 'emacs)
 
+(use-package expand-region
+  :config
+  (global-set-key (kbd "C-=") 'er/expand-region))
+
 (evil-leader/set-key
   "!" 'shell-command)
 
