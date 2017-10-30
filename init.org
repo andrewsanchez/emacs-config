@@ -833,7 +833,7 @@ Also look at sensible-defaults
 
 #+RESULTS:
 * Gnus
-#+begin_src elisp :tangle ~/.gnus.el
+#+begin_src elisp :tangle gnus.el
   (use-package gnus
     :commands gnus
     :config
