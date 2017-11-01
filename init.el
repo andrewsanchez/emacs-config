@@ -223,7 +223,7 @@
 	 "* TODO %? \n%U\n" :empty-lines 1)
 	("n" "NEXT" entry (file+headline "/Users/andrew/org/agenda/gtd.org" "Tasks")
 	 "* NEXT %? \n%U\n" :empty-lines 1)
-	("h" "New Headline" entry (file+headline "/Users/andrew/agenda/gtd.org" "Notes")
+	("h" "New Headline" entry (file+headline "/Users/andrew/org/agenda/gtd.org" "Notes")
 	   "* %?\n")
 	("p" "Plan" entry (file+headline "/Users/andrew/org/agenda/gtd.org" "Plans")
 	"* %?\n")
