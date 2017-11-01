@@ -2,9 +2,7 @@
   :commands gnus
   :config
     (add-to-list 'evil-emacs-state-modes 'gnus-group-mode)
-    (setq user-mail-address "inbox.asanchez@gmail.com"
-	  user-full-name "Andrew Sanchez"
-	  send-mail-function (quote smtpmail-send-it))
+    (setq send-mail-function (quote smtpmail-send-it))
     (setq gnus-select-method
 	  '(nnimap "gmail"
 		   (nnimap-address "imap.gmail.com")
