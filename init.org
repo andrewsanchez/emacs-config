@@ -1,27 +1,17 @@
 #+PROPERTY: header-args: tangle "init.el"
-* Custom set variables
-#+begin_src elisp :tangle yes
-  (custom-set-variables
-   '(custom-safe-themes
-     (quote
-      ("8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" "d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" default)))
-   '(initial-frame-alist (quote ((fullscreen . maximized))))
-   '(safe-local-variable-values
-     (quote
-      ((pyvenv-activate . "/Users/andrew/anaconda3/envs/genbank-qc")
-       (projectile-project-test-cmd . "~/anaconda3/envs/genbankfilter/bin/pytest -s test/test_*")))))
-
-#+end_src
 * Packages
 ** Sources 
 #+begin_src elisp :tangle yes
-  (package-initialize)
+  (require 'package)
+
   (setq package-archives
       '(("gnu" . "http://elpa.gnu.org/packages/")
 	("marmalade" . "http://marmalade-repo.org/packages/")
 	("melpa" . "http://melpa.milkbox.net/packages/")
 	("melpa-stable" . "http://stable.melpa.org/packages/")
 	("elpy" . "https://jorgenschaefer.github.io/packages/")))
+  (package-initialize)
+  (package-refresh-contents)
 #+end_src
 ** Use-package
 #+begin_src elisp :tangle yes
@@ -303,13 +293,16 @@ Display a more compact mode line
 	      "* TODO %? \n%U\n" :empty-lines 1)
 	     ("n" "NEXT" entry (file+headline "/Users/andrew/org/agenda/gtd.org" "Tasks")
 	      "* NEXT %? \n%U\n" :empty-lines 1)
-	     ("h" "New Headline" entry (file+headline "/Users/andrew/agenda/gtd.org" "Notes")
+	     ("h" "New Headline" entry (file+headline "/Users/andrew/org/agenda/gtd.org" "Notes")
 		"* %?\n")
 	     ("p" "Plan" entry (file+headline "/Users/andrew/org/agenda/gtd.org" "Plans")
 	     "* %?\n")
 	     ("j" "Journal" entry (file+datetree "/Users/andrew/org/agenda/journal.org")
 	     "* %?\nEntered on %U\n")))
 #+end_src
+
+#+RESULTS:
+| t | TODO | entry | (file+headline /Users/andrew/org/agenda/gtd.org Tasks) | * TODO %? |
 
 ** Agenda
 #+begin_src elisp :tangle yes
@@ -818,7 +811,7 @@ Also look at sensible-defaults
 : t
 * Elfeed
 #+begin_src elisp :tangle yes
-  (use-package elfeed
+(use-package elfeed
     :commands elfeed
     :config
     (use-package elfeed-org
@@ -832,15 +825,41 @@ Also look at sensible-defaults
 #+end_src
 
 #+RESULTS:
+* MU4E
+#+begin_src elisp :tangle yes
+  (use-package mu4e
+    :load-path "/usr/local/Cellar/mu/HEAD-65863e4_1/share/emacs/site-lisp/mu/mu4e"
+    :commands mu4e
+    :config
+    (setq mu4e-change-filenames-when-moving t)
+    (setq mu4e-sent-messages-behavior 'delete)
+    (setq mu4e-mu-binary "/usr/local/bin/mu")
+    (setq mu4e-get-mail-command "/usr/local/bin/mbsync -a")
+    ; tell mu4e to use w3m for html rendering
+    ; brew install w3m if necessary
+    ; (setq mu4e-html2text-command "/usr/local/bin/w3m -T text/html")
+    (setq mu4e-maildir (expand-file-name "~/Maildir"))
+    (setq mu4e-drafts-folder "/drafts"
+	  mu4e-sent-folder "/sent"
+	  setq mu4e-trash-folder "/trash"
+	  mu4e-refile-folder "/archive")
+    (setq mu4e-maildir-shortcuts
+	  '(("/INBOX". ?i)
+	    ("sent" . ?s)
+	    ("trash" . ?t)
+	    ("all" . ?a))))
+
+#+end_src
+
+#+RESULTS:
+
 * Gnus
 #+begin_src elisp :tangle gnus.el
   (use-package gnus
     :commands gnus
     :config
       (add-to-list 'evil-emacs-state-modes 'gnus-group-mode)
-      (setq user-mail-address "inbox.asanchez@gmail.com"
-	    user-full-name "Andrew Sanchez"
-	    send-mail-function (quote smtpmail-send-it))
+      (setq send-mail-function (quote smtpmail-send-it))
       (setq gnus-select-method
 	    '(nnimap "gmail"
 		     (nnimap-address "imap.gmail.com")
@@ -1007,3 +1026,16 @@ Also look at sensible-defaults
 #+RESULTS:
 * Future
 ** TODO Create list for globally enabled packages
+* Custom set variables
+#+begin_src elisp :tangle yes
+  (custom-set-variables
+   '(custom-safe-themes
+     (quote
+      ("8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" "d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" default)))
+   '(initial-frame-alist (quote ((fullscreen . maximized))))
+   '(safe-local-variable-values
+     (quote
+      ((pyvenv-activate . "/Users/andrew/anaconda3/envs/genbank-qc")
+       (projectile-project-test-cmd . "~/anaconda3/envs/genbankfilter/bin/pytest -s test/test_*")))))
+
+#+end_src
