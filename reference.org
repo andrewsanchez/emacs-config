@@ -1,0 +1,39 @@
+* Packages
+** Bindings
+*** God mode
+    This is a global minor mode for entering Emacs commands without modifier keys. It's similar to Vim's separation of commands and insertion mode.
+    - https://github.com/chrisdone/god-mode
+*** fbergrot on github
+    See his evil-use-package
+    - https://github.com/fbergroth/.emacs.d
+** Hydras
+*** TODO [[https://github.com/abo-abo/hydra/wiki/Window-Management][window management]]
+*** TODO [[https://github.com/abo-abo/hydra/wiki/Dired][dired]]
+** helm
+   - https://github.com/abo-abo/hydra/wiki/Helm
+   - https://github.com/abo-abo/hydra/wiki/Helm-2
+** [[https://github.com/abo-abo/hydra/wiki/Switch-to-buffer][switch to buffer]]
+** IDE Enhancements
+*** [[https://github.com/gregsexton/origami.el][Origami - folding minor mode]]
+    - [[https://github.com/abo-abo/hydra/wiki/origami-code-folding][hydra]]
+** Magnar
+*** TODO [[https://github.com/magnars/s.el][The long lost Emacs string manipulation library.]]
+    - try to implement a hydra for this functions
+*** TODO [[https://github.com/magnars/dash.el][A modern list library for Emacs]]
+* Email
+** IMAP
+*** [[http://isync.sourceforge.net/][isync]]
+*** MU4E
+    - http://pragmaticemacs.com/mu4e-tutorials/
+** [[https://www.reddit.com/r/emacs/comments/3s5fas/which_email_client_mu4e_mutt_notmuch_gnus_do_you/][Reddit discussion]]
+   - Which email client (mu4e, Mutt, notmuch, Gnus) do you use inside Emacs, and why?
+* File System and Buffer management
+** TODO [[https://www.masteringemacs.org/article/introduction-to-ido-mode][Intro to IDO Mode]]
+   From Mastering Emacs:
+
+
+ 
+** TODO [[https://www.masteringemacs.org/article/working-multiple-files-dired][Working with multiple files in dired]]
+* Noteable Configurations
+** [[https://github.com/AndreaCrotti/minimal-emacs-configuration][Minimal python config]]
+** [[https://github.com/AndreaCrotti/Emacs-configuration][Guy who contributed all the yasnippets]]
