@@ -143,7 +143,8 @@
   ("f" helm-find-files "helm-find-files")
   ("m" helm-multi-files "helm-multi-files")
   ("b" helm-filtered-bookmarks "helm-filtered-bookmarks")
-  ("t" neotree-toggle "neotree-toggle"))
+  ("t" neotree-toggle "neotree-toggle")
+  ("r" helm-recentf "recentf-open-files"))
 
 (defhydra hydra-applications ()
   "Applications"
