@@ -642,27 +642,26 @@ _k_: kill        _s_: split                   _{_: wrap with { }
       (elfeed-org)
       (setq rmh-elfeed-org-files (list "~/org/elfeed.org"))))
 
-(use-package mu4e
-  :load-path "/usr/local/Cellar/mu/HEAD-65863e4_1/share/emacs/site-lisp/mu/mu4e"
-  :commands mu4e
-  :config
+(add-to-list 'load-path "/usr/local/Cellar/mu/HEAD-65863e4_1/share/emacs/site-lisp")
+; (require 'mu4e nil t)
+(require 'mu4e)
   (setq mu4e-change-filenames-when-moving t)
   (setq mu4e-sent-messages-behavior 'delete)
   (setq mu4e-mu-binary "/usr/local/bin/mu")
   (setq mu4e-get-mail-command "/usr/local/bin/mbsync -a")
   ; tell mu4e to use w3m for html rendering
   ; brew install w3m if necessary
-  ; (setq mu4e-html2text-command "/usr/local/bin/w3m -T text/html")
+  (setq mu4e-html2text-command "/usr/local/bin/w3m -T text/html")
   (setq mu4e-maildir (expand-file-name "~/Maildir"))
-  (setq mu4e-drafts-folder "/drafts"
-	mu4e-sent-folder "/sent"
-	setq mu4e-trash-folder "/trash"
-	mu4e-refile-folder "/archive")
+  (setq mu4e-drafts-folder "/drafts") 
+  (setq mu4e-sent-folder "/sent")
+  (setq mu4e-trash-folder "/trash")
+  (setq mu4e-refile-folder "/archive")
   (setq mu4e-maildir-shortcuts
 	'(("/INBOX". ?i)
-	  ("sent" . ?s)
-	  ("trash" . ?t)
-	  ("all" . ?a))))
+	  ("/sent" . ?s)
+	  ("/trash" . ?t)
+	  ("/all" . ?a)))
 
 (use-package keyfreq
   :config
