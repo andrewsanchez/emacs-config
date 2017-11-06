@@ -257,9 +257,15 @@
     (setq org-pomodoro-long-break-sound mindfulness-chimes)
     (setq org-pomodoro-start-sound-p t))
 
+; Can't remember what I wanted this for...
+; (use-package org-plus-contrib)
+(use-package ob-ipython)
 (org-babel-do-load-languages
  'org-babel-load-languages
-'((emacs-lisp . t) (shell . t)))
+ '((emacs-lisp . t)
+   (shell . t)
+   (ipython . t)
+   (python . t)))
 
 (setq org-capture-templates
       '(("t" "TODO" entry (file+headline "/Users/andrew/org/agenda/gtd.org" "Tasks")
