@@ -37,3 +37,171 @@
 * Noteable Configurations
 ** [[https://github.com/AndreaCrotti/minimal-emacs-configuration][Minimal python config]]
 ** [[https://github.com/AndreaCrotti/Emacs-configuration][Guy who contributed all the yasnippets]]
+
+* From Howard
+** Modernizing Emacs
+
+    With a long history of working on small machines without gigabytes
+    of RAM, we might as well let Emacs be the beast it has always
+    dreamed.
+
+    First, let’s increase the cache before starting garbage collection:
+    #+begin_src elisp
+      (setq gc-cons-threshold 50000000)
+    #+end_src
+
+    Found [[https://github.com/wasamasa/dotemacs/blob/master/init.org#init][here]] how to remove the warnings from the GnuTLS library when
+    using HTTPS... increase the minimum prime bits size:
+    #+begin_src elisp
+      (setq gnutls-min-prime-bits 4096)
+    #+end_src
+
+** Encrypting
+   Files
+
+    Synchronize notes formatted in org-mode across multiple computers
+    with cloud storage services, like Dropbox? Those files are /cached/
+    in various other storage facilities... so, I use symmetric key
+    encryption with [[http://en.wikipedia.org/wiki/Pretty_Good_Privacy][PGP]].
+
+    To get started on the Mac, install the goodies:
+
+    #+begin_src shell
+      brew install gpg
+    #+end_src
+
+    Now, any file loaded with a =gpg= extension, e.g. =some.org.gpg=,
+    will prompt for a password (and then use =org-mode=).  Since these
+    files are for my eyes only, I don’t need the key-ring prompt:
+
+    #+begin_src elisp
+      (setq epa-file-select-keys 2)
+    #+end_src
+
+    If you trust your Emacs session on your computer, you can have
+    Emacs cache the password.
+
+    #+begin_src elisp
+      (setq epa-file-cache-passphrase-for-symmetric-encryption t)
+    #+end_src
+* Block Wrappers
+
+   While the =M-(= binding to =insert-pair= is great, I often need to
+   wrap with other characters:
+
+   #+begin_src elisp
+     (global-set-key (kbd "M-[") 'insert-pair)
+     (global-set-key (kbd "M-{") 'insert-pair)
+     (global-set-key (kbd "M-<") 'insert-pair)
+     (global-set-key (kbd "M-'") 'insert-pair)
+     (global-set-key (kbd "M-`") 'insert-pair)
+     (global-set-key (kbd "M-\"") 'insert-pair)
+   #+end_src
+
+   But [[https://github.com/rejeep/wrap-region.el][wrap-region]] is even more flexible. In most editors, selecting
+   text and typing anything replaces the selected text (see the
+   [[info:emacs#Using%20Region][delete-selection-mode]]), but in this case, we can do something
+   different... like wrapping:
+
+   #+begin_src elisp
+     (use-package wrap-region
+       :ensure   t
+       :config
+       (wrap-region-global-mode t)
+       (wrap-region-add-wrappers
+        '(("(" ")")
+          ("[" "]")
+          ("{" "}")
+          ("<" ">")
+          ("'" "'")
+          ("\"" "\"")
+          ("‘" "’"   "q")
+          ("“" "”"   "Q")
+          ("*" "*"   "b"   org-mode)                 ; bolden
+          ("*" "*"   "*"   org-mode)                 ; bolden
+          ("/" "/"   "i"   org-mode)                 ; italics
+          ("/" "/"   "/"   org-mode)                 ; italics
+          ("~" "~"   "c"   org-mode)                 ; code
+          ("~" "~"   "~"   org-mode)                 ; code
+          ("=" "="   "v"   org-mode)                 ; verbatim
+          ("=" "="   "="   org-mode)                 ; verbatim
+          ("_" "_"   "u" '(org-mode markdown-mode))  ; underline
+          ("**" "**" "b"   markdown-mode)            ; bolden
+          ("*" "*"   "i"   markdown-mode)            ; italics
+          ("`" "`"   "c" '(markdown-mode ruby-mode)) ; code
+          ("`" "'"   "c"   lisp-mode)                ; code
+          ))
+       :diminish wrap-region-mode)
+   #+end_src
+
+   But in order to wrap text in a more general way (with just about
+   any textual string), we need something more. Especially with the
+   =expand-region= command, wrapping a logical block of text with a
+   beginning and ending string really makes sense.
+
+   #+begin_src elisp
+     (defun surround (start end txt)
+       "Wrap region with textual markers.
+
+      Without active region (START and END), use the current 'symbol /
+     word' at point instead of TXT.
+
+     Useful for wrapping parens and angle-brackets to also
+     insert the matching closing symbol.
+
+     This function also supports some `org-mode' wrappers:
+
+       - `#s` wraps the region in a source code block
+       - `#e` wraps it in an example block
+       - `#q` wraps it in an quote block"
+       (interactive "r\nsEnter text to surround: " start end txt)
+
+       ;; If the region is not active, we use the 'thing-at-point' function
+       ;; to get a "symbol" (often a variable or a single word in text),
+       ;; and use that as our region.
+
+       (if (not (region-active-p))
+           (let ((new-region (bounds-of-thing-at-point 'symbol)))
+             (setq start (car new-region))
+             (setq end (cdr new-region))))
+
+       ;; We create a table of "odd balls" where the front and the end are
+       ;; not the same string.
+       (let* ((s-table '(("#e" . ("#+BEGIN_EXAMPLE\n" "\n#+END_EXAMPLE") )
+                         ("#s" . ("#+begin_src \n"    "\n#+end_src") )
+                         ("#q" . ("#+BEGIN_QUOTE\n"   "\n#+END_QUOTE"))
+                         ("<"  . ("<" ">"))
+                         ("("  . ("(" ")"))
+                         ("{"  . ("{" "}"))
+                         ("["  . ("[" "]"))))    ; Why yes, we'll add more
+              (s-pair (assoc-default txt s-table)))
+
+         ;; If txt doesn't match a table entry, then the pair will just be
+         ;; the text for both the front and the back...
+         (unless s-pair
+           (setq s-pair (list txt txt)))
+
+         (save-excursion
+           (narrow-to-region start end)
+           (goto-char (point-min))
+           (insert (car s-pair))
+           (goto-char (point-max))
+           (insert (cadr s-pair))
+           (widen))))
+
+     (global-set-key (kbd "C-+") 'surround)
+   #+end_src
+
+   This function returns an interactive lambda expression, suitable
+   for adding to a key-binding:
+
+   #+begin_src elisp
+     (defun surround-text-with (surr-str)
+       "Return an interactive function that when called, surrounds region (or word) with string, SURR-STR."
+       (lexical-let ((text surr-str))
+           (lambda ()
+             (interactive)
+             (if (region-active-p)
+                 (surround (region-beginning) (region-end) text)
+               (surround nil nil text)))))
+   #+end_src
