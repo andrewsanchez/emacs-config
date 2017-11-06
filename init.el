@@ -96,6 +96,8 @@
       "<SPC>" 'helm-M-x
       "sj" 'helm-semantic-or-imenu
       "ha" 'helm-apropos
+      "ho" 'helm-info-org
+      "hi" 'helm-info
       "ss" 'helm-occur)
   :commands
   (helm-google-suggest helm-M-x helm-semantic-or-imenu helm-apropos helm-occur)
