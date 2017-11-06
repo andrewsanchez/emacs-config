@@ -713,9 +713,9 @@ _k_: kill        _s_: split                   _{_: wrap with { }
 (use-package realgud
   :commands realgud
   :config
-  (add-hook 'realgud-short-key-mode-hook
-      (lambda ()
-        (local-set-key "\C-c" realgud:shortkey-mode-map)))
+  (add-hook
+   'realgud-short-key-mode-hook
+   (lambda () (local-set-key "\C-c" realgud:shortkey-mode-map)))
   (setq realgud:pdb-command-name "python -m pdb"))
 
 (use-package gnugo
