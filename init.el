@@ -120,6 +120,10 @@
 	 (interactive)
 	 (pop-to-buffer "*scratch*"))
    "scratch")
+  ("i" (lambda ()
+	 (interactive)
+	 (pop-to-buffer "*info*"))
+   "info")
   ("b" helm-buffers-list "helm buffers list"))
 
 (evil-leader/set-key "b" 'hydra-buffers/body)
