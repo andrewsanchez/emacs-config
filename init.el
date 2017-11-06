@@ -375,6 +375,7 @@
 (require 'saveplace)
 (setq-default save-place t)
 (fset 'yes-or-no-p 'y-or-n-p)
+(setq initial-scratch-message "") ;; Uh, I know what Scratch is for
 
 ;; This doesn't actually seem to be faster...
 ;; (setq tramp-default-method "ssh")
