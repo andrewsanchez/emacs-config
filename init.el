@@ -86,7 +86,6 @@
 (use-package smart-mode-line
     :init
     (setq sml/no-confirm-load-theme t)
-    :config
     (sml/setup))
 (display-time-mode 1)
 
