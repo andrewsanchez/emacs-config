@@ -1,24 +1,31 @@
-(require 'package)
+(defconst as/emacs-directory (concat (getenv "HOME") "/.emacs.d/"))
+(setq user-full-name "Andrew Sanchez"
+      user-mail-address "inbox.asanchez@gmail.com")
 
-(setq package-archives
-    '(("gnu" . "http://elpa.gnu.org/packages/")
-      ("marmalade" . "http://marmalade-repo.org/packages/")
-      ("melpa" . "http://melpa.milkbox.net/packages/")
-      ("melpa-stable" . "http://stable.melpa.org/packages/")
-      ("elpy" . "https://jorgenschaefer.github.io/packages/")))
+(setq custom-file (expand-file-name "custom.el" as/emacs-directory))
+(when (file-exists-p custom-file)
+  (load custom-file))
+
+(require 'package)
+  (add-to-list 'load-path "packages")
+  (setq package-archives
+      '(("gnu" . "http://elpa.gnu.org/packages/")
+	("marmalade" . "http://marmalade-repo.org/packages/")
+	("melpa" . "http://melpa.milkbox.net/packages/")
+	("melpa-stable" . "http://stable.melpa.org/packages/")
+	("elpy" . "https://jorgenschaefer.github.io/packages/")
+	("org" . "http://orgmode.org/elpa/")))
+
 (package-initialize)
-(package-refresh-contents)
 
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
   (package-install 'use-package))
 (eval-when-compile
+
   (require 'use-package))
 (setq use-package-always-ensure t)
 (setq use-package-verbose t)
-
-(setq user-full-name "Andrew Sanchez"
-      user-mail-address "inbox.asanchez@gmail.com")
 
 (use-package evil-leader
   :config
