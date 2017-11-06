@@ -1,35 +1,49 @@
-#+PROPERTY: header-args: tangle "init.el"
-* Packages
-** Sources 
-#+begin_src elisp :tangle yes
-  (require 'package)
-
-  (setq package-archives
-      '(("gnu" . "http://elpa.gnu.org/packages/")
-	("marmalade" . "http://marmalade-repo.org/packages/")
-	("melpa" . "http://melpa.milkbox.net/packages/")
-	("melpa-stable" . "http://stable.melpa.org/packages/")
-	("elpy" . "https://jorgenschaefer.github.io/packages/")))
-  (package-initialize)
-  (package-refresh-contents)
-#+end_src
-** Use-package
-#+begin_src elisp :tangle yes
-(unless (package-installed-p 'use-package)
-  (package-refresh-contents)
-  (package-install 'use-package))
-(eval-when-compile
-  (require 'use-package))
-(setq use-package-always-ensure t)
-(setq use-package-verbose t)
-#+end_src
-* Personal info
-#+begin_src elisp :tangle yes
+* Personal info and constants
+#+begin_src elisp :tangle init.el
+(defconst as/emacs-directory (concat (getenv "HOME") "/.emacs.d/"))
 (setq user-full-name "Andrew Sanchez"
       user-mail-address "inbox.asanchez@gmail.com")
 #+end_src
+
+#+RESULTS:
+: inbox.asanchez@gmail.com
+
+* Custom set variables
+#+begin_src elisp :tangle init.el
+  (setq custom-file (expand-file-name "custom.el" as/emacs-directory))
+  (when (file-exists-p custom-file)
+    (load custom-file))
+#+end_src
+
+* Packages
+#+begin_src elisp :tangle init.el
+    (require 'package)
+    (add-to-list 'load-path "packages")
+    (setq package-archives
+	'(("gnu" . "http://elpa.gnu.org/packages/")
+	  ("marmalade" . "http://marmalade-repo.org/packages/")
+	  ("melpa" . "http://melpa.milkbox.net/packages/")
+	  ("melpa-stable" . "http://stable.melpa.org/packages/")
+	  ("elpy" . "https://jorgenschaefer.github.io/packages/")
+	  ("org" . "http://orgmode.org/elpa/")))
+
+  (package-initialize)
+
+  (unless (package-installed-p 'use-package)
+    (package-refresh-contents)
+    (package-install 'use-package))
+  (eval-when-compile
+
+    (require 'use-package))
+  (setq use-package-always-ensure t)
+  (setq use-package-verbose t)
+#+end_src
+
+#+RESULTS:
+: t
+
 * Evil
-#+begin_src elisp :tangle yes
+#+begin_src elisp :tangle init.el
     (use-package evil-leader
       :config
       (global-evil-leader-mode)
@@ -74,7 +88,7 @@
 #+end_src
 
 ** Exclude list
-#+begin_src elisp :tangle yes
+#+begin_src elisp :tangle init.el
   (add-to-list 'evil-emacs-state-modes 'dired-mode)
   (add-to-list 'evil-emacs-state-modes 'flycheck-error-list-mode)
   (add-to-list 'evil-emacs-state-modes 'elfeed-search-mode)
@@ -84,8 +98,8 @@
 
 #+end_src
 
-* Core
-#+begin_src elisp :tangle yes
+* Misc
+#+begin_src elisp :tangle init.el
   (use-package expand-region
     :config
     (global-set-key (kbd "C-=") 'er/expand-region))
@@ -99,11 +113,10 @@
 * Modeline
 Display a more compact mode line
 
-#+begin_src elisp :tangle yes
+#+begin_src elisp :tangle init.el
   (use-package smart-mode-line
       :init
       (setq sml/no-confirm-load-theme t)
-      :config
       (sml/setup))
   (display-time-mode 1)
 #+end_src
@@ -111,11 +124,9 @@ Display a more compact mode line
 #+RESULTS:
 : t
 
-#+begin_src emacs-lisp
-#+end_src
 * Helm
   Also check out [[https://github.com/abo-abo/swiper][ivy and swiper]] and helm-swiper.
-#+begin_src elisp :tangle yes
+#+begin_src elisp :tangle init.el
   (use-package helm
     :init
     (evil-leader/set-key
@@ -123,6 +134,8 @@ Display a more compact mode line
 	"<SPC>" 'helm-M-x
 	"sj" 'helm-semantic-or-imenu
 	"ha" 'helm-apropos
+	"ho" 'helm-info-org
+	"hi" 'helm-info
 	"ss" 'helm-occur)
     :commands
     (helm-google-suggest helm-M-x helm-semantic-or-imenu helm-apropos helm-occur)
@@ -140,12 +153,14 @@ Display a more compact mode line
 #+RESULTS:
   
 * Hydra
-#+begin_src elisp :tangle yes
+#+begin_src elisp :tangle init.el
 (use-package hydra)
 #+end_src
 
+#+RESULTS:
+
 ** Buffers
-#+begin_src elisp :tangle yes
+#+begin_src elisp :tangle init.el
   (defhydra hydra-buffers (:color blue)
     "Buffers"
     ("d" kill-this-buffer "kill buffer")
@@ -153,6 +168,10 @@ Display a more compact mode line
 	   (interactive)
 	   (pop-to-buffer "*scratch*"))
      "scratch")
+    ("i" (lambda ()
+	   (interactive)
+	   (pop-to-buffer "*info*"))
+     "info")
     ("b" helm-buffers-list "helm buffers list"))
 
   (evil-leader/set-key "b" 'hydra-buffers/body)
@@ -161,7 +180,7 @@ Display a more compact mode line
 #+RESULTS:
 
 ** Files
-#+begin_src elisp :tangle yes
+#+begin_src elisp :tangle init.el
 
   (evil-leader/set-key "f" 'hydra-files/body)
 
@@ -178,7 +197,8 @@ Display a more compact mode line
     ("f" helm-find-files "helm-find-files")
     ("m" helm-multi-files "helm-multi-files")
     ("b" helm-filtered-bookmarks "helm-filtered-bookmarks")
-    ("t" neotree-toggle "neotree-toggle"))
+    ("t" neotree-toggle "neotree-toggle")
+    ("r" helm-recentf "recentf-open-files"))
 
 #+end_src
 
@@ -186,7 +206,7 @@ Display a more compact mode line
 : hydra-files/body
 
 ** Applications
-#+begin_src elisp :tangle yes
+#+begin_src elisp :tangle init.el
   (defhydra hydra-applications ()
     "Applications"
     ("d" deft "deft find file"))
@@ -195,8 +215,45 @@ Display a more compact mode line
 
 #+RESULTS:
 
+* Yasnippet
+#+begin_src elisp :tangle init.el
+
+(use-package yasnippet
+    :config
+    (require 'yasnippet)
+    (yas-global-mode 1)
+    :init
+    (evil-leader/set-key
+      "y" 'hydra-yasnippet/body)
+
+  (defhydra hydra-yasnippet (:color blue :hint nil)
+    "
+		^YASnippets^
+  --------------------------------------------
+    Modes:    Load/Visit:    Actions:
+
+   _g_lobal  _d_irectory    _i_nsert
+   _m_inor   _f_ile         _t_ryout
+   _e_xtra   _l_ist         _n_ew
+	   _a_ll
+  "
+    ("d" yas-load-directory)
+    ("e" yas-activate-extra-mode)
+    ("i" yas-insert-snippet)
+    ("f" yas-visit-snippet-file :color blue)
+    ("n" yas-new-snippet)
+    ("t" yas-tryout-snippet)
+    ("l" yas-describe-tables)
+    ("g" yas/global-mode)
+    ("m" yas/minor-mode)
+    ("a" yas-reload-all)))
+#+end_src
+
+#+RESULTS:
+: t
+
 * Org-mode
-#+begin_src elisp :tangle yes
+#+begin_src elisp :tangle init.el
   (use-package org
     :load-path "~/.emacs.d/packages/org-mode/lisp"
     :init
@@ -274,19 +331,23 @@ Display a more compact mode line
       (setq org-pomodoro-start-sound-p t))
 #+end_src
 
-#+RESULTS:
-
 ** Babel
-#+begin_src elisp :tangle yes
+#+begin_src elisp :tangle init.el
+  ; Can't remember what I wanted this for...
+  ; (use-package org-plus-contrib)
+  (use-package ob-ipython)
   (org-babel-do-load-languages
    'org-babel-load-languages
-  '((emacs-lisp . t) (shell . t)))
+   '((emacs-lisp . t)
+     (shell . t)
+     (ipython . t)
+     (python . t)))
 #+end_src
 
 #+RESULTS:
 
 ** Capture
-#+begin_src elisp :tangle yes
+#+begin_src elisp :tangle init.el
 
      (setq org-capture-templates
 	   '(("t" "TODO" entry (file+headline "/Users/andrew/org/agenda/gtd.org" "Tasks")
@@ -305,7 +366,7 @@ Display a more compact mode line
 | t | TODO | entry | (file+headline /Users/andrew/org/agenda/gtd.org Tasks) | * TODO %? |
 
 ** Agenda
-#+begin_src elisp :tangle yes
+#+begin_src elisp :tangle init.el
 
 (defun org-archive-done-tasks ()
   (interactive)
@@ -352,11 +413,11 @@ Display a more compact mode line
 * Windows and frames
 ** Toolbar
    Save space by not showing the toolbar
-#+begin_src elisp :tangle yes
+#+begin_src elisp :tangle init.el
 (tool-bar-mode -1)
 #+end_src
 ** Golden ratio mode
-#+begin_src elisp :tangle yes
+#+begin_src elisp :tangle init.el
   (use-package golden-ratio
     :config
     (golden-ratio-mode 1)
@@ -368,7 +429,7 @@ Display a more compact mode line
 #+end_src
 ** Winner mode
 Undo and redo window configuration
-#+begin_src elisp :tangle yes
+#+begin_src elisp :tangle init.el
   (use-package winner
     :commands
     (winner-undo winner-redo)
@@ -383,7 +444,7 @@ Undo and redo window configuration
 : t
 
 ** Zoom
-#+begin_src elisp :tangle yes
+#+begin_src elisp :tangle init.el
   (use-package zoom-frm
     :commands hydra-zoom)
 
@@ -399,14 +460,14 @@ Undo and redo window configuration
 : hydra-zoom/body
 
 * Backups
-#+begin_src elisp :tangle yes
+#+begin_src elisp :tangle init.el
 ;; Special dir for backups
 (setq backup-directory-alist '(("." . "~/.emacs.d/backups")))
 #+end_src
 
 * Magit
 
-#+begin_src elisp :tangle yes
+#+begin_src elisp :tangle init.el
   (use-package magit
     :init (evil-leader/set-key "gs" 'magit-status)
     :commands magit-status
@@ -418,7 +479,7 @@ Undo and redo window configuration
 
 * Better defaults
 Also look at sensible-defaults
-#+begin_src elisp :tangle yes
+#+begin_src elisp :tangle init.el
 (show-paren-mode 1)
 (menu-bar-mode -1)
 (when (fboundp 'tool-bar-mode)
@@ -434,9 +495,11 @@ Also look at sensible-defaults
 (require 'saveplace)
 (setq-default save-place t)
 (fset 'yes-or-no-p 'y-or-n-p)
+(setq initial-scratch-message "") ;; Uh, I know what Scratch is for
+
 #+end_src
 * Tramp
-#+begin_src elisp :tangle yes
+#+begin_src elisp :tangle init.el
 ;; This doesn't actually seem to be faster...
 ;; (setq tramp-default-method "ssh")
 (setq tramp-inline-compress-start-size 1000000)
@@ -444,7 +507,7 @@ Also look at sensible-defaults
 
 * Binding related
   Also check out [[https://github.com/nonsequitur/smex][smex]] 
-#+begin_src elisp :tangle yes
+#+begin_src elisp :tangle init.el
   (use-package which-key
       :defer 10
       :config
@@ -454,7 +517,7 @@ Also look at sensible-defaults
 #+RESULTS:
 
 * Python
-#+begin_src elisp :tangle yes
+#+begin_src elisp :tangle init.el
   (use-package python
     :defer t
     :mode ("\\.py\\'" . python-mode)
@@ -549,30 +612,30 @@ Also look at sensible-defaults
    Fixes this error message:
    Warning (python): Your ‘python-shell-interpreter’ doesn’t seem to support readline, yet ‘python-shell-completion-native’ was t and "ipython3" is not part of the ‘python-shell-completion-native-disabled-interpreters’ list. Native completions have been disabled locally.
 
- #+begin_src elisp :tangle yes
- (defun python-shell-completion-native-try ()
-   "Return non-nil if can trigger native completion."
-   (let ((python-shell-completion-native-enable t)
-         (python-shell-completion-native-output-timeout
-           python-shell-completion-native-try-output-timeout))
-      (python-shell-completion-native-get-completions
-       (get-buffer-process (current-buffer))
-       nil "_")))
- #+end_src
-
+#+begin_src elisp :tangle init.el
+(defun python-shell-completion-native-try ()
+  "Return non-nil if can trigger native completion."
+  (let ((python-shell-completion-native-enable t)
+        (python-shell-completion-native-output-timeout
+          python-shell-completion-native-try-output-timeout))
+     (python-shell-completion-native-get-completions
+      (get-buffer-process (current-buffer))
+      nil "_")))
+#+end_src
+   
 * Yapfify
-#+begin_src elisp :tangle yes
+#+begin_src elisp :tangle init.el
   (use-package yapfify :commands yapfify-buffer)
 #+end_src
 * Exec-path-from-shell
-#+begin_src elisp :tangle yes
+#+begin_src elisp :tangle init.el
 (use-package exec-path-from-shell)
 (when (memq window-system '(mac ns x))
   (exec-path-from-shell-initialize))
 #+end_src
 
 * Smartparens
-#+begin_src elisp :tangle yes
+#+begin_src elisp :tangle init.el
   (use-package smartparens
       :config
       (autoload 'smartparens-mode "paredit" "Turn on pseudo-structural editing of Lisp code." t)
@@ -642,7 +705,7 @@ Also look at sensible-defaults
 : t
 
 * Projectile
-#+begin_src elisp :tangle yes
+#+begin_src elisp :tangle init.el
 
   (use-package projectile
     :init
@@ -662,45 +725,8 @@ Also look at sensible-defaults
 
 #+RESULTS:
 
-* Yasnippet
-#+begin_src elisp :tangle yes
-  (use-package yasnippet
-    :load-path "~/.emacs.d/packages/yasnippet"
-    :config
-    (require 'yasnippet)
-    (yas-global-mode 1)
-    :init
-    (evil-leader/set-key
-      "y" 'hydra-yasnippet/body)
-
-  (defhydra hydra-yasnippet (:color blue :hint nil)
-    "
-		^YASnippets^
-  --------------------------------------------
-    Modes:    Load/Visit:    Actions:
-
-   _g_lobal  _d_irectory    _i_nsert
-   _m_inor   _f_ile         _t_ryout
-   _e_xtra   _l_ist         _n_ew
-	   _a_ll
-  "
-    ("d" yas-load-directory)
-    ("e" yas-activate-extra-mode)
-    ("i" yas-insert-snippet)
-    ("f" yas-visit-snippet-file :color blue)
-    ("n" yas-new-snippet)
-    ("t" yas-tryout-snippet)
-    ("l" yas-describe-tables)
-    ("g" yas/global-mode)
-    ("m" yas/minor-mode)
-    ("a" yas-reload-all)))
-#+end_src
-
-#+RESULTS:
-: t
-
 * Themes and fonts
-#+begin_src elisp :tangle yes
+#+begin_src elisp :tangle init.el
   (use-package solarized-theme
     :config
     (evil-leader/set-key "tt" 'toggle-theme))
@@ -718,7 +744,7 @@ Also look at sensible-defaults
 #+end_src
 * Completion
 
-#+begin_src elisp :tangle yes
+#+begin_src elisp :tangle init.el
   (use-package company
     :config
     (global-company-mode))
@@ -738,7 +764,7 @@ Also look at sensible-defaults
 : t
 
 ** Helm-wordnet
-#+begin_src elisp :tangle yes
+#+begin_src elisp :tangle init.el
   (use-package helm-wordnet
     :commands helm-wordnet
     :load-path "packages/helm-wordnet"
@@ -749,7 +775,7 @@ Also look at sensible-defaults
 #+end_src
 
 ** Google translate
-#+begin_src elisp :tangle yes
+#+begin_src elisp :tangle init.el
   (use-package google-translate
     :commands (google-translate-at-point google-translate-smooth-translate)
     :config
@@ -760,7 +786,7 @@ Also look at sensible-defaults
       "ww" 'google-translate-smooth-translate))
 #+end_src
 * Display
-#+begin_src elisp :tangle yes
+#+begin_src elisp :tangle init.el
 (use-package linum-relative
     :config
     (linum-relative-global-mode))
@@ -770,7 +796,7 @@ Also look at sensible-defaults
 #+RESULTS:
 : t
 * Flycheck
-#+begin_src elisp :tangle yes
+#+begin_src elisp :tangle init.el
   (use-package flycheck
     :init
     (add-hook 'after-init-hook 'global-flycheck-mode)
@@ -792,7 +818,7 @@ Also look at sensible-defaults
 #+RESULTS:
 : t
 * Deft
-#+begin_src elisp :tangle yes
+#+begin_src elisp :tangle init.el
   (use-package deft
     :config
     (setq deft-directory "~/org")
@@ -810,7 +836,7 @@ Also look at sensible-defaults
 #+RESULTS:
 : t
 * Elfeed
-#+begin_src elisp :tangle yes
+#+begin_src elisp :tangle init.el
 (use-package elfeed
     :commands elfeed
     :config
@@ -826,32 +852,32 @@ Also look at sensible-defaults
 
 #+RESULTS:
 * MU4E
-#+begin_src elisp :tangle yes
-  (use-package mu4e
-    :load-path "/usr/local/Cellar/mu/HEAD-65863e4_1/share/emacs/site-lisp/mu/mu4e"
-    :commands mu4e
-    :config
+#+begin_src elisp :tangle init.el
+  (add-to-list 'load-path "/usr/local/Cellar/mu/HEAD-65863e4_1/share/emacs/site-lisp")
+  ; (require 'mu4e nil t)
+  (require 'mu4e)
     (setq mu4e-change-filenames-when-moving t)
     (setq mu4e-sent-messages-behavior 'delete)
     (setq mu4e-mu-binary "/usr/local/bin/mu")
     (setq mu4e-get-mail-command "/usr/local/bin/mbsync -a")
     ; tell mu4e to use w3m for html rendering
     ; brew install w3m if necessary
-    ; (setq mu4e-html2text-command "/usr/local/bin/w3m -T text/html")
+    (setq mu4e-html2text-command "/usr/local/bin/w3m -T text/html")
     (setq mu4e-maildir (expand-file-name "~/Maildir"))
-    (setq mu4e-drafts-folder "/drafts"
-	  mu4e-sent-folder "/sent"
-	  setq mu4e-trash-folder "/trash"
-	  mu4e-refile-folder "/archive")
+    (setq mu4e-drafts-folder "/drafts") 
+    (setq mu4e-sent-folder "/sent")
+    (setq mu4e-trash-folder "/trash")
+    (setq mu4e-refile-folder "/archive")
     (setq mu4e-maildir-shortcuts
 	  '(("/INBOX". ?i)
-	    ("sent" . ?s)
-	    ("trash" . ?t)
-	    ("all" . ?a))))
+	    ("/sent" . ?s)
+	    ("/trash" . ?t)
+	    ("/all" . ?a)))
 
 #+end_src
 
 #+RESULTS:
+: ((/INBOX . 105) (/sent . 115) (/trash . 116) (/all . 97))
 
 * Gnus
 #+begin_src elisp :tangle gnus.el
@@ -936,7 +962,7 @@ Also look at sensible-defaults
 : t
 
 * Keyfreq
-#+begin_src elisp :tangle yes
+#+begin_src elisp :tangle init.el
   (use-package keyfreq
     :config
     (require 'keyfreq)
@@ -971,7 +997,7 @@ Also look at sensible-defaults
     (keyfreq-autosave-mode 1))
 #+end_src
 * Convenience
-#+begin_src elisp :tangle yes
+#+begin_src elisp :tangle init.el
   (use-package restart-emacs
     :init
     (evil-leader/set-key "qr" 'restart-emacs)
@@ -980,7 +1006,7 @@ Also look at sensible-defaults
 
 #+RESULTS:
 * Neotree
-#+begin_src elisp :tangle yes
+#+begin_src elisp :tangle init.el
   (use-package neotree :load-path "~/.emacs.d/packages/neotree"
     :commands  neotree-toggle
     :config
@@ -994,28 +1020,29 @@ Also look at sensible-defaults
 #+RESULTS:
 : t
 * Debugging
-#+begin_src elisp :tangle yes
+** NEXT Figure out how to defer realgud
+#+begin_src elisp :tangle init.el
   (use-package realgud
     :commands realgud
     :config
     (add-hook 'realgud-short-key-mode-hook
         (lambda ()
           (local-set-key "\C-c" realgud:shortkey-mode-map)))
-    (setq realgud:pdb-command-name "python -m pdb"))
+	  (setq realgud:pdb-command-name "python -m pdb"))
 #+end_src
 
 #+RESULTS:
 : t
 * Fun
 ** Gnugo
- #+begin_src elisp :tangle yes
+#+begin_src elisp :tangle init.el
    (use-package gnugo
      :commands gnugo
      :config
      (add-to-list 'evil-emacs-state-modes 'gnugo-board-mode)
      (add-hook 'gnugo-start-game-hook 'gnugo-image-display-mode)
      (setq gnugo-xpms 'gnugo-imgen-create-xpms))
- #+end_src 
+#+end_src 
 
  #+RESULTS:
  : t
@@ -1024,18 +1051,40 @@ Also look at sensible-defaults
 #+end_src  
 
 #+RESULTS:
-* Future
-** TODO Create list for globally enabled packages
-* Custom set variables
-#+begin_src elisp :tangle yes
-  (custom-set-variables
-   '(custom-safe-themes
-     (quote
-      ("8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" "d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" default)))
-   '(initial-frame-alist (quote ((fullscreen . maximized))))
-   '(safe-local-variable-values
-     (quote
-      ((pyvenv-activate . "/Users/andrew/anaconda3/envs/genbank-qc")
-       (projectile-project-test-cmd . "~/anaconda3/envs/genbankfilter/bin/pytest -s test/test_*")))))
 
-#+end_src
+* Future
+** TODO [[https://github.com/tlh/workgroups.el][Workgroups]]
+   Workgroups for Windows (for Emacs)
+It's tedious setting Emacs' window layout just the way you like it -- splitting windows, adjusting their size, switching to the right buffers, etc. And even when it is set, it won't stay that way for long. On top of that, you can't save your window-configurations to disk, so you have to start over from scratch every time you restart Emacs.
+
+There are solutions out there to parts of the problem -- elscreen, revive.el, window-configuration-to-register, etc. -- but none provide a complete solution. Workgroups does.
+
+With Workgroups, you can:
+
+Store an unlimited number of window configs
+
+Save window configs to disk, and load them from disk
+
+Kill and yank window configs
+
+It also provides:
+
+Animated window config morphing
+
+Frame reversing and window movement
+
+A concept of "base" and "working" configs, for maximum flexibility
+
+Lots of other stuff
+** TODO [[https://github.com/nex3/perspective-el][Perspective]]
+   Description
+
+This package provides tagged workspaces in Emacs, similar to workspaces in windows managers such as Awesome and XMonad (and somewhat similar to multiple desktops in Gnome or Spaces in OS X).
+
+perspective.el provides multiple workspaces (or "perspectives") for each Emacs frame. This makes it easy to work on many separate projects without getting lost in all the buffers.
+
+Each perspective is composed of a window configuration and a set of buffers. Switching to a perspective activates its window configuration, and when in a perspective only its buffers are available by default.
+
+It's recommended that you install perspective.el from Marmalade using M-x package-install. Alternately, you may put it in your load path and run (require 'perspective). Users of Debian 9 or later or Ubuntu 16.04 or later may simply apt-get install elpa-perspective.
+** TODO [[https://github.com/ShingoFukuyama/helm-swoop][helm swoop]]
+** TODO [[Create list for globally enabled packages][Avy]]
