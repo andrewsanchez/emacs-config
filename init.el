@@ -390,11 +390,6 @@
 ;; (setq tramp-default-method "ssh")
 (setq tramp-inline-compress-start-size 1000000)
 
-(use-package which-key
-    :defer 10
-    :config
-    (which-key-mode))
-
 (use-package python
   :defer t
   :mode ("\\.py\\'" . python-mode)
