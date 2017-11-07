@@ -415,7 +415,8 @@
     :config
     (require 'py-isort))
   (use-package virtualenvwrapper
-    :config
+    :commands (venv-workon)
+    :config 
     (venv-initialize-interactive-shells)
     (venv-initialize-eshell)
     (setq venv-location "/Users/andrew/miniconda3/envs")
