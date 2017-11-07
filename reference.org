@@ -21,10 +21,14 @@
     - try to implement a hydra for this functions
 *** TODO [[https://github.com/magnars/dash.el][A modern list library for Emacs]]
 * Email
+* TODO [[http://timharford.com/2013/09/3180/][10 email commandments]]
 ** IMAP
 *** [[http://isync.sourceforge.net/][isync]]
-*** MU4E
-    - http://pragmaticemacs.com/mu4e-tutorials/
+** MU4E
+   - [[http://www.djcbsoftware.nl/code/mu/mu4e/][mu4e user manual]]
+   - [[http://pragmaticemacs.com/emacs/migrating-from-offlineimap-to-mbsync-for-mu4e/#comment-708][Migrating from offlineimap to mbsync]]
+   - [[http://pragmaticemacs.com/mu4e-tutorials/][mu4e tutorials]]
+
 ** [[https://www.reddit.com/r/emacs/comments/3s5fas/which_email_client_mu4e_mutt_notmuch_gnus_do_you/][Reddit discussion]]
    - Which email client (mu4e, Mutt, notmuch, Gnus) do you use inside Emacs, and why?
 * File System and Buffer management
