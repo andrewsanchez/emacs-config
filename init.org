@@ -33,7 +33,6 @@
     (package-refresh-contents)
     (package-install 'use-package))
   (eval-when-compile
-
     (require 'use-package))
   (setq use-package-always-ensure t)
   (setq use-package-verbose t)
@@ -42,6 +41,16 @@
 #+RESULTS:
 : t
 
+* General Binding Config
+Also check out [[https://github.com/nonsequitur/smex][smex]] 
+#+begin_src elisp :tangle init.el
+  (global-set-key (kbd "C-6") 'evil-switch-to-windows-last-buffer)
+  (global-set-key (kbd "C-w") 'evil-window-next)
+    (use-package which-key
+	:defer 10
+	:config
+	(which-key-mode))
+#+end_src
 * Evil
 #+begin_src elisp :tangle init.el
     (use-package evil-leader
@@ -164,14 +173,10 @@ Display a more compact mode line
   (defhydra hydra-buffers (:color blue)
     "Buffers"
     ("d" kill-this-buffer "kill buffer")
-    ("s" (lambda ()
-	   (interactive)
-	   (pop-to-buffer "*scratch*"))
-     "scratch")
-    ("i" (lambda ()
-	   (interactive)
-	   (pop-to-buffer "*info*"))
-     "info")
+    ("s" (lambda () (interactive) (pop-to-buffer "*scratch*")) "*scratch*")
+    ("i" (lambda () (interactive) (pop-to-buffer "*info*")) "*info*")
+    ("h" (lambda () (interactive) (pop-to-buffer "*Help*")) "*Help*")
+    ("m" (lambda () (interactive) (pop-to-buffer "*Messages*")) "*Messages*")
     ("b" helm-buffers-list "helm buffers list"))
 
   (evil-leader/set-key "b" 'hydra-buffers/body)
@@ -419,6 +424,13 @@ Display a more compact mode line
 ** Golden ratio mode
 #+begin_src elisp :tangle init.el
   (use-package golden-ratio
+    :commands
+    (evil-window-next
+     evil-window-next
+     evil-window-right
+     evil-window-left
+     evil-window-down
+     evil-window-up)
     :config
     (golden-ratio-mode 1)
     (add-to-list 'golden-ratio-extra-commands 'evil-window-next)
@@ -427,6 +439,10 @@ Display a more compact mode line
     (add-to-list 'golden-ratio-extra-commands 'evil-window-down)
     (add-to-list 'golden-ratio-extra-commands 'evil-window-up))
 #+end_src
+
+#+RESULTS:
+: t
+
 ** Winner mode
 Undo and redo window configuration
 #+begin_src elisp :tangle init.el
@@ -505,17 +521,6 @@ Also look at sensible-defaults
 (setq tramp-inline-compress-start-size 1000000)
 #+end_src
 
-* Binding related
-  Also check out [[https://github.com/nonsequitur/smex][smex]] 
-#+begin_src elisp :tangle init.el
-  (use-package which-key
-      :defer 10
-      :config
-      (which-key-mode))
-#+end_src
-
-#+RESULTS:
-
 * Python
 #+begin_src elisp :tangle init.el
   (use-package python
@@ -523,7 +528,6 @@ Also look at sensible-defaults
     :mode ("\\.py\\'" . python-mode)
     :interpreter ("python" . python-mode)
     :config
-    (load-library "realgud")
     (evil-leader/set-key-for-mode 'python-mode "m" 'hydra-python/body)
     (add-hook 'before-save-hook 'py-isort-before-save)
     (add-hook 'python-mode-hook 'smartparens-mode)
@@ -544,7 +548,8 @@ Also look at sensible-defaults
       :config
       (require 'py-isort))
     (use-package virtualenvwrapper
-      :config
+      :commands (venv-workon)
+      :config 
       (venv-initialize-interactive-shells)
       (venv-initialize-eshell)
       (setq venv-location "/Users/andrew/miniconda3/envs")
@@ -570,7 +575,6 @@ Also look at sensible-defaults
 	("s" (progn
 	       (switch-to-buffer-other-window "*compilation*")
 	       (goto-char (point-max))) "switch to compilation buffer" :color blue)
-	("w" (venv-workon) "Workon venv…")
 	("q" nil "quit")
 	("Q" (kill-buffer "*compilation*") "quit and kill compilation buffer" :color blue)))
     (defhydra hydra-python (:color blue :hint nil)
@@ -851,115 +855,128 @@ Also look at sensible-defaults
 #+end_src
 
 #+RESULTS:
-* MU4E
-#+begin_src elisp :tangle init.el
-  (add-to-list 'load-path "/usr/local/Cellar/mu/HEAD-65863e4_1/share/emacs/site-lisp")
-  ; (require 'mu4e nil t)
-  (require 'mu4e)
-    (setq mu4e-change-filenames-when-moving t)
-    (setq mu4e-sent-messages-behavior 'delete)
-    (setq mu4e-mu-binary "/usr/local/bin/mu")
-    (setq mu4e-get-mail-command "/usr/local/bin/mbsync -a")
-    ; tell mu4e to use w3m for html rendering
-    ; brew install w3m if necessary
-    (setq mu4e-html2text-command "/usr/local/bin/w3m -T text/html")
-    (setq mu4e-maildir (expand-file-name "~/Maildir"))
-    (setq mu4e-drafts-folder "/drafts") 
-    (setq mu4e-sent-folder "/sent")
-    (setq mu4e-trash-folder "/trash")
-    (setq mu4e-refile-folder "/archive")
-    (setq mu4e-maildir-shortcuts
-	  '(("/INBOX". ?i)
-	    ("/sent" . ?s)
-	    ("/trash" . ?t)
-	    ("/all" . ?a)))
-
-#+end_src
-
-#+RESULTS:
-: ((/INBOX . 105) (/sent . 115) (/trash . 116) (/all . 97))
-
-* Gnus
-#+begin_src elisp :tangle gnus.el
-  (use-package gnus
-    :commands gnus
-    :config
-      (add-to-list 'evil-emacs-state-modes 'gnus-group-mode)
-      (setq send-mail-function (quote smtpmail-send-it))
-      (setq gnus-select-method
-	    '(nnimap "gmail"
-		     (nnimap-address "imap.gmail.com")
-		     (nnimap-server-port "993")
-		     (nnimap-stream ssl)))
-      (setq smtpmail-smtp-server "smtp.gmail.com"
-	    smtpmail-smtp-service 587
-	    gnus-ignored-newsgroups "^to\\.\\|^[0-9. ]+\\( \\|$\\)\\|^[\"]\"[#'()]"
-	    gnus-message-archive-group nil)
-	    ;; mml2015-encrypt-to-self 
-      ;; Attempt to encrypt all outgoin emails
-      ;; (add-hook 'message-setup-hook 'mml-secure-message-encrypt)
-      (eval-after-load 'gnus-group
-      '(progn
-	 (defhydra hydra-gnus-group (:color blue)
-	   "Do?"
-	   ("l" gnus-group-list-all-groups "List subscribed groups")
-	   ("a" gnus-group-list-active "List groups on servers")
-	   ("c" gnus-group-catchup-all "Read all")
-	   ("G" gnus-group-make-nnir-group "Search server G G")
-	   ("g" gnus-group-get-new-news "Refresh g")
-	   ("s" gnus-group-enter-server-mode "Servers")
-	   ("m" gnus-group-new-mail "Compose m OR C-x m")
-	   ("#" gnus-topic-mark-topic "mark #")
-	   ("q" nil "cancel"))
-	 (define-key gnus-group-mode-map "," 'hydra-gnus-group/body)))
-
-    ;; gnus-summary-mode
-    (eval-after-load 'gnus-sum
-      '(progn
-	 (defhydra hydra-gnus-summary (:color blue)
-	   "Do?"
-	   ("s" gnus-summary-show-thread "Show thread")
-	   ("h" gnus-summary-hide-thread "Hide thread")
-	   ("n" gnus-summary-insert-new-articles "Refresh / N")
-	   ("f" gnus-summary-mail-forward "Forward C-c C-f")
-	   ("!" gnus-summary-tick-article-forward "Mail -> disk !")
-	   ("p" gnus-summary-put-mark-as-read "Mail <- disk")
-	   ("c" gnus-summary-catchup-and-exit "Read all c")
-	   ("e" gnus-summary-resend-message-edit "Resend S D e")
-	   ("R" gnus-summary-reply-with-original "Reply with original R")
-	   ("r" gnus-summary-reply "Reply r")
-	   ("W" gnus-summary-wide-reply-with-original "Reply all with original S W")
-	   ("w" gnus-summary-wide-reply "Reply all S w")
-	   ("#" gnus-topic-mark-topic "mark #")
-	   ("q" nil "cancel"))
-	 (define-key gnus-summary-mode-map "," 'hydra-gnus-summary/body)))
-
-    ;; gnus-article-mode
-    (eval-after-load 'gnus-art
-      '(progn
-	 (defhydra hydra-gnus-article (:color blue)
-	   "Do?"
-	   ("f" gnus-summary-mail-forward "Forward")
-	   ("R" gnus-article-reply-with-original "Reply with original R")
-	   ("r" gnus-article-reply "Reply r")
-	   ("W" gnus-article-wide-reply-with-original "Reply all with original S W")
-	   ("o" gnus-mime-save-part "Save attachment at point o")
-	   ("w" gnus-article-wide-reply "Reply all S w")
-	   ("q" nil "cancel"))
-	 (define-key gnus-article-mode-map "," 'hydra-gnus-article/body)))
-
-    (eval-after-load 'message
-      '(progn (add-hook 'message-mode-hook 'flyspell-mode)
-	 (defhydra hydra-message (:color blue)
-	   "Do?"
-	   ("ca" mml-attach-file "Attach C-c C-a")
-	   ("cc" message-send-and-exit "Send C-c C-c")
-	   ("q" nil "cancel"))
-	 (global-set-key (kbd "C-c C-y") 'hydra-message/body))))
+* Mail
+** smtp
+#+begin_src elisp :tangle yes
+  (setq message-send-mail-function 'smtpmail-send-it
+     starttls-use-gnutls t
+     smtpmail-starttls-credentials '(("smtp.gmail.com" 587 nil nil))
+     smtpmail-auth-credentials
+       '(("smtp.gmail.com" 587 "inbox.asanchez@gmail.com" nil))
+     smtpmail-default-smtp-server "smtp.gmail.com"
+     smtpmail-smtp-server "smtp.gmail.com"
+     smtpmail-smtp-service 587)
+  (setq message-kill-buffer-on-exit t)
 #+end_src
 
 #+RESULTS:
 : t
+
+** MU4E
+ #+begin_src elisp :tangle init.el
+   (add-to-list 'load-path "/usr/local/Cellar/mu/HEAD-65863e4_1/share/emacs/site-lisp")
+   ; (require 'mu4e nil t)
+   (require 'mu4e)
+     (setq mu4e-change-filenames-when-moving t)
+     (setq mu4e-sent-messages-behavior 'delete)
+     (setq mu4e-mu-binary "/usr/local/bin/mu")
+     (setq mu4e-get-mail-command "/usr/local/bin/mbsync -a")
+     ; tell mu4e to use w3m for html rendering
+     ; brew install w3m if necessary
+     (setq mu4e-html2text-command "/usr/local/bin/w3m -T text/html")
+     (setq mu4e-maildir (expand-file-name "~/Maildir"))
+     (setq mu4e-drafts-folder "/drafts") 
+     (setq mu4e-sent-folder "/sent")
+     (setq mu4e-trash-folder "/trash")
+     (setq mu4e-refile-folder "/archive")
+     (setq mu4e-maildir-shortcuts
+	   '(("/INBOX". ?i)
+	     ("/sent" . ?s)
+	     ("/trash" . ?t)
+	     ("/all" . ?a)))
+ #+end_src
+
+ #+RESULTS:
+ : ((/INBOX . 105) (/sent . 115) (/trash . 116) (/all . 97))
+
+** Gnus
+ #+begin_src elisp :tangle no
+   (use-package gnus
+     :commands gnus
+     :config
+       (add-to-list 'evil-emacs-state-modes 'gnus-group-mode)
+       (setq gnus-select-method
+	     '(nnimap "gmail"
+		      (nnimap-address "imap.gmail.com")
+		      (nnimap-server-port "993")
+		      (nnimap-stream ssl)))
+       (setq gnus-ignored-newsgroups "^to\\.\\|^[0-9. ]+\\( \\|$\\)\\|^[\"]\"[#'()]"
+	     gnus-message-archive-group nil)
+	     ;; mml2015-encrypt-to-self 
+       ;; Attempt to encrypt all outgoin emails
+       ;; (add-hook 'message-setup-hook 'mml-secure-message-encrypt)
+       (eval-after-load 'gnus-group
+       '(progn
+	  (defhydra hydra-gnus-group (:color blue)
+	    "Do?"
+	    ("l" gnus-group-list-all-groups "List subscribed groups")
+	    ("a" gnus-group-list-active "List groups on servers")
+	    ("c" gnus-group-catchup-all "Read all")
+	    ("G" gnus-group-make-nnir-group "Search server G G")
+	    ("g" gnus-group-get-new-news "Refresh g")
+	    ("s" gnus-group-enter-server-mode "Servers")
+	    ("m" gnus-group-new-mail "Compose m OR C-x m")
+	    ("#" gnus-topic-mark-topic "mark #")
+	    ("q" nil "cancel"))
+	  (define-key gnus-group-mode-map "," 'hydra-gnus-group/body)))
+
+     ;; gnus-summary-mode
+     (eval-after-load 'gnus-sum
+       '(progn
+	  (defhydra hydra-gnus-summary (:color blue)
+	    "Do?"
+	    ("s" gnus-summary-show-thread "Show thread")
+	    ("h" gnus-summary-hide-thread "Hide thread")
+	    ("n" gnus-summary-insert-new-articles "Refresh / N")
+	    ("f" gnus-summary-mail-forward "Forward C-c C-f")
+	    ("!" gnus-summary-tick-article-forward "Mail -> disk !")
+	    ("p" gnus-summary-put-mark-as-read "Mail <- disk")
+	    ("c" gnus-summary-catchup-and-exit "Read all c")
+	    ("e" gnus-summary-resend-message-edit "Resend S D e")
+	    ("R" gnus-summary-reply-with-original "Reply with original R")
+	    ("r" gnus-summary-reply "Reply r")
+	    ("W" gnus-summary-wide-reply-with-original "Reply all with original S W")
+	    ("w" gnus-summary-wide-reply "Reply all S w")
+	    ("#" gnus-topic-mark-topic "mark #")
+	    ("q" nil "cancel"))
+	  (define-key gnus-summary-mode-map "," 'hydra-gnus-summary/body)))
+
+     ;; gnus-article-mode
+     (eval-after-load 'gnus-art
+       '(progn
+	  (defhydra hydra-gnus-article (:color blue)
+	    "Do?"
+	    ("f" gnus-summary-mail-forward "Forward")
+	    ("R" gnus-article-reply-with-original "Reply with original R")
+	    ("r" gnus-article-reply "Reply r")
+	    ("W" gnus-article-wide-reply-with-original "Reply all with original S W")
+	    ("o" gnus-mime-save-part "Save attachment at point o")
+	    ("w" gnus-article-wide-reply "Reply all S w")
+	    ("q" nil "cancel"))
+	  (define-key gnus-article-mode-map "," 'hydra-gnus-article/body)))
+
+     (eval-after-load 'message
+       '(progn (add-hook 'message-mode-hook 'flyspell-mode)
+	  (defhydra hydra-message (:color blue)
+	    "Do?"
+	    ("ca" mml-attach-file "Attach C-c C-a")
+	    ("cc" message-send-and-exit "Send C-c C-c")
+	    ("q" nil "cancel"))
+	  (global-set-key (kbd "C-c C-y") 'hydra-message/body))))
+ #+end_src
+
+ #+RESULTS:
+ : t
 
 * Keyfreq
 #+begin_src elisp :tangle init.el
@@ -1025,6 +1042,7 @@ Also look at sensible-defaults
   (use-package realgud
     :commands realgud
     :config
+    (load-library "realgud")
     (add-hook 'realgud-short-key-mode-hook
         (lambda ()
           (local-set-key "\C-c" realgud:shortkey-mode-map)))
