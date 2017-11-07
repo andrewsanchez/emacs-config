@@ -2,15 +2,12 @@
   :commands gnus
   :config
     (add-to-list 'evil-emacs-state-modes 'gnus-group-mode)
-    (setq send-mail-function (quote smtpmail-send-it))
     (setq gnus-select-method
 	  '(nnimap "gmail"
 		   (nnimap-address "imap.gmail.com")
 		   (nnimap-server-port "993")
 		   (nnimap-stream ssl)))
-    (setq smtpmail-smtp-server "smtp.gmail.com"
-	  smtpmail-smtp-service 587
-	  gnus-ignored-newsgroups "^to\\.\\|^[0-9. ]+\\( \\|$\\)\\|^[\"]\"[#'()]"
+    (setq gnus-ignored-newsgroups "^to\\.\\|^[0-9. ]+\\( \\|$\\)\\|^[\"]\"[#'()]"
 	  gnus-message-archive-group nil)
 	  ;; mml2015-encrypt-to-self 
     ;; Attempt to encrypt all outgoin emails
