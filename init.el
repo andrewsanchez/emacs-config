@@ -122,14 +122,10 @@
 (defhydra hydra-buffers (:color blue)
   "Buffers"
   ("d" kill-this-buffer "kill buffer")
-  ("s" (lambda ()
-	 (interactive)
-	 (pop-to-buffer "*scratch*"))
-   "scratch")
-  ("i" (lambda ()
-	 (interactive)
-	 (pop-to-buffer "*info*"))
-   "info")
+  ("s" (lambda () (interactive) (pop-to-buffer "*scratch*")) "*scratch*")
+  ("i" (lambda () (interactive) (pop-to-buffer "*info*")) "*info*")
+  ("h" (lambda () (interactive) (pop-to-buffer "*Help*")) "*Help*")
+  ("m" (lambda () (interactive) (pop-to-buffer "*Messages*")) "*Messages*")
   ("b" helm-buffers-list "helm buffers list"))
 
 (evil-leader/set-key "b" 'hydra-buffers/body)
