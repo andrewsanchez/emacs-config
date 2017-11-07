@@ -442,7 +442,6 @@
       ("s" (progn
 	     (switch-to-buffer-other-window "*compilation*")
 	     (goto-char (point-max))) "switch to compilation buffer" :color blue)
-      ("w" (venv-workon) "Workon venv…")
       ("q" nil "quit")
       ("Q" (kill-buffer "*compilation*") "quit and kill compilation buffer" :color blue)))
   (defhydra hydra-python (:color blue :hint nil)
