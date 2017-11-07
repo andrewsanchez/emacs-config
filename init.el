@@ -22,10 +22,16 @@
   (package-refresh-contents)
   (package-install 'use-package))
 (eval-when-compile
-
   (require 'use-package))
 (setq use-package-always-ensure t)
 (setq use-package-verbose t)
+
+(global-set-key (kbd "C-6") 'evil-switch-to-windows-last-buffer)
+(global-set-key (kbd "C-w") 'evil-window-next)
+  (use-package which-key
+      :defer 10
+      :config
+      (which-key-mode))
 
 (use-package evil-leader
   :config
