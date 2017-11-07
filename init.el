@@ -326,6 +326,13 @@
 (tool-bar-mode -1)
 
 (use-package golden-ratio
+  :commands
+  (evil-window-next
+   evil-window-next
+   evil-window-right
+   evil-window-left
+   evil-window-down
+   evil-window-up)
   :config
   (golden-ratio-mode 1)
   (add-to-list 'golden-ratio-extra-commands 'evil-window-next)
