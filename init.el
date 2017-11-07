@@ -645,6 +645,16 @@ _k_: kill        _s_: split                   _{_: wrap with { }
       (elfeed-org)
       (setq rmh-elfeed-org-files (list "~/org/elfeed.org"))))
 
+(setq message-send-mail-function 'smtpmail-send-it
+   starttls-use-gnutls t
+   smtpmail-starttls-credentials '(("smtp.gmail.com" 587 nil nil))
+   smtpmail-auth-credentials
+     '(("smtp.gmail.com" 587 "inbox.asanchez@gmail.com" nil))
+   smtpmail-default-smtp-server "smtp.gmail.com"
+   smtpmail-smtp-server "smtp.gmail.com"
+   smtpmail-smtp-service 587)
+(setq message-kill-buffer-on-exit t)
+
 (add-to-list 'load-path "/usr/local/Cellar/mu/HEAD-65863e4_1/share/emacs/site-lisp")
 ; (require 'mu4e nil t)
 (require 'mu4e)
