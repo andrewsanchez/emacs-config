@@ -28,6 +28,19 @@
 (use-package diminish
   :config
   (diminish 'undo-tree-mode))
+
+;; Tangle init.el
+;; [[https://emacs.stackexchange.com/questions/20707/automatically-tangle-org-files-in-a-specific-directory#20733][Automatically tangle]] this file on save.
+
+
+(defun as/tangle-dotfiles ()
+  "If the current file is in 'as/elisp' blocks are tangled"
+  (when (equal (file-name-directory (directory-file-name buffer-file-name))
+               as/elisp)
+    (org-babel-tangle)
+    (message "%s tangled" buffer-file-name)))
+(add-hook 'after-save-hook #'as/tangle-dotfiles)
+
 ;; Helpful
 
 (use-package helpful
