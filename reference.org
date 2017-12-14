@@ -6,6 +6,7 @@
 *** fbergrot on github
     See his evil-use-package
     - https://github.com/fbergroth/.emacs.d
+*** TODO [[https://www.reddit.com/r/emacs/comments/4e4ja5/lazy_loading_leader_bindings_with_usepackage/][Lazy Loading Leader Bindings with Use-package]]
 ** Hydras
 *** TODO [[https://github.com/abo-abo/hydra/wiki/Window-Management][window management]]
 *** TODO [[https://github.com/abo-abo/hydra/wiki/Dired][dired]]
@@ -20,17 +21,21 @@
 *** TODO [[https://github.com/magnars/s.el][The long lost Emacs string manipulation library.]]
     - try to implement a hydra for this functions
 *** TODO [[https://github.com/magnars/dash.el][A modern list library for Emacs]]
+** use-package
+* Python
+** [[https://ericjmritz.wordpress.com/2015/11/06/gnu-emacs-packages-for-python-programming/#more-792][ericjmritz.wordpress.com]]
+   - emacs packages
 * Email
-* TODO [[http://timharford.com/2013/09/3180/][10 email commandments]]
-** IMAP
-*** [[http://isync.sourceforge.net/][isync]]
-** MU4E
-   - [[http://www.djcbsoftware.nl/code/mu/mu4e/][mu4e user manual]]
-   - [[http://pragmaticemacs.com/emacs/migrating-from-offlineimap-to-mbsync-for-mu4e/#comment-708][Migrating from offlineimap to mbsync]]
-   - [[http://pragmaticemacs.com/mu4e-tutorials/][mu4e tutorials]]
+** TODO [[http://timharford.com/2013/09/3180/][10 email commandments]]
+*** IMAP
+**** [[http://isync.sourceforge.net/][isync]]
+*** MU4E
+    - [[http://www.djcbsoftware.nl/code/mu/mu4e/][mu4e user manual]]
+    - [[http://pragmaticemacs.com/emacs/migrating-from-offlineimap-to-mbsync-for-mu4e/#comment-708][Migrating from offlineimap to mbsync]]
+    - [[http://pragmaticemacs.com/mu4e-tutorials/][mu4e tutorials]]
 
-** [[https://www.reddit.com/r/emacs/comments/3s5fas/which_email_client_mu4e_mutt_notmuch_gnus_do_you/][Reddit discussion]]
-   - Which email client (mu4e, Mutt, notmuch, Gnus) do you use inside Emacs, and why?
+*** [[https://www.reddit.com/r/emacs/comments/3s5fas/which_email_client_mu4e_mutt_notmuch_gnus_do_you/][Reddit discussion]]
+    - Which email client (mu4e, Mutt, notmuch, Gnus) do you use inside Emacs, and why?
 * File System and Buffer management
 ** TODO [[https://www.masteringemacs.org/article/introduction-to-ido-mode][Intro to IDO Mode]]
    From Mastering Emacs:
