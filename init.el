@@ -217,18 +217,13 @@
   ("t" neotree-toggle "neotree-toggle")
   ("r" helm-recentf "recentf-open-files"))
 
-(defhydra hydra-applications ()
-  "Applications"
-  ("d" deft "deft find file"))
-(evil-leader/set-key "a" 'hydra-applications/body)
+;; Applications
 
-(use-package yasnippet
-    :config
-    (require 'yasnippet)
-    (yas-global-mode 1)
-    :init
-    (evil-leader/set-key
-      "y" 'hydra-yasnippet/body)
+;; (defhydra hydra-applications ()
+;;   "Applications"
+;;   ("d" deft "deft find file"))
+(evil-leader/set-key "ad" 'deft)
+(evil-leader/set-key "am" 'mu4e)
 
   (defhydra hydra-yasnippet (:color blue :hint nil)
     "
