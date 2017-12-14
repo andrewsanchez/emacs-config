@@ -147,7 +147,10 @@
   :config
   (use-package link-hint))
 
+;; Misc
+
 (use-package expand-region
+  :commands (er/expand-region)
   :config
   (global-set-key (kbd "C-=") 'er/expand-region))
 
