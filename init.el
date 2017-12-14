@@ -64,9 +64,13 @@
 (when (file-exists-p custom-file)
   (load custom-file))
 
+;; General Binding Config
+;; Also check out [[https://github.com/nonsequitur/smex][smex]] 
 
 (global-set-key (kbd "C-6") 'evil-switch-to-windows-last-buffer)
 (global-set-key (kbd "C-w") 'evil-window-next)
+(global-set-key (kbd "C-x f") 'helm-find-files)
+
   (use-package which-key
       :defer 10
       :config
