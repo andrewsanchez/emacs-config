@@ -389,97 +389,116 @@
 ;; (setq tramp-default-method "ssh")
 (setq tramp-inline-compress-start-size 1000000)
 
-(use-package python
-  :defer t
-  :mode ("\\.py\\'" . python-mode)
-  :interpreter ("python" . python-mode)
-  :config
-  (evil-leader/set-key-for-mode 'python-mode "m" 'hydra-python/body)
-  (add-hook 'before-save-hook 'py-isort-before-save)
-  (add-hook 'python-mode-hook 'smartparens-mode)
-  (add-hook 'inferior-python-mode-hook 'smartparens-mode)
-  (setq python-shell-exec-path '("~/anaconda3/bin/python"))
-  (use-package anaconda-mode
-    :commands hydra-python/body
-    :config
-    (anaconda-mode)
-    (anaconda-eldoc-mode)
-    (add-to-list 'company-backends 'company-anaconda))
-  (use-package sphinx-doc
-    :commands (sphinx-doc)
-    :config
-    (sphinx-doc-mode))
-  (use-package helm-pydoc :commands helm-pydoc)
-  (use-package py-isort :commands py-isort-buffer
-    :config
-    (require 'py-isort))
-  (use-package virtualenvwrapper
-    :commands (venv-workon)
-    :config 
-    (venv-initialize-interactive-shells)
-    (venv-initialize-eshell)
-    (setq venv-location "/Users/andrew/miniconda3/envs")
-    (setq venv-project-home "/Users/andrew/projects/"))
-  (use-package elpy
-    :init (with-eval-after-load 'python (elpy-enable))
-    :commands elpy-enable
-    :config 
-    (elpy-use-ipython)
-    (pyvenv-mode)
-    (defhydra elpy-hydra (:color red)
-      "
-      Elpy in venv: %`pyvenv-virtual-env-name
-      "
-      ("t" (progn (call-interactively 'elpy-test-pytest-runner) (elpy-nav-errors/body)) "pytest" :color blue)
-      ("w" (venv-workon) "workon venv…")
-      ("q" nil "quit")
-      ("Q" (kill-buffer "*compilation*") "quit and kill compilation buffer" :color blue))
-    (defhydra elpy-nav-errors (:color red)
-      " Navigate errors "
-      ("n" next-error "next error")
-      ("p" previous-error "previous error")
-      ("s" (progn
-	     (switch-to-buffer-other-window "*compilation*")
-	     (goto-char (point-max))) "switch to compilation buffer" :color blue)
-      ("q" nil "quit")
-      ("Q" (kill-buffer "*compilation*") "quit and kill compilation buffer" :color blue)))
-  (defhydra hydra-python (:color blue :hint nil)
-  "
-  ^Navigation^                  ^Elpy^                 ^Formatting^
-  -------------------------------------------------------------------------
-  _d_: find definitions      _t_: elpy-test           _y_: yapfify-buffer
-  _a_: find assignments      _z_: switch to shell     _i_: py-isort-buffer
-  _r_: find references       _c_: send region/buffer  _f_: flycheck
-  _s_: show doc              _C_: send statement
-  _v_: pyvenv-activate     
-  _V_: pyvenv-deactivate
-  _w_: venv-workon
-  _W_: venv-deactivate
-  "
-      ("d" elpy-goto-definition)
-      ("a" anaconda-mode-find-assignments)
-      ("r" xref-find-references)
-      ("s" elpy-doc)
-      ("y" yapfify-buffer)
-      ("v" pyvenv-activate)
-      ("V" pyvenv-deactivate)
-      ("w" venv-workon)
-      ("W" venv-deactivate)
-      ("i" py-isort-buffer)
-      ("f" hydra-flycheck/body)
-      ("t" elpy-hydra/body)
-      ("z" elpy-shell-switch-to-shell)
-      ("c" elpy-shell-send-region-or-buffer)
-      ("C" elpy-shell-send-current-statement)))
+;; General
 
-(defun python-shell-completion-native-try ()
-  "Return non-nil if can trigger native completion."
-  (let ((python-shell-completion-native-enable t)
-        (python-shell-completion-native-output-timeout
-          python-shell-completion-native-try-output-timeout))
-     (python-shell-completion-native-get-completions
-      (get-buffer-process (current-buffer))
-      nil "_")))
+(use-package python
+    :mode ("\\.py\\'" . python-mode)
+    :interpreter ("python" . python-mode)
+    :config
+    ; org-babel
+    (use-package ob-ipython
+      :config
+      (require 'ob-ipython))
+    (org-babel-do-load-languages
+     'org-babel-load-languages
+     (append org-babel-load-languages
+             '((ipython . t)
+               (python . t))))
+    (add-hook 'before-save-hook 'py-isort-before-save)
+    (add-hook 'python-mode-hook 'smartparens-mode)
+    (add-hook 'inferior-python-mode-hook 'smartparens-mode)
+    (add-hook 'rst-mode-hook 'turn-on-flyspell)
+    (setq python-shell-exec-path '("~/anaconda3/bin/python"))
+
+    (defhydra hydra-python (:color blue :hint nil)
+    "
+    ^Navigation^                  ^Elpy^                 ^Formatting^
+    -------------------------------------------------------------------------
+    _d_: find definitions      _t_: elpy-test           _y_: yapfify-buffer
+    _a_: find assignments      _z_: switch to shell     _i_: py-isort-buffer
+    _r_: find references       _c_: send region/buffer  _f_: flycheck
+    _s_: show doc              _C_: send statement      _x_: sphinx-doc
+    _v_: pyvenv-activate     
+    _V_: pyvenv-deactivate
+    _w_: venv-workon
+    _W_: venv-deactivate
+    "
+        ("d" elpy-goto-definition)
+        ("a" anaconda-mode-find-assignments)
+        ("r" xref-find-references)
+        ("s" elpy-doc)
+        ("y" yapfify-buffer)
+        ("v" pyvenv-activate)
+        ("V" pyvenv-deactivate)
+        ("w" venv-workon)
+        ("W" venv-deactivate)
+        ("i" py-isort-buffer)
+        ("f" hydra-flycheck/body)
+        ("x" sphinx-doc)
+        ("t" elpy-hydra/body)
+        ("z" elpy-shell-switch-to-shell)
+        ("c" elpy-shell-send-region-or-buffer)
+        ("C" elpy-shell-send-current-statement))
+        (evil-leader/set-key-for-mode 'python-mode "m" 'hydra-python/body)
+        (evil-leader/set-key-for-mode 'rst-mode "m" 'hydra-python/body)
+
+    (use-package anaconda-mode
+      :commands hydra-python/body
+      :config
+      (anaconda-mode)
+      (anaconda-eldoc-mode)
+      (add-to-list 'company-backends 'company-anaconda))
+    (use-package sphinx-doc :commands (sphinx-doc)
+      :config (sphinx-doc-mode))
+    (use-package helm-pydoc :commands helm-pydoc)
+    (use-package py-isort :commands py-isort-buffer
+      :config (require 'py-isort))
+    (use-package virtualenvwrapper :commands (venv-workon)
+      :config 
+      (venv-initialize-interactive-shells)
+      (venv-initialize-eshell)
+      (setq venv-location "/Users/andrew/miniconda3/envs"))
+    (use-package elpy
+      :init (with-eval-after-load 'python (elpy-enable))
+      :config 
+      (elpy-use-ipython)
+      (pyvenv-mode)
+
+      (defhydra elpy-hydra (:color red)
+        "
+        Elpy in venv: %`pyvenv-virtual-env-name
+        "
+        ("t" (progn (call-interactively 'elpy-test-pytest-runner) (elpy-nav-errors/body)) "pytest" :color blue)
+        ("w" (venv-workon) "workon venv…")
+        ("q" nil "quit")
+        ("Q" (kill-buffer "*compilation*") "quit and kill compilation buffer" :color blue))
+
+      (defhydra elpy-nav-errors (:color red)
+        " Navigate errors "
+        ("n" next-error "next error")
+        ("p" previous-error "previous error")
+        ("s" (progn
+               (switch-to-buffer-other-window "*compilation*")
+               (goto-char (point-max))) "switch to compilation buffer" :color blue)
+        ("q" nil "quit")
+        ("Q" (kill-buffer "*compilation*") "quit and kill compilation buffer" :color blue))))
+
+;; Fix faulty completion bug
+;;    Source:  https://github.com/jorgenschaefer/elpy/issues/887
+;;    Fixes this error message:
+;;    Warning (python): Your ‘python-shell-interpreter’ doesn’t seem to support readline, yet ‘python-shell-completion-native’ was t and "ipython3" is not part of the ‘python-shell-completion-native-disabled-interpreters’ list. Native completions have been disabled locally.
+
+
+(with-eval-after-load 'python
+  (defun python-shell-completion-native-try ()
+    "Return non-nil if can trigger native completion."
+    (let ((python-shell-completion-native-enable t)
+          (python-shell-completion-native-output-timeout
+           python-shell-completion-native-try-output-timeout))
+      (python-shell-completion-native-get-completions
+       (get-buffer-process (current-buffer))
+       nil "_"))))
+
 
 (use-package yapfify :commands yapfify-buffer)
 
