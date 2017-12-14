@@ -761,14 +761,17 @@ _k_: kill        _s_: split                   _{_: wrap with { }
   (evil-define-key 'normal neotree-mode-map (kbd "q") 'neotree-hide)
   (evil-define-key 'normal neotree-mode-map (kbd "RET") 'neotree-enter))
 
+;; NEXT Figure out how to defer realgud
+
 (use-package realgud
   :commands realgud
   :config
-  (load-library "realgud")
   (add-hook 'realgud-short-key-mode-hook
       (lambda ()
-        (local-set-key "\C-c" realgud:shortkey-mode-map)))
+        (local-set-key "," realgud:shortkey-mode-map)))
 	(setq realgud:pdb-command-name "python -m pdb"))
+
+;; Gnugo
 
 (use-package gnugo
   :commands gnugo
