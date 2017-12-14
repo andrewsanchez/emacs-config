@@ -193,6 +193,7 @@
   ("s" (lambda () (interactive) (pop-to-buffer "*scratch*")) "*scratch*")
   ("i" (lambda () (interactive) (pop-to-buffer "*info*")) "*info*")
   ("h" (lambda () (interactive) (pop-to-buffer "*Help*")) "*Help*")
+  ("e" (lambda () (interactive) (pop-to-buffer "*eshell*")) "*eshell*")
   ("m" (lambda () (interactive) (pop-to-buffer "*Messages*")) "*Messages*")
   ("b" helm-buffers-list "helm buffers list"))
 
