@@ -377,6 +377,14 @@
 (fset 'yes-or-no-p 'y-or-n-p)
 (setq initial-scratch-message "") ;; Uh, I know what Scratch is for
 
+;; My own
+
+(use-package visual-fill-column
+  :init
+  (global-visual-fill-column-mode)
+  (evil-leader/set-key "tl" 'visual-fill-column-mode)
+  :config
+  (add-hook 'rst-mode-hook 'visual-line-mode))
 ;; This doesn't actually seem to be faster...
 ;; (setq tramp-default-method "ssh")
 (setq tramp-inline-compress-start-size 1000000)
