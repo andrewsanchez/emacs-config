@@ -121,9 +121,10 @@
   (require 'evil-matchit)
   (global-evil-matchit-mode 1))
 
+;; Exclude list
+
 (add-to-list 'evil-emacs-state-modes 'dired-mode)
 (add-to-list 'evil-emacs-state-modes 'flycheck-error-list-mode)
-(add-to-list 'evil-emacs-state-modes 'elfeed-search-mode)
 (add-to-list 'evil-emacs-state-modes 'realgud-short-key-mode)
 (evil-set-initial-state 'realgud-short-key-mode 'emacs)
 (evil-set-initial-state 'Info-mode 'emacs)
@@ -681,10 +682,12 @@ _k_: kill        _s_: split                   _{_: wrap with { }
   (deft-find-file "/Users/andrew/org/agenda/gtd.org")
   (deft-find-file "/Users/andrew/org/agenda/PMI.org")
   (deft-find-file "/Users/andrew/org/agenda/projects.org"))
+;; Elfeed
 
 (use-package elfeed
     :commands elfeed
     :config
+    (add-to-list 'evil-emacs-state-modes 'elfeed-search-mode)
     (use-package elfeed-org
       :config
       (require 'elfeed-org)
