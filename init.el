@@ -721,28 +721,46 @@ _k_: kill        _s_: split                   _{_: wrap with { }
    smtpmail-smtp-service 587)
 (setq message-kill-buffer-on-exit t)
 
+;; MU4E
+
 (add-to-list 'load-path "/usr/local/Cellar/mu/HEAD-65863e4_1/share/emacs/site-lisp")
-; (require 'mu4e nil t)
 (require 'mu4e)
-  (setq mu4e-change-filenames-when-moving t)
-  (setq mu4e-sent-messages-behavior 'delete)
-  (setq mu4e-mu-binary "/usr/local/bin/mu")
-  (setq mu4e-get-mail-command "/usr/local/bin/mbsync -a")
-  ; tell mu4e to use w3m for html rendering
-  ; brew install w3m if necessary
-  (setq mu4e-html2text-command "/usr/local/bin/w3m -T text/html")
-  (setq mu4e-maildir (expand-file-name "~/Maildir"))
-  (setq mu4e-drafts-folder "/drafts") 
-  (setq mu4e-sent-folder "/sent")
-  (setq mu4e-trash-folder "/trash")
-  (setq mu4e-refile-folder "/archive")
-  (setq mu4e-maildir-shortcuts
-	'(("/INBOX". ?i)
-	  ("/sent" . ?s)
-	  ("/trash" . ?t)
-	  ("/all" . ?a)))
+(add-hook 'message-send-hook (lambda () (mu4e-update-mail-and-index t)))
+(require 'org-mu4e) ;; store org-mode links to messages
+;;store link to message if in header view, not to header query
+(setq org-mu4e-link-query-in-headers-mode nil)
+(setq mu4e-change-filenames-when-moving t)
+(setq mu4e-sent-messages-behavior 'delete)
+(setq mu4e-mu-binary "/usr/local/bin/mu")
+(setq mu4e-get-mail-command "/usr/local/bin/mbsync -a")
+(setq mu4e-maildir (expand-file-name "~/Maildir"))
+(setq mu4e-drafts-folder "/drafts") 
+(setq mu4e-sent-folder "/sent")
+(setq mu4e-trash-folder "/trash")
+(setq mu4e-refile-folder "/all")
+(setq mu4e-maildir-shortcuts
+      '(("/INBOX". ?i)
+        ("/sent" . ?s)
+        ("/trash" . ?t)
+        ("/all" . ?a)
+        ("/drafts" . ?d)))
+(evil-set-initial-state 'mu4e-view-mode 'motion)
+(add-hook 'message-mode-hook 'turn-on-orgstruct++)
+(add-hook 'mu4e-compose-mode-hook 'turn-on-flyspell)
+(add-hook 'mu4e-compose-mode-hook 'visual-line-mode)
+(add-hook 'mu4e-view-mode-hook 'visual-line-mode)
+
+;; Hydra
+
+(defhydra hydra-mail (:color blue)
+  "Mail"
+  ("M" mu4e "mu4e")
+  ("m" mu4e~main-menu "mu4e main menu"))
+
+;; Keyfreq
 
 (use-package keyfreq
+  :defer 5
   :config
   (require 'keyfreq)
   (setq keyfreq-excluded-commands
