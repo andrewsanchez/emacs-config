@@ -58,6 +58,9 @@
   (global-set-key (kbd "C-h k") #'helpful-key)
   (global-set-key (kbd "C-h o") #'helpful-at-point))
 
+;; Custom set variables
+
+(setq custom-file (expand-file-name "custom.el" as/elisp))
 (when (file-exists-p custom-file)
   (load custom-file))
 
