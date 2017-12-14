@@ -6,6 +6,23 @@
 (setq user-full-name "Andrew Sanchez"
       user-mail-address "inbox.asanchez@gmail.com")
 
+;; Helpful
+
+(use-package helpful
+  :commands
+  (helpful-callable
+   helpful-function
+   helpful-macro
+   helpful-command
+   helpful-key
+   helpful-variable
+   helpful-at-point)
+  :init
+  (global-set-key (kbd "C-h f") #'helpful-callable)
+  (global-set-key (kbd "C-h v") #'helpful-variable)
+  (global-set-key (kbd "C-h k") #'helpful-key)
+  (global-set-key (kbd "C-h o") #'helpful-at-point))
+
 (when (file-exists-p custom-file)
   (load custom-file))
 
