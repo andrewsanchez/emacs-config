@@ -225,16 +225,21 @@
 (evil-leader/set-key "ad" 'deft)
 (evil-leader/set-key "am" 'mu4e)
 
+;; Yasnippet
+
+(use-package yasnippet
+  :diminish yas-minor-mode
+  :init
   (defhydra hydra-yasnippet (:color blue :hint nil)
     "
-		^YASnippets^
+                ^YASnippets^
   --------------------------------------------
     Modes:    Load/Visit:    Actions:
 
    _g_lobal  _d_irectory    _i_nsert
    _m_inor   _f_ile         _t_ryout
    _e_xtra   _l_ist         _n_ew
-	   _a_ll
+           _a_ll
   "
     ("d" yas-load-directory)
     ("e" yas-activate-extra-mode)
@@ -245,7 +250,15 @@
     ("l" yas-describe-tables)
     ("g" yas/global-mode)
     ("m" yas/minor-mode)
-    ("a" yas-reload-all)))
+    ("a" yas-reload-all))
+  (evil-leader/set-key "y" 'hydra-yasnippet/body)
+  :defer 15
+  ; not sure why this doesn't work
+  ; :commands hydra-yasnippet/body
+  :config
+  (require 'yasnippet)
+  (yas-global-mode 1))
+
 
 (use-package org
   :load-path "~/.emacs.d/packages/org-mode/lisp"
