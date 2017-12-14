@@ -506,17 +506,15 @@
 (when (memq window-system '(mac ns x))
   (exec-path-from-shell-initialize))
 
+;; Smartparens
+
 (use-package smartparens
-    :config
-    (autoload 'smartparens-mode "paredit" "Turn on pseudo-structural editing of Lisp code." t)
-    (add-hook 'emacs-lisp-mode-hook       #'smartparens-mode)
-    (add-hook 'eval-expression-minibuffer-setup-hook #'smartparens-mode)
-    (add-hook 'ielm-mode-hook             #'smartparens-mode)
-    (add-hook 'lisp-mode-hook             #'smartparens-mode)
-    (add-hook 'lisp-interaction-mode-hook #'smartparens-mode)
-    (add-hook 'scheme-mode-hook           #'smartparens-mode)
-  :init
+  :defer 5
+  :config
   (require 'smartparens-config)
+  (smartparens-global-mode)
+  (autoload 'smartparens-mode "paredit" "Turn on pseudo-structural editing of Lisp code." t)
+  (add-hook 'eval-expression-minibuffer-setup-hook #'smartparens-mode)
   (defhydra hydra-smartparens (:hint nil)
     "
 Sexps (quit with _q_)
