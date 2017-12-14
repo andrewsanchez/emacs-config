@@ -76,6 +76,10 @@
       :config
       (which-key-mode))
 
+;; Toggles
+
+(evil-leader/set-key "tf" 'flyspell-mode)
+
 (use-package evil-leader
   :config
   (global-evil-leader-mode)
