@@ -157,11 +157,18 @@
 (evil-leader/set-key
   "!" 'shell-command)
 
+;; Modeline
+;; Display a more compact mode line
+
+
 (use-package smart-mode-line
     :init
     (setq sml/no-confirm-load-theme t)
     (sml/setup))
 (display-time-mode 1)
+
+;; Helm
+;;   Also check out [[https://github.com/abo-abo/swiper][ivy and swiper]] and helm-swiper.
 
 (use-package helm
   :init
@@ -185,7 +192,11 @@
   (use-package helm-descbinds
     :bind (("C-h b" . helm-descbinds)))
 
+;; Hydra
+
 (use-package hydra)
+
+;; Buffers
 
 (defhydra hydra-buffers (:color blue)
   "Buffers"
@@ -198,6 +209,8 @@
   ("b" helm-buffers-list "helm buffers list"))
 
 (evil-leader/set-key "b" 'hydra-buffers/body)
+
+;; Files
 
 (evil-leader/set-key "f" 'hydra-files/body)
 
@@ -329,14 +342,20 @@
   (add-to-list 'golden-ratio-extra-commands 'evil-window-down)
   (add-to-list 'golden-ratio-extra-commands 'evil-window-up))
 
+;; Winner mode
+;; Undo and redo window configuration
+
 (use-package winner
+  :init
+  (evil-leader/set-key
+    "wu" 'winner-undo
+    "wr" 'winner-redo)
   :commands
   (winner-undo winner-redo)
   :config
-  (winner-mode)
-  (evil-leader/set-key
-    "wu" 'winner-undo
-    "wr" 'winner-redo))
+  (winner-mode))
+
+;; Zoom
 
 (use-package zoom-frm
   :commands hydra-zoom)
@@ -348,17 +367,24 @@
   ("i" zoom-in)
   ("o" zoom-out))
 
+;; Backups
+
 ;; Special dir for backups
 (setq backup-directory-alist '(("." . "~/.emacs.d/backups")))
+
+;; Magit
+
 
 (use-package magit
   :init (evil-leader/set-key "gs" 'magit-status)
   :commands magit-status
   :config
-  (setq magit-git-executable "~/usr/bin/git"))
   (setq magit-git-executable "~/usr/bin/git")
   (add-hook 'git-commit-mode-hook 'git-commit-turn-on-flyspell)
   (evil-set-initial-state 'git-commit-mode 'normal))
+
+;; Better defaults
+;; Also look at sensible-defaults
 
 (show-paren-mode 1)
 (menu-bar-mode -1)
@@ -385,6 +411,9 @@
   (evil-leader/set-key "tl" 'visual-fill-column-mode)
   :config
   (add-hook 'rst-mode-hook 'visual-line-mode))
+
+;; Tramp
+
 ;; This doesn't actually seem to be faster...
 ;; (setq tramp-default-method "ssh")
 (setq tramp-inline-compress-start-size 1000000)
@@ -499,8 +528,11 @@
        (get-buffer-process (current-buffer))
        nil "_"))))
 
+;; Yapfify
 
 (use-package yapfify :commands yapfify-buffer)
+
+;; Exec-path-from-shell
 
 (use-package exec-path-from-shell)
 (when (memq window-system '(mac ns x))
@@ -583,6 +615,8 @@ _k_: kill        _s_: split                   _{_: wrap with { }
     (require 'helm-projectile)
     (helm-projectile-on)))
 
+;; Themes and fonts
+
 (use-package solarized-theme
   :config
   (evil-leader/set-key "tt" 'toggle-theme))
@@ -598,9 +632,15 @@ _k_: kill        _s_: split                   _{_: wrap with { }
   "-*-Source Code Pro-normal-normal-normal-*-*-*-*-*-m-0-iso10646-1")
 (set-face-attribute 'default nil :height 140)
 
+;; Company
+
+
 (use-package company
+  :diminish company-mode
   :config
   (global-company-mode))
+
+;; Helm-wordnet
 
 (use-package helm-wordnet
   :commands helm-wordnet
@@ -609,6 +649,8 @@ _k_: kill        _s_: split                   _{_: wrap with { }
   (setq helm-wordnet-prog "/usr/local/bin/wn"))
   (evil-leader/set-key
     "wd" 'helm-wordnet)
+
+;; Google translate
 
 (use-package google-translate
   :commands (google-translate-at-point google-translate-smooth-translate)
@@ -619,10 +661,14 @@ _k_: kill        _s_: split                   _{_: wrap with { }
     "wp" 'google-translate-at-point
     "ww" 'google-translate-smooth-translate))
 
+;; Display
+
 (use-package linum-relative
     :config
     (linum-relative-global-mode))
 (setq column-number-mode t)
+
+;; Flycheck
 
 (use-package flycheck
   :init
@@ -664,6 +710,8 @@ _k_: kill        _s_: split                   _{_: wrap with { }
       (require 'elfeed-org)
       (elfeed-org)
       (setq rmh-elfeed-org-files (list "~/org/elfeed.org"))))
+
+;; smtp
 
 (setq message-send-mail-function 'smtpmail-send-it
    starttls-use-gnutls t
@@ -747,10 +795,14 @@ _k_: kill        _s_: split                   _{_: wrap with { }
   (keyfreq-mode 1)
   (keyfreq-autosave-mode 1))
 
+;; Convenience
+
 (use-package restart-emacs
   :init
   (evil-leader/set-key "qr" 'restart-emacs)
   :commands restart-emacs)
+
+;; Neotree
 
 (use-package neotree :load-path "~/.emacs.d/packages/neotree"
   :commands  neotree-toggle
