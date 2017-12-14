@@ -6,6 +6,28 @@
 (setq user-full-name "Andrew Sanchez"
       user-mail-address "inbox.asanchez@gmail.com")
 
+;; Package management
+
+(require 'package)
+    (add-to-list 'load-path "packages")
+    (setq package-archives
+        '(("gnu" . "http://elpa.gnu.org/packages/")
+        ("marmalade" . "http://marmalade-repo.org/packages/")
+          ("melpa" . "http://melpa.milkbox.net/packages/")
+          ("melpa-stable" . "http://stable.melpa.org/packages/")
+          ("elpy" . "https://jorgenschaefer.github.io/packages/")
+          ("org" . "http://orgmode.org/elpa/")))
+  (package-initialize)
+  (unless (package-installed-p 'use-package)
+    (package-refresh-contents)
+    (package-install 'use-package))
+  (eval-when-compile
+    (require 'use-package))
+  (setq use-package-always-ensure t)
+  (setq use-package-verbose t)
+(use-package diminish
+  :config
+  (diminish 'undo-tree-mode))
 ;; Helpful
 
 (use-package helpful
