@@ -129,6 +129,24 @@
 (evil-set-initial-state 'realgud-short-key-mode 'emacs)
 (evil-set-initial-state 'Info-mode 'emacs)
 
+;; Navigation
+
+(use-package avy
+  :init
+  (defhydra hydra-avy (:color blue)
+    "avy-goto"
+    ("c" avy-goto-char "char")
+    ("C" avy-goto-char-2 "char-2")
+    ("w" avy-goto-word-1 "word")
+    ("s" avy-goto-subword-1 "subword")
+    ("l" avy-goto-line "line")
+    ("u" link-hint-open-link "open-URI")
+    ("U" link-hint-copy-link "copy-URI"))
+  (evil-leader/set-key "j" 'hydra-avy/body)
+  :commands hydra-avy/body
+  :config
+  (use-package link-hint))
+
 (use-package expand-region
   :config
   (global-set-key (kbd "C-=") 'er/expand-region))
