@@ -80,9 +80,13 @@
 
 (evil-leader/set-key "tf" 'flyspell-mode)
 
+;; Evil
+
 (use-package evil-leader
   :config
   (global-evil-leader-mode)
+  (setq evil-leader/in-all-states t)
+  (setq evil-leader/non-normal-prefix "C-")
   (evil-leader/set-leader "<SPC>"))
 
 (use-package evil
