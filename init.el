@@ -568,11 +568,12 @@ _k_: kill        _s_: split                   _{_: wrap with { }
     ("C-<left>" sp-backward-barf-sexp)
     ("C-<right>" sp-backward-slurp-sexp)))
 
+;; Projectile
+
 (use-package projectile
   :init
   (evil-leader/set-key "p" 'helm-projectile)
-  :load-path "~/.emacs.d/packages/projectile"
-  :commands helm-projectile
+  :commands (helm-projectile-switch-project helm-projectile)
   :config
   (evil-leader/set-key "p" 'projectile-command-map)
   (projectile-mode)
