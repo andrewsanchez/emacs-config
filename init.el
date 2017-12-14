@@ -356,6 +356,9 @@
   :commands magit-status
   :config
   (setq magit-git-executable "~/usr/bin/git"))
+  (setq magit-git-executable "~/usr/bin/git")
+  (add-hook 'git-commit-mode-hook 'git-commit-turn-on-flyspell)
+  (evil-set-initial-state 'git-commit-mode 'normal))
 
 (show-paren-mode 1)
 (menu-bar-mode -1)
