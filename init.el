@@ -1,8 +1,11 @@
+;; Personal info and constants
+
 (defconst as/emacs-directory (concat (getenv "HOME") "/.emacs.d/"))
+(defconst as/elisp (concat (getenv "HOME") "/projects/emacs-config/"))
+(add-to-list 'load-path as/elisp)
 (setq user-full-name "Andrew Sanchez"
       user-mail-address "inbox.asanchez@gmail.com")
 
-(setq custom-file (expand-file-name "custom.el" as/emacs-directory))
 (when (file-exists-p custom-file)
   (load custom-file))
 
