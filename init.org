@@ -703,7 +703,14 @@ Also look at sensible-defaults
        (get-buffer-process (current-buffer))
        nil "_"))))
 #+end_src
-
+* HPC
+** Slurm
+#+begin_src elisp
+  (use-package slurm-mode
+    :load-path "~/.emacs.d/elisp"
+    :commands (slurm-mode)
+    :config)
+#+end_src
 * Yapfify
 #+begin_src elisp
   (use-package yapfify :commands yapfify-buffer)
