@@ -259,21 +259,31 @@
   (require 'yasnippet)
   (yas-global-mode 1))
 
+;; General
 
 (use-package org
+  :mode (("\\.org$" . org-mode))
+  :commands (org-agenda org-capture)
   :load-path "~/.emacs.d/packages/org-mode/lisp"
+  :diminish org-mode
   :init
   (evil-leader/set-key
       "oa" 'org-agenda
       "oc" 'org-capture
       "ot" 'hydra-org-clock/body)
   :config
+  (setq as/agenda (concat (getenv "HOME") "/org/agenda/"))
+  (setq as/views (concat (getenv "HOME") "/org/views/"))
+  (setq as/gtd (concat as/agenda "gtd.org"))
+
+  (load "org-config")
+  (add-hook 'org-mode-hook 'toggle-truncate-lines)
   (setq org-hide-leading-stars t)
   (setq org-default-notes-file "/Users/andrew/org/notes.org")
   (setq org-todo-keywords
-    '((sequence "NEXT" "TODO" "|" "DONE")))
+    '((sequence "TODO" "|" "DONE")))
   (setq org-refile-targets '((nil :maxlevel . 3)
-			     (org-agenda-files :maxlevel . 2)))
+                             (org-agenda-files :maxlevel . 2)))
   (setq org-outline-path-complete-in-steps nil)
   (setq org-completion-use-ido nil)
   (setq org-refile-use-outline-path t) 
@@ -282,46 +292,7 @@
     (not (member (nth 2 (org-heading-components)) org-done-keywords)))
   (setq org-refile-target-verify-function 'as/verify-refile-target)
   (setq org-refile-allow-creating-parent-nodes 'confirm)
-  (setq org-src-fontify-natively t)
-  (evil-leader/set-key-for-mode 'org-mode
-    "m" 'hydra-org-headings/body)
-  ;; Hydras
-  (defhydra hydra-org-headings ()
-    "Headings"
-	("t" org-todo "org-todo")
-	(":" org-set-tags-command "org-set-tags-command")
-	("n" org-narrow-to-subtree "org-narrow-to-subtree")
-	("w" widen "widen")
-	("s" org-sort)
-	("l" org-demote-subtree "org-demote-subtree")
-	("h" org-promote-subtree "org-promote-subtree")
-	("K" outline-up-heading "org-backward-heading-same-level")
-	("J" org-forward-heading-same-level "org-forward-heading-same-level")
-	("k" outline-previous-visible-heading "outline-previous-visible-heading")
-	("j" outline-next-visible-heading "outline-next-visible-heading")
-	("*" org-toggle-heading "org-toggle-heading")
-	("r" org-refile "org-refile"))
-
-  (defhydra hydra-org-clock (:color blue :hint nil)
-      "
-
-      Clock   In/out^     ^Edit^   ^Summary     (_?_)
-      -----------------------------------------
-	      _i_n         _e_dit   _g_oto entry
-	      _c_ontinue   _q_uit   _d_isplay
-	      _o_ut        ^ ^      _r_eport
-	      _p_omodoro
-      "
-      ("i" org-clock-in)
-      ("o" org-clock-out)
-      ("c" org-clock-in-last)
-      ("e" org-clock-modify-effort-estimate)
-      ("q" org-clock-cancel)
-      ("p" org-pomodoro)
-      ("g" org-clock-goto)
-      ("d" org-clock-display)
-      ("r" org-clock-report)
-      ("?" (org-info "Clocking commands"))))
+  (setq org-src-fontify-natively t))
 
   (use-package org-pomodoro
     :commands org-pomodoro
@@ -336,76 +307,16 @@
     (setq org-pomodoro-long-break-sound mindfulness-chimes)
     (setq org-pomodoro-start-sound-p t))
 
-; Can't remember what I wanted this for...
-; (use-package org-plus-contrib)
-(use-package ob-ipython)
-(org-babel-do-load-languages
- 'org-babel-load-languages
- '((emacs-lisp . t)
-   (shell . t)
-   (ipython . t)
-   (python . t)))
-
-(setq org-capture-templates
-      '(("t" "TODO" entry (file+headline "/Users/andrew/org/agenda/gtd.org" "Tasks")
-	 "* TODO %? \n%U\n" :empty-lines 1)
-	("n" "NEXT" entry (file+headline "/Users/andrew/org/agenda/gtd.org" "Tasks")
-	 "* NEXT %? \n%U\n" :empty-lines 1)
-	("h" "New Headline" entry (file+headline "/Users/andrew/org/agenda/gtd.org" "Notes")
-	   "* %?\n")
-	("p" "Plan" entry (file+headline "/Users/andrew/org/agenda/gtd.org" "Plans")
-	"* %?\n")
-	("j" "Journal" entry (file+datetree "/Users/andrew/org/agenda/journal.org")
-	"* %?\nEntered on %U\n")))
-
-(defun org-archive-done-tasks ()
-  (interactive)
-  (org-map-entries
-   (lambda ()
-     (org-archive-subtree)
-     (setq org-map-continue-from (outline-previous-heading)))
-   "/DONE" 'tree))
-
-     (setq org-agenda-sorting-strategy
-	   '((agenda habit-down timestamp-down priority-down category-keep)
-	    (todo priority-down timestamp-down category-keep)
-	    (tags priority-down timestamp-down category-keep)
-	    (search category-keep timestamp-down)))
-
-     (setq org-agenda-files '("~/org/agenda" "~/org/projects"))
-     (setq org-agenda-custom-commands
-	 '(("!" "ASAP" tags-todo "asap-TODO=\"DONE\"") 
-	     ("n" . "Next")
-	     ("np" "Next PMI" tags-todo "TODO=\"NEXT\"+category=\"PMI\""
-	      ((org-agenda-overriding-header "Next PMI")))
-	     ("na" "Next ABB" tags-todo "TODO=\"NEXT\"+category=\"ABB\""
-	      ((org-agenda-overriding-header "Next ABB")))
-	     ("nm" "Next Miscellaneous" tags-todo "TODO=\"NEXT\"+category=\"misc\""
-	      ((org-agenda-overriding-header "Next Miscellaneous")))
-	     ("A" . "All")
-	     ;("am" "All Miscellaneous" tags-todo "TODO={TODO\\|NEXT}+category=\"misc\"")
-	     ("Am" "All Miscellaneous"
-	     ((tags-todo "TODO=\"NEXT\"+category=\"misc\"")
-	     (tags-todo "TODO=\"TODO\"+category=\"misc\"")
-	     (tags-todo "TODO=\"DONE\"+category=\"misc\""))
-	     ((org-agenda-overriding-header "All Miscellaneous")))
-	     ("Ap" "All PMI"
-	     ((tags-todo "TODO=\"NEXT\"+category=\"PMI\"")
-	     (tags-todo "TODO=\"TODO\"+category=\"PMI\"")
-	     (tags-todo "TODO=\"DONE\"+category=\"PMI\""))
-	     ((org-agenda-overriding-header "")))
-	     ("Aa" "ALL"
-	     ((tags-todo "TODO=\"NEXT\"")
-	     (tags-todo "TODO=\"TODO\"")
-	     (tags-todo "TODO=\"DONE\""))
-	     ((org-agenda-overriding-header "All")))))
+;; Toolbar
+;;    Save space by not showing the toolbar
 
 (tool-bar-mode -1)
+
+;; Golden ratio mode
 
 (use-package golden-ratio
   :commands
   (evil-window-next
-   evil-window-next
    evil-window-right
    evil-window-left
    evil-window-down
