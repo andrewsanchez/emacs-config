@@ -95,11 +95,6 @@
 
 (use-package evil-nerd-commenter
   :config
-  ;; Emacs key bindings
-  (global-set-key (kbd "M-;") 'evilnc-comment-or-uncomment-lines)
-  (global-set-key (kbd "C-c l") 'evilnc-quick-comment-or-uncomment-to-the-line)
-  (global-set-key (kbd "C-c c") 'evilnc-copy-and-comment-lines)
-  (global-set-key (kbd "C-c p") 'evilnc-comment-or-uncomment-paragraphs)
   (evil-leader/set-key
     "ci" 'evilnc-comment-or-uncomment-lines
     "cl" 'evilnc-quick-comment-or-uncomment-to-the-line
