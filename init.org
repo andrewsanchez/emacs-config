@@ -995,9 +995,6 @@ Each perspective is composed of a window configuration and a set of buffers. Swi
 
 It's recommended that you install perspective.el from Marmalade using M-x package-install. Alternately, you may put it in your load path and run (require 'perspective). Users of Debian 9 or later or Ubuntu 16.04 or later may simply apt-get install elpa-perspective.
 ** TODO [[https://github.com/ShingoFukuyama/helm-swoop][helm swoop]]
-** TODO Steal his code for auto tangling this file in init.el
-   - https://github.com/novoid/dot-emacs/blob/master/init.el#L36
-   - he based it on this post http://www.holgerschurig.de/en/emacs-init-tangle/
 ** TODO [[https://github.com/abo-abo/tiny][Tiny - Quickly generate linear ranges in Emacs]]
-
+   
    
