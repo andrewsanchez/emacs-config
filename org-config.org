@@ -1,0 +1,159 @@
+#+PROPERTY:    header-args        :results silent   :eval no-export   :comments org
+#+PROPERTY:    header-args:elisp  :tangle ~/projects/emacs-config/org-config.el
+
+#+begin_src elisp
+(provide 'as/layer-org)
+#+end_src
+
+* Babel
+#+begin_src elisp
+  ; Can't remember what I wanted this for...
+  ; (use-package org-plus-contrib) 
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((emacs-lisp . t)
+     (shell . t)))
+   (setq org-confirm-babel-evaluate nil)
+#+end_src
+* Capture
+#+begin_src elisp
+  (setq org-capture-templates
+        '(("t" "TODO" entry (file+headline as/gtd "Collect")
+           "* TODO %? \n%U" :empty-lines 1)
+          ("p" "Priority" entry (file+headline as/gtd "Collect")
+           "* TODO [#A] %? \nSCHEDULED: %^t")
+          ("a" "Appointment" entry (file+headline as/gtd "Collect")
+           "* %? \n%^t")
+          ("l" "Link" entry (file+headline as/gtd "Collect")
+           "* TODO %?\nSCHEDULED: %(org-insert-time-stamp (org-read-date nil t \"+0d\"))\n%a\n")
+          ("n" "Note" entry (file+headline as/gtd "Notes")
+             "* %?\n%U" :empty-lines 1)
+          ("j" "Journal" entry (file+datetree "/Users/andrew/org/agenda/journal.org")
+          "* %?\nEntered on %U\n")))
+#+end_src
+* Agenda
+#+begin_src elisp
+  (setq org-agenda-include-diary t)
+   (setq org-tag-persistent-alist '(("PMI" . ?p)
+                                    ("work" . ?w)
+                                    ("buy" . ?b)
+                                    ("sdm" . ?m)
+                                    ("X" . ?x)
+                                    ("read" . ?r)
+                                    ("school" . ?s)))
+
+  (setq org-agenda-files '("/Users/andrew/org/agenda/"
+                           "/Users/andrew/org/projects/"))
+
+   (defun org-archive-done-tasks ()
+     (interactive)
+     (org-map-entries
+      (lambda ()
+        (org-archive-subtree)
+        (setq org-map-continue-from (outline-previous-heading))) "/DONE" 'agenda))
+
+   (setq org-agenda-sorting-strategy
+         '((agenda habit-down timestamp-down priority-down category-keep)
+           (todo priority-down timestamp-down category-keep)
+           (tags priority-down timestamp-down category-keep)
+           (search category-keep timestamp-down)))
+
+   (setq org-agenda-custom-commands
+         `(("a" "Current day/week" agenda "" nil
+            (,(concat as/views "agenda.ics")
+             ,(concat as/views "agenda.org")
+             ,(concat as/views "agenda.html")))
+           ("p" "PMI"
+            ((tags-todo "TODO=\"TODO\"+category=\"PMI\"")
+             (tags-todo "TODO=\"DONE\"+category=\"PMI\""))
+            ((org-agenda-overriding-header "")
+             (org-agenda-remove-tags t))
+            (,(concat as/views "pmi-dev-plan.org")))
+           ("f" "Fluent Forever"
+            ((tags-todo "TODO=\"TODO\"+category=\"Fluent Forever\""))
+            ((org-agenda-overriding-header "")
+             (org-agenda-remove-tags t)))
+           ("Aa" "ALL"
+            ((alltodo))
+            ((org-agenda-overriding-header "All"))
+            (,(concat as/views "all.org")))))
+#+end_src
+* Hydras
+*** Main
+#+begin_src elisp
+  (defhydra hydra-org-mode ()
+    "Org-mode"
+    ("t" org-todo "org-todo")
+    (":" org-set-tags-command "org-set-tags-command")
+    ("n" org-narrow-to-subtree "org-narrow-to-subtree")
+    ("w" widen "widen")
+    ("s" org-sort)
+    ("l" org-demote-subtree "org-demote-subtree")
+    ("h" org-promote-subtree "org-promote-subtree")
+    ("K" outline-up-heading "org-backward-heading-same-level")
+    ("J" org-forward-heading-same-level "org-forward-heading-same-level")
+    ("k" outline-previous-visible-heading "outline-previous-visible-heading")
+    ("j" outline-next-visible-heading "outline-next-visible-heading")
+    ("*" org-toggle-heading "org-toggle-heading")
+    ("$" org-archive-done-tasks "org-archive-done-tasks"))
+    (evil-leader/set-key-for-mode 'org-mode "m" 'hydra-org-mode/body)
+#+end_src
+*** Clock
+#+begin_src elisp
+  (defhydra hydra-org-clock (:color blue :hint nil)
+          "
+          Clock   In/out^     ^Edit^   ^Summary     (_?_)
+          -----------------------------------------
+                  _i_n         _e_dit   _g_oto entry
+                  _c_ontinue   _q_uit   _d_isplay
+                  _o_ut        ^ ^      _r_eport
+                  _p_omodoro
+          "
+          ("i" org-clock-in)
+          ("o" org-clock-out)
+          ("c" org-clock-in-last)
+          ("e" org-clock-modify-effort-estimate)
+          ("q" org-clock-cancel)
+          ("p" org-pomodoro)
+          ("g" org-clock-goto)
+          ("d" org-clock-display)
+          ("r" org-clock-report)
+          ("?" (org-info "Clocking commands")))
+#+end_src
+*** Block templates
+ #+begin_src elisp
+ (defhydra hydra-org-template (:color blue :hint nil)
+   "
+ _c_enter  _q_uote    _L_aTeX:
+ _l_atex   _e_xample  _i_ndex:
+ _a_scii   _v_erse    _I_NCLUDE:
+ _s_rc     ^ ^        _H_TML:
+ _h_tml    ^ ^        _A_SCII:
+ "
+   ("s" (hot-expand "<s"))
+   ("e" (hot-expand "<e"))
+   ("q" (hot-expand "<q"))
+   ("v" (hot-expand "<v"))
+   ("c" (hot-expand "<c"))
+   ("l" (hot-expand "<l"))
+   ("h" (hot-expand "<h"))
+   ("a" (hot-expand "<a"))
+   ("L" (hot-expand "<L"))
+   ("i" (hot-expand "<i"))
+   ("I" (hot-expand "<I"))
+   ("H" (hot-expand "<H"))
+   ("A" (hot-expand "<A"))
+   ("<" self-insert-command "ins")
+   ("o" nil "quit"))
+
+ (defun hot-expand (str)
+   "Expand org template."
+   (insert str)
+   (org-try-structure-completion))
+
+   (define-key org-mode-map "<"
+   (lambda () (interactive)
+      (if (looking-back "^")
+          (hydra-org-template/body)
+	(self-insert-command 1))))
+ #+end_src
