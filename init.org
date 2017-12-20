@@ -706,10 +706,9 @@ Also look at sensible-defaults
 * HPC
 ** Slurm
 #+begin_src elisp
-  (use-package slurm-mode
-    :load-path "~/.emacs.d/elisp"
-    :commands (slurm-mode)
-    :config)
+(add-to-list 'load-path (concat as/elisp "slurm"))
+(require 'slurm-mode)
+(require 'slurm-script-mode)
 #+end_src
 * Yapfify
 #+begin_src elisp
