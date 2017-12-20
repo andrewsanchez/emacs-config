@@ -5,8 +5,10 @@
 ** Personal info and constants
  #+begin_src elisp
  (defconst as/emacs-directory (concat (getenv "HOME") "/.emacs.d/"))
- (defconst as/elisp (concat (getenv "HOME") "/projects/emacs-config/"))
+ (defconst as/config (concat (getenv "HOME") "/projects/emacs-config/"))
+ (defconst as/elisp (concat (getenv "HOME") "/projects/emacs-config/elisp/"))
  (add-to-list 'load-path as/elisp)
+ (add-to-list 'load-path as/config)
  (setq user-full-name "Andrew Sanchez"
        user-mail-address "inbox.asanchez@gmail.com")
  #+end_src
@@ -38,9 +40,9 @@
 
 #+begin_src elisp
 (defun as/tangle-dotfiles ()
-  "If the current file is in 'as/elisp' blocks are tangled"
+  "If the current file is in 'as/config, tangle blocks"
   (when (equal (file-name-directory (directory-file-name buffer-file-name))
-               as/elisp)
+               as/config)
     (org-babel-tangle)
     (message "%s tangled" buffer-file-name)))
 (add-hook 'after-save-hook #'as/tangle-dotfiles)
@@ -64,7 +66,7 @@
 #+end_src
 * Custom set variables
 #+begin_src elisp
-  (setq custom-file (expand-file-name "custom.el" as/elisp))
+  (setq custom-file (expand-file-name "custom.el" as/config))
   (when (file-exists-p custom-file)
     (load custom-file))
 #+end_src
