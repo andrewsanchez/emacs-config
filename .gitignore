@@ -1,1 +1,3 @@
-*.el
+init.el
+elisp/org-config.el
+/org-config.el
