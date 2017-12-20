@@ -926,7 +926,7 @@ Also look at sensible-defaults
 #+end_src
 * Neotree
 #+begin_src elisp
-  (use-package neotree :load-path "~/.emacs.d/packages/neotree"
+  (use-package neotree
     :commands  neotree-toggle
     :config
     (require 'neotree)
