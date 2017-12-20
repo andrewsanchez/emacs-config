@@ -776,6 +776,7 @@ Also look at sensible-defaults
    (require 'org-mu4e) ;; store org-mode links to messages
    ;;store link to message if in header view, not to header query
    (setq org-mu4e-link-query-in-headers-mode nil)
+   (setq mu4e-confirm-quit nil)
    (setq mu4e-change-filenames-when-moving t)
    (setq mu4e-sent-messages-behavior 'delete)
    (setq mu4e-mu-binary "/usr/local/bin/mu")
