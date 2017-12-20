@@ -20,7 +20,7 @@
  '(org-use-property-inheritance t)
  '(package-selected-packages
    (quote
-    (helpful link-hint avy visual-fill-column helm-projectile ob-python gnugo realgud neotree restart-emacs keyfreq elfeed-org elfeed deft flycheck linum-relative google-translate helm-wordnet company solarized-theme projectile exec-path-from-shell yapfify which-key magit zoom-frm golden-ratio org-plus-contrib yasnippet use-package smart-mode-line org-pomodoro ob-ipython hydra helm-descbinds expand-region evil-surround evil-nerd-commenter evil-matchit evil-lisp-state evil-leader)))
+    (slurm-mode helpful link-hint avy visual-fill-column helm-projectile ob-python gnugo realgud neotree restart-emacs keyfreq elfeed-org elfeed deft flycheck linum-relative google-translate helm-wordnet company solarized-theme projectile exec-path-from-shell yapfify which-key magit zoom-frm golden-ratio org-plus-contrib yasnippet use-package smart-mode-line org-pomodoro ob-ipython hydra helm-descbinds expand-region evil-surround evil-nerd-commenter evil-matchit evil-lisp-state evil-leader)))
  '(rst-compile-toolsets
    (quote
     ((html "rst2html.py" ".html" nil)
