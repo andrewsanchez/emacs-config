@@ -1,14 +1,47 @@
 #+PROPERTY:    header-args        :results silent   :eval no-export   :comments org
 #+PROPERTY:    header-args:elisp  :tangle ~/projects/emacs-config/org-config.el
 
+* General
 #+begin_src elisp
-(provide 'as/layer-org)
+  (provide 'as/layer-org)
+  (setq org-default-notes-file "/Users/andrew/org/notes.org")
+  (setq org-hide-leading-stars t)
+  (setq org-todo-keywords
+    '((sequence "TODO" "|" "DONE")))
+  (setq org-refile-targets '((nil :maxlevel . 3)
+			 (org-agenda-files :maxlevel . 2)))
+  (setq org-outline-path-complete-in-steps nil)
+  (setq org-completion-use-ido nil)
+  (setq org-refile-use-outline-path t) 
+  (defun as/verify-refile-target ()
+    "Exclude todo keywords with a done state from refile targets"
+    (not (member (nth 2 (org-heading-components)) org-done-keywords)))
+  (setq org-refile-target-verify-function 'as/verify-refile-target)
+  (setq org-refile-allow-creating-parent-nodes 'confirm)
+  (setq org-src-fontify-natively t)
+#+end_src
+
+* Pomodoro
+#+begin_src elisp
+  (use-package org-pomodoro
+     :commands org-pomodoro
+     :config
+     (setq mindfulness-bell "/Users/andrew/Music/Miscellaneous/Timer_Sounds/mindfullness_bell.mp3") 
+     (setq mindfulness-chimes "/Users/andrew/Music/Miscellaneous/Timer_Sounds/chimes.mp3") 
+     (setq org-pomodoro-length 15)
+     (setq org-pomodoro-short-break-length .5)
+     (setq org-pomodoro-start-sound mindfulness-bell)
+     (setq org-pomodoro-finished-sound mindfulness-bell)
+     (setq org-pomodoro-short-break-sound mindfulness-bell)
+     (setq org-pomodoro-long-break-sound mindfulness-chimes)
+     (setq org-pomodoro-start-sound-p t))
 #+end_src
 
 * Babel
 #+begin_src elisp
   ; Can't remember what I wanted this for...
   ; (use-package org-plus-contrib) 
+  (setq org-src-window-setup (quote current-window))
   (org-babel-do-load-languages
    'org-babel-load-languages
    '((emacs-lisp . t)
@@ -33,30 +66,31 @@
 #+end_src
 * Agenda
 #+begin_src elisp
+  (setq org-agenda-files
+	'("/Users/andrew/org/gtd.org"
+	  "/Users/andrew/org/PMI/PMI.org"
+	  "/Users/andrew/org/Fluent-Forever/Fluent-Forever.org"))
   (setq org-agenda-include-diary t)
-   (setq org-tag-persistent-alist '(("PMI" . ?p)
-                                    ("work" . ?w)
-                                    ("buy" . ?b)
-                                    ("sdm" . ?m)
-                                    ("X" . ?x)
-                                    ("read" . ?r)
-                                    ("school" . ?s)))
-
-  (setq org-agenda-files '("/Users/andrew/org/agenda/"
-                           "/Users/andrew/org/projects/"))
+  (setq org-tag-persistent-alist '(("PMI" . ?p)
+				    ("work" . ?w)
+				    ("buy" . ?b)
+				    ("sdm" . ?m)
+				    ("X" . ?x)
+				    ("read" . ?r)
+				    ("school" . ?s)))
 
    (defun org-archive-done-tasks ()
      (interactive)
      (org-map-entries
       (lambda ()
-        (org-archive-subtree)
-        (setq org-map-continue-from (outline-previous-heading))) "/DONE" 'agenda))
+	(org-archive-subtree)
+	(setq org-map-continue-from (outline-previous-heading))) "/DONE" 'agenda))
 
    (setq org-agenda-sorting-strategy
-         '((agenda habit-down timestamp-down priority-down category-keep)
-           (todo priority-down timestamp-down category-keep)
-           (tags priority-down timestamp-down category-keep)
-           (search category-keep timestamp-down)))
+	 '((agenda habit-down timestamp-down priority-down category-keep)
+	   (todo priority-down timestamp-down category-keep)
+	   (tags priority-down timestamp-down category-keep)
+	   (search category-keep timestamp-down)))
 
    (setq org-agenda-custom-commands
 	 `(("a" "Current day/week" agenda "" nil
