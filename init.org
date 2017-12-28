@@ -190,7 +190,7 @@ Display a more compact mode line
 	"hi" 'helm-info
 	"ss" 'helm-occur)
     :commands
-    (helm-google-suggest helm-M-x helm-semantic-or-imenu helm-apropos helm-occur)
+    (helm-google-suggest helm-M-x helm-semantic-or-imenu helm-apropos helm-occur helm-info-org)
     :bind (("M-y" . helm-show-kill-ring)
 	   ("C-h a" . helm-apropos)
 	   ("M-x" . helm-M-x)
