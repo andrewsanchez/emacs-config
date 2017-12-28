@@ -34,6 +34,7 @@
    (use-package diminish
      :config
      (diminish 'undo-tree-mode))
+   (server-start)
  #+end_src
 ** Tangle init.el
 [[https://emacs.stackexchange.com/questions/20707/automatically-tangle-org-files-in-a-specific-directory#20733][Automatically tangle]] this file on save.
