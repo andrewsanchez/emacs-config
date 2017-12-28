@@ -715,7 +715,11 @@ Also look at sensible-defaults
     (setq deft-default-extension "org")
     (setq deft-recursive t)
     (setq deft-use-filename-as-title t)
-    (setq deft-use-filter-string-for-filename t))
+    (setq deft-use-filter-string-for-filename t)
+    (setq deft-ignore-file-regexp
+	(concat "\\(?:"
+		"archive\\.org\\'"
+		"\\)")))
 
 #+end_src
 * Elfeed
