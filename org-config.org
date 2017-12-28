@@ -59,24 +59,23 @@
            (search category-keep timestamp-down)))
 
    (setq org-agenda-custom-commands
-         `(("a" "Current day/week" agenda "" nil
-            (,(concat as/views "agenda.ics")
-             ,(concat as/views "agenda.org")
-             ,(concat as/views "agenda.html")))
-           ("p" "PMI"
-            ((tags-todo "TODO=\"TODO\"+category=\"PMI\"")
-             (tags-todo "TODO=\"DONE\"+category=\"PMI\""))
-            ((org-agenda-overriding-header "")
-             (org-agenda-remove-tags t))
-            (,(concat as/views "pmi-dev-plan.org")))
-           ("f" "Fluent Forever"
-            ((tags-todo "TODO=\"TODO\"+category=\"Fluent Forever\""))
-            ((org-agenda-overriding-header "")
-             (org-agenda-remove-tags t)))
-           ("Aa" "ALL"
-            ((alltodo))
-            ((org-agenda-overriding-header "All"))
-            (,(concat as/views "all.org")))))
+	 `(("a" "Current day/week" agenda "" nil
+	    (,(concat as/agenda "agenda.ics")
+	     ,(concat as/agenda "agenda.html")))
+	   ("p" "PMI"
+	    ((tags-todo "gbqc+TODO=\"TODO\"+category=\"PMI\"") 
+             (tags-todo "ncbitk+TODO=\"TODO\"+category=\"PMI\""))
+	    ((org-agenda-overriding-header ""))
+	    (,(concat as/org "PMI/PMI-all-todos.org")))
+	   ("f" "Fluent Forever"
+	    ((tags-todo "TODO=\"TODO\"+category=\"Fluent Forever\""))
+	    ((org-agenda-overriding-header "")
+	     (org-agenda-remove-tags t))
+	    (,(concat as/org "Fluent-Forever/Fluent-Forever.html")))
+	   ("Aa" "ALL"
+	    ((alltodo))
+	    ((org-agenda-overriding-header "All"))
+	     ,(concat as/agenda "all.html"))))
 #+end_src
 * Hydras
 *** Main
