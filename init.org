@@ -67,7 +67,7 @@
 #+end_src
 * Custom set variables
 #+begin_src elisp
-  (setq custom-file (expand-file-name "custom.el" as/config))
+  (setq custom-file (expand-file-name "custom.el" as/elisp))
   (when (file-exists-p custom-file)
     (load custom-file))
 #+end_src
