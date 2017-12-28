@@ -285,53 +285,27 @@ Display a more compact mode line
     (yas-global-mode 1))
 #+end_src
 * Org-mode
-** General
-#+begin_src elisp
-  (use-package org
-    :mode (("\\.org$" . org-mode))
-    :commands (org-agenda org-capture helm-info-org)
-    :load-path "~/.emacs.d/packages/org-mode/lisp"
-    :diminish org-mode
-    :init
-    (evil-leader/set-key
-        "oa" 'org-agenda
-        "oc" 'org-capture
-        "ot" 'hydra-org-clock/body)
-    :config
-    (setq as/agenda (concat (getenv "HOME") "/org/agenda/"))
-    (setq as/views (concat (getenv "HOME") "/org/views/"))
-    (setq as/gtd (concat as/agenda "gtd.org"))
-    (load "org-config")
-    (add-hook 'org-mode-hook 'toggle-truncate-lines)
-    (setq org-hide-leading-stars t)
-    (setq org-default-notes-file "/Users/andrew/org/notes.org")
-    (setq org-todo-keywords
-      '((sequence "TODO" "|" "DONE")))
-    (setq org-refile-targets '((nil :maxlevel . 3)
-                               (org-agenda-files :maxlevel . 2)))
-    (setq org-outline-path-complete-in-steps nil)
-    (setq org-completion-use-ido nil)
-    (setq org-refile-use-outline-path t) 
-    (defun as/verify-refile-target ()
-      "Exclude todo keywords with a done state from refile targets"
-      (not (member (nth 2 (org-heading-components)) org-done-keywords)))
-    (setq org-refile-target-verify-function 'as/verify-refile-target)
-    (setq org-refile-allow-creating-parent-nodes 'confirm)
-    (setq org-src-fontify-natively t))
+** [[file:org-config.org][Main configuration file]]
 
-    (use-package org-pomodoro
-      :commands org-pomodoro
-      :config
-      (setq mindfulness-bell "/Users/andrew/Music/Miscellaneous/Timer_Sounds/mindfullness_bell.mp3") 
-      (setq mindfulness-chimes "/Users/andrew/Music/Miscellaneous/Timer_Sounds/chimes.mp3") 
-      (setq org-pomodoro-length 15)
-      (setq org-pomodoro-short-break-length .5)
-      (setq org-pomodoro-start-sound mindfulness-bell)
-      (setq org-pomodoro-finished-sound mindfulness-bell)
-      (setq org-pomodoro-short-break-sound mindfulness-bell)
-      (setq org-pomodoro-long-break-sound mindfulness-chimes)
-      (setq org-pomodoro-start-sound-p t))
-#+end_src
+ #+begin_src elisp
+   (use-package org
+     :init
+     (setq as/agenda (concat (getenv "HOME") "/org/agenda/"))
+     (setq as/org (concat (getenv "HOME") "/org/"))
+     (setq as/views (concat (getenv "HOME") "/org/views/"))
+     (setq as/gtd (concat as/agenda "gtd.org"))
+     :mode (("\\.org$" . org-mode))
+     :commands (org-agenda org-capture helm-info-org)
+     :load-path "~/.emacs.d/packages/org-mode/lisp"
+     :diminish org-mode
+     :init
+     (evil-leader/set-key
+	 "oa" 'org-agenda
+	 "oc" 'org-capture
+	 "ot" 'hydra-org-clock/body)
+     :config
+     (load "org-config"))
+ #+end_src
 * Windows and frames
 ** Toolbar
    Save space by not showing the toolbar
