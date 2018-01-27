@@ -446,7 +446,7 @@ Also look at sensible-defaults
       "
           ("d" elpy-goto-definition)
           ("a" anaconda-mode-find-assignments)
-          ("r" xref-find-references)
+          ("r" anaconda-mode-find-references)
           ("s" elpy-doc)
           ("y" yapfify-buffer)
           ("v" pyvenv-activate)
@@ -464,7 +464,6 @@ Also look at sensible-defaults
           (evil-leader/set-key-for-mode 'rst-mode "m" 'hydra-python/body)
 
       (use-package anaconda-mode
-        :commands hydra-python/body
         :config
         (anaconda-mode)
         (anaconda-eldoc-mode)
@@ -760,16 +759,16 @@ Also look at sensible-defaults
    (setq mu4e-mu-binary "/usr/local/bin/mu")
    (setq mu4e-get-mail-command "/usr/local/bin/mbsync -a")
    (setq mu4e-maildir (expand-file-name "~/Maildir"))
-   (setq mu4e-drafts-folder "/drafts") 
-   (setq mu4e-sent-folder "/sent")
-   (setq mu4e-trash-folder "/trash")
-   (setq mu4e-refile-folder "/all")
+   (setq mu4e-drafts-folder "/personal/drafts") 
+   (setq mu4e-sent-folder "/personal/sent")
+   (setq mu4e-trash-folder "/personal/trash")
+   (setq mu4e-refile-folder "/personal/all")
    (setq mu4e-maildir-shortcuts
-         '(("/INBOX". ?i)
-           ("/sent" . ?s)
-           ("/trash" . ?t)
-           ("/all" . ?a)
-           ("/drafts" . ?d)))
+         '(("/personal/INBOX". ?i)
+           ("/personal/sent" . ?s)
+           ("/personal/trash" . ?t)
+           ("/personal/all" . ?a)
+           ("/personal/drafts" . ?d)))
    (evil-set-initial-state 'mu4e-view-mode 'motion)
    (add-hook 'message-mode-hook 'turn-on-orgstruct++)
    (add-hook 'mu4e-compose-mode-hook 'turn-on-flyspell)
