@@ -89,7 +89,7 @@ Also check out [[https://github.com/nonsequitur/smex][smex]]
 #+end_src
 * Toggles
 #+begin_src elisp
-(evil-leader/set-key "tf" 'flyspell-mode)
+(evil-leader/set-key "ts" 'flyspell-mode)
 #+end_src
 * Evil
 #+begin_src elisp
