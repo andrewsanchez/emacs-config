@@ -53,17 +53,21 @@
 #+begin_src elisp
   (setq org-capture-templates
         '(("t" "TODO" entry (file+headline as/gtd "Collect")
-           "* TODO %? \n%U" :empty-lines 1)
+           "* TODO %? %^G \n  %U" :empty-lines 1)
+          ("s" "Scheduled TODO" entry (file+headline as/gtd "Collect")
+           "* TODO %? %^G \nSCHEDULED: %^t\n  %U" :empty-lines 1)
+          ("d" "Deadline" entry (file+headline as/gtd "Collect")
+             "* TODO %? %^G \n  DEADLINE: %^t" :empty-lines 1)
           ("p" "Priority" entry (file+headline as/gtd "Collect")
-           "* TODO [#A] %? \nSCHEDULED: %^t")
+           "* TODO [#A] %? %^G \n  SCHEDULED: %^t")
           ("a" "Appointment" entry (file+headline as/gtd "Collect")
-           "* %? \n%^t")
+           "* %? %^G \n  %^t")
           ("l" "Link" entry (file+headline as/gtd "Collect")
-           "* TODO %?\nSCHEDULED: %(org-insert-time-stamp (org-read-date nil t \"+0d\"))\n%a\n")
+           "* TODO %a %? %^G\nSCHEDULED: %(org-insert-time-stamp (org-read-date nil t \"+0d\"))\n")
           ("n" "Note" entry (file+headline as/gtd "Notes")
-             "* %?\n%U" :empty-lines 1)
+             "* %? %^G\n%U" :empty-lines 1)
           ("j" "Journal" entry (file+datetree "/Users/andrew/org/agenda/journal.org")
-          "* %?\nEntered on %U\n")))
+          "* %? %^G\nEntered on %U\n")))
 #+end_src
 * Agenda
 #+begin_src elisp
