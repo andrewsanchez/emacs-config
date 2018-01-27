@@ -10,9 +10,7 @@
  '(global-visual-line-mode t)
  '(indent-tabs-mode nil)
  '(initial-frame-alist (quote ((fullscreen . maximized))))
- '(org-agenda-files
-   (quote
-    ("~/org/bookmarks.org" "/Users/andrew/org/agenda/PMI.org" "/Users/andrew/org/agenda/gtd.org" "/Users/andrew/org/projects/life.org" "/Users/andrew/org/projects/memworth.org")))
+ '(org-agenda-skip-deadline-prewarning-if-scheduled t)
  '(org-footnote-section "References")
  '(org-html-postamble nil)
  '(org-src-window-setup (quote current-window))
@@ -20,7 +18,7 @@
  '(org-use-property-inheritance t)
  '(package-selected-packages
    (quote
-    (slurm-mode helpful link-hint avy visual-fill-column helm-projectile ob-python gnugo realgud neotree restart-emacs keyfreq elfeed-org elfeed deft flycheck linum-relative google-translate helm-wordnet company solarized-theme projectile exec-path-from-shell yapfify which-key magit zoom-frm golden-ratio org-plus-contrib yasnippet use-package smart-mode-line org-pomodoro ob-ipython hydra helm-descbinds expand-region evil-surround evil-nerd-commenter evil-matchit evil-lisp-state evil-leader)))
+    (flycheck-ledger ledger-mode slurm-mode helpful link-hint avy visual-fill-column helm-projectile ob-python gnugo realgud neotree restart-emacs keyfreq elfeed-org elfeed deft flycheck linum-relative google-translate helm-wordnet company solarized-theme projectile exec-path-from-shell yapfify which-key magit zoom-frm golden-ratio org-plus-contrib yasnippet use-package smart-mode-line org-pomodoro ob-ipython hydra helm-descbinds expand-region evil-surround evil-nerd-commenter evil-matchit evil-lisp-state evil-leader)))
  '(rst-compile-toolsets
    (quote
     ((html "rst2html.py" ".html" nil)
