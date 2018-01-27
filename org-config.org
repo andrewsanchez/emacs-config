@@ -19,6 +19,7 @@
   (setq org-refile-target-verify-function 'as/verify-refile-target)
   (setq org-refile-allow-creating-parent-nodes 'confirm)
   (setq org-src-fontify-natively t)
+  (add-to-list 'org-modules 'org-habit)
 #+end_src
 
 * Pomodoro
