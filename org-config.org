@@ -72,9 +72,9 @@
 * Agenda
 #+begin_src elisp
   (setq org-agenda-files
-	'("/Users/andrew/org/gtd.org"
-	  "/Users/andrew/org/PMI/PMI.org"
-	  "/Users/andrew/org/Fluent-Forever/Fluent-Forever.org"))
+        '("/Users/andrew/org/gtd.org"
+          "/Users/andrew/org/PMI/PMI.org"
+          "/Users/andrew/org/Fluent-Forever/Fluent-Forever.org"))
   (setq org-agenda-include-diary t)
   (setq org-tag-persistent-alist '(("PMI" . ?p)
 				    ("work" . ?w)
