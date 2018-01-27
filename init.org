@@ -293,11 +293,6 @@ Display a more compact mode line
 
  #+begin_src elisp
    (use-package org
-     :init
-     (setq as/agenda (concat (getenv "HOME") "/org/agenda/"))
-     (setq as/org (concat (getenv "HOME") "/org/"))
-     (setq as/views (concat (getenv "HOME") "/org/views/"))
-     (setq as/gtd (concat as/agenda "gtd.org"))
      :mode (("\\.org$" . org-mode))
      :commands (org-agenda org-capture helm-info-org)
      :load-path "~/.emacs.d/packages/org-mode/lisp"
