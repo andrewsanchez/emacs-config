@@ -236,7 +236,7 @@ Display a more compact mode line
      "dot-file")
 
     ("g" (lambda () (interactive)
-	  (find-file "~/org/agenda/gtd.org"))
+	  (find-file "~/org/gtd.org"))
      "gtd")
     ("f" helm-find-files "helm-find-files")
     ("m" helm-multi-files "helm-multi-files")
