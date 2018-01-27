@@ -934,6 +934,16 @@ Also look at sensible-defaults
      (add-hook 'gnugo-start-game-hook 'gnugo-image-display-mode)
      (setq gnugo-xpms 'gnugo-imgen-create-xpms))
 #+end_src 
+
+* Finance
+
+** Ledger
+#+begin_src elisp
+  (use-package ledger-mode
+    :mode "\\.ledger\\'"
+    :config
+    (use-package flycheck-ledger))
+#+end_src
 * Test
 #+begin_src elisp :tangle no
 #+end_src  
