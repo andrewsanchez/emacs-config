@@ -139,9 +139,17 @@ Also check out [[https://github.com/nonsequitur/smex][smex]]
 #+begin_src elisp
   (add-to-list 'evil-emacs-state-modes 'dired-mode)
   (add-to-list 'evil-emacs-state-modes 'flycheck-error-list-mode)
-  (add-to-list 'evil-emacs-state-modes 'realgud-short-key-mode)
-  (evil-set-initial-state 'realgud-short-key-mode 'emacs)
   (evil-set-initial-state 'Info-mode 'emacs)
+
+  (evil-set-initial-state 'realgud-short-key-mode 'emacs)
+  (evil-set-initial-state 'pdb-track-mode 'emacs)
+  (evil-set-initial-state 'realgud-short-key-mode 'emacs)
+  (evil-set-initial-state 'realgud-track-mode 'emacs)
+
+  (add-to-list 'evil-emacs-state-modes 'realgud-short-key-mode)
+  (add-to-list 'evil-emacs-state-modes 'pdb-track-mode)
+  (add-to-list 'evil-emacs-state-modes 'realgud-short-key-mode)
+  (add-to-list 'evil-emacs-state-modes 'realgud-track-mode)
 
 #+end_src
 * Navigation
