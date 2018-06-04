@@ -433,6 +433,7 @@ Also look at sensible-defaults
       :interpreter ("python" . python-mode)
       :config
       ; org-babel
+      (load "realgud")
       (use-package ob-ipython
         :config
         (require 'ob-ipython))
