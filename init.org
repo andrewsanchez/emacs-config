@@ -232,16 +232,17 @@ Display a more compact mode line
     "Files"
 
     ("d" (lambda () (interactive)
-	   (find-file "~/projects/emacs-config/init.org"))
+           (find-file "~/projects/emacs-config/init.org"))
      "dot-file")
 
     ("g" (lambda () (interactive)
-	  (find-file "~/org/gtd.org"))
+          (find-file "~/org/gtd.org"))
      "gtd")
     ("f" helm-find-files "helm-find-files")
     ("m" helm-multi-files "helm-multi-files")
     ("b" helm-filtered-bookmarks "helm-filtered-bookmarks")
     ("t" neotree-toggle "neotree-toggle")
+    ("F" helm-tramp "helm-tramp")
     ("r" helm-recentf "recentf-open-files"))
 
 #+end_src
@@ -355,8 +356,9 @@ Undo and redo window configuration
 #+end_src
 * Backups
 #+begin_src elisp
-;; Special dir for backups
-(setq backup-directory-alist '(("." . "~/.emacs.d/backups")))
+  ;; Special dir for backups
+  (setq backup-directory-alist '(("." . "~/.emacs.d/backups")))
+  (setq create-lockfiles nil)
 #+end_src
 
 * Magit
