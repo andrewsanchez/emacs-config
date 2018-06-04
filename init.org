@@ -4,17 +4,19 @@
 * Setup
 ** Personal info and constants
  #+begin_src elisp
- (defconst as/emacs-directory (concat (getenv "HOME") "/.emacs.d/"))
- (defconst as/config (concat (getenv "HOME") "/projects/emacs-config/"))
- (defconst as/elisp (concat (getenv "HOME") "/projects/emacs-config/elisp/"))
- (setq as/org (concat (getenv "HOME") "/org/"))
- (setq as/agenda (concat as/org "agenda/"))
- (setq as/views (concat (getenv "HOME") "/org/views/"))
- (setq as/gtd (concat as/org "gtd.org"))
- (add-to-list 'load-path as/elisp)
- (add-to-list 'load-path as/config)
- (setq user-full-name "Andrew Sanchez"
-       user-mail-address "inbox.asanchez@gmail.com")
+   (defconst as/emacs-directory (concat (getenv "HOME") "/.emacs.d/"))
+   (defconst as/config (concat (getenv "HOME") "/projects/emacs-config/"))
+   (defconst as/elisp (concat (getenv "HOME") "/projects/emacs-config/elisp/"))
+   (setq as/org (concat (getenv "HOME") "/org/"))
+   (setq as/agenda (concat as/org "agenda/"))
+   (setq as/views (concat (getenv "HOME") "/org/views/"))
+   (setq as/gtd (concat as/org "gtd.org"))
+   (add-to-list 'load-path as/elisp)
+   (add-to-list 'load-path as/config)
+   (let ((default-directory  as/elisp))
+     (normal-top-level-add-subdirs-to-load-path))
+   (setq user-full-name "Andrew Sanchez"
+         user-mail-address "inbox.asanchez@gmail.com")
  #+end_src
 ** Package management
  #+begin_src elisp
