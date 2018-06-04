@@ -483,6 +483,7 @@ Also look at sensible-defaults
           ("i" py-isort-buffer)
           ("f" hydra-flycheck/body)
           ("x" sphinx-doc)
+          ("p" realgud:pdb)
           ("t" elpy-hydra/body)
           ("z" elpy-shell-switch-to-shell)
           ("c" elpy-shell-send-region-or-buffer)
