@@ -20,6 +20,7 @@
   (setq org-refile-allow-creating-parent-nodes 'confirm)
   (setq org-src-fontify-natively t)
   (add-to-list 'org-modules 'org-habit)
+  (setq org-duration-format (quote h:mm))
 #+end_src
 
 * Pomodoro
