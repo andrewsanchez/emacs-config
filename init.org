@@ -142,14 +142,12 @@ Also check out [[https://github.com/nonsequitur/smex][smex]]
   (evil-set-initial-state 'Info-mode 'emacs)
 
   (evil-set-initial-state 'realgud-short-key-mode 'emacs)
-  (evil-set-initial-state 'pdb-track-mode 'emacs)
-  (evil-set-initial-state 'realgud-short-key-mode 'emacs)
   (evil-set-initial-state 'realgud-track-mode 'emacs)
+  (evil-set-initial-state 'pdb-track-mode 'emacs)
 
   (add-to-list 'evil-emacs-state-modes 'realgud-short-key-mode)
-  (add-to-list 'evil-emacs-state-modes 'pdb-track-mode)
-  (add-to-list 'evil-emacs-state-modes 'realgud-short-key-mode)
   (add-to-list 'evil-emacs-state-modes 'realgud-track-mode)
+  (add-to-list 'evil-emacs-state-modes 'pdb-track-mode)
 
 #+end_src
 * Navigation
@@ -470,11 +468,13 @@ Also look at sensible-defaults
       _V_: pyvenv-deactivate
       _w_: venv-workon
       _W_: venv-deactivate
+      _p_: pdb
       "
           ("d" elpy-goto-definition)
           ("a" anaconda-mode-find-assignments)
           ("r" anaconda-mode-find-references)
           ("s" elpy-doc)
+          ("S" helm-pydoc)
           ("y" yapfify-buffer)
           ("v" pyvenv-activate)
           ("V" pyvenv-deactivate)
@@ -976,8 +976,8 @@ Also look at sensible-defaults
     :config
     (add-hook 'realgud-short-key-mode-hook
         (lambda ()
-          (local-set-key "," realgud:shortkey-mode-map)))
-	  (setq realgud:pdb-command-name "python -m pdb"))
+          (local-set-key "\C-c" realgud:shortkey-mode-map)))
+    (setq realgud:pdb-command-name "python -m pdb"))
 #+end_src
 
 * Fun
