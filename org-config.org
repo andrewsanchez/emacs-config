@@ -119,13 +119,12 @@
             ((org-agenda-overriding-header ""))
             (,(concat as/org "PMI/PMI-all-todos.org")))
            ("f" "Fluent Forever"
-            ((tags-todo "TODO=\"TODO\"+category=\"Fluent Forever\""))
-            ((org-agenda-overriding-header "")
-             (org-agenda-remove-tags t))
+            ((tags-todo "category={Fluent Forever}+TODO={TODO\\|WAITING}"))
+            ((org-agenda-overriding-header ""))
             (,(concat as/org "Fluent-Forever/Fluent-Forever.html")))
-           ("A" "ALL"
-            ((alltodo))
-            ((org-agenda-overriding-header "All"))
+           ("A" "ALL" ((alltodo))
+            ((org-agenda-overriding-header "All")
+             (org-agenda-sorting-strategy '(priority-down)))
              ,(concat as/agenda "all.html"))))
 #+end_src
 * Hydras
