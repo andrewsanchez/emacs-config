@@ -196,3 +196,9 @@
           (hydra-org-template/body)
 	(self-insert-command 1))))
  #+end_src
+* Export and Publish
+#+begin_src elisp
+  (setq 
+   org-export-with-toc nil
+   org-export-with-section-numbers nil)
+#+end_src
