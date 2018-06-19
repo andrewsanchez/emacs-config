@@ -88,19 +88,27 @@
                                     ("read" . ?r)
                                     ("school" . ?s)))
 
-   (defun org-archive-done-tasks ()
+   (defun org-archive-done-tasks-agenda ()
      (interactive)
      (org-map-entries
       (lambda ()
-	(org-archive-subtree)
-	(setq org-map-continue-from (outline-previous-heading))) "/DONE" 'agenda))
+        (org-archive-subtree)
+        (setq org-map-continue-from (outline-previous-heading))) "/DONE" 'agenda))
 
-   (setq org-agenda-sorting-strategy
-	 '((agenda habit-down timestamp-down priority-down category-keep)
-	   (todo priority-down timestamp-down category-keep)
-	   (tags priority-down timestamp-down category-keep)
-	   (search category-keep timestamp-down)))
+   (defun org-archive-done-tasks-buffer ()
+     (interactive)
+     (org-map-entries
+      (lambda ()
+        (org-archive-subtree)
+        (setq org-map-continue-from (outline-previous-heading))) "/DONE" 'file))
 
+  ;;  (setq org-agenda-sorting-strategy
+  ;;        '((agenda timestamp-up category-up priority-down)
+  ;;          (todo priority-down timestamp-up category-up)
+  ;;          (tags priority-down timestamp-up category-up)
+  ;;          (search category-up timestamp-up)))
+
+  (setq org-deadline-warning-days 10)
    (setq org-agenda-custom-commands
          `(("a" "Current day/week" agenda "" nil
             (,(concat as/agenda "agenda.ics")
