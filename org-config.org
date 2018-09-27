@@ -110,9 +110,10 @@
 
   (setq org-deadline-warning-days 10)
    (setq org-agenda-custom-commands
-         `(("a" "Current day/week" agenda "" nil
+         `(("a" "Current day/week" agenda "" ((org-agenda-span 5)) 
             (,(concat as/agenda "agenda.ics")
              ,(concat as/agenda "agenda.html")))
+           ("A" "Agenda" agenda "" ((org-agenda-category-filter-preset '("-habit"))))
            ("p" "PMI"
             ((tags-todo "gbqc+TODO=\"TODO\"+category=\"PMI\"") 
              (tags-todo "ncbitk+TODO=\"TODO\"+category=\"PMI\""))
