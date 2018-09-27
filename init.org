@@ -497,10 +497,8 @@ Also look at sensible-defaults
           (evil-leader/set-key-for-mode 'python-mode "m" 'hydra-python/body)
           (evil-leader/set-key-for-mode 'rst-mode "m" 'hydra-python/body)
 
-      (use-package anaconda-mode
         :config
         (anaconda-mode)
-        (anaconda-eldoc-mode)
         (add-to-list 'company-backends 'company-anaconda))
       (use-package sphinx-doc :commands (sphinx-doc)
         :config (sphinx-doc-mode))
@@ -536,6 +534,9 @@ Also look at sensible-defaults
                  (goto-char (point-max))) "switch to compilation buffer" :color blue)
           ("q" nil "quit")
           ("Q" (kill-buffer "*compilation*") "quit and kill compilation buffer" :color blue))))
+            (use-package anaconda-mode
+              :config (anaconda-eldoc-mode)
+              (add-to-list 'company-backends 'company-anaconda))
 
 
  #+end_src
