@@ -296,6 +296,7 @@ Display a more compact mode line
     :config
     (require 'yasnippet)
     (yas-global-mode 1))
+    (use-package yasnippet-snippets)
 #+end_src
 * Org-mode
 ** [[file:org-config.org][Main configuration file]]
