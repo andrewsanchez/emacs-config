@@ -441,114 +441,116 @@ Also look at sensible-defaults
 * Python
 ** General
 #+begin_src elisp
-    (use-package python
-        :mode ("\\.py\\'" . python-mode)
-        :interpreter ("python" . python-mode)
-        :config
-        (load "realgud")
-        (anaconda-mode)
+  (use-package python
+      :mode ("\\.py\\'" . python-mode)
+      :interpreter ("python" . python-mode)
+      :config
+      (load "realgud")
+      (anaconda-mode)
+      (flycheck-mode)
 
-        ;; (use-package ob-ipython
-        ;;   :config (require 'ob-ipython))
-        ;; (org-babel-do-load-languages
-        ;;  'org-babel-load-languages
-        ;;  (append org-babel-load-languages
-        ;;          '((ipython . t)
-        ;;            (python . t))))
+      ;; (use-package ob-ipython
+      ;;   :config (require 'ob-ipython))
+      ;; (org-babel-do-load-languages
+      ;;  'org-babel-load-languages
+      ;;  (append org-babel-load-languages
+      ;;          '((ipython . t)
+      ;;            (python . t))))
 
-        (add-hook 'before-save-hook 'py-isort-before-save)
-        (add-hook 'python-mode-hook 'smartparens-mode)
-        (add-hook 'inferior-python-mode-hook 'smartparens-mode)
-        (add-hook 'rst-mode-hook 'turn-on-flyspell)
+      (add-hook 'before-save-hook 'py-isort-before-save)
+      (add-hook 'python-mode-hook 'smartparens-mode)
+      (add-hook 'inferior-python-mode-hook 'smartparens-mode)
+      (add-hook 'rst-mode-hook 'turn-on-flyspell)
 
-        (setq python-shell-exec-path '("~/miniconda3/bin/python"))
+      (setq python-shell-exec-path '("~/miniconda3/bin/python"))
 
-        (defhydra hydra-python (:color blue :hint nil)
-        "
-        ^Navigation^                  ^Elpy^                 ^Formatting^
-        -------------------------------------------------------------------------
-        _d_: find definitions      _t_: elpy-test           _y_: yapfify-buffer
-        _a_: find assignments      _z_: switch to shell     _i_: py-isort-buffer
-        _r_: find references       _c_: send region/buffer  _f_: flycheck
-        _s_: show doc              _C_: send statement      _x_: sphinx-doc
-        _v_: pyvenv-activate     
-        _V_: pyvenv-deactivate
-        _w_: venv-workon
-        _W_: venv-deactivate
-        _p_: pdb
-        "
-            ("d" elpy-goto-definition)
-            ("a" anaconda-mode-find-assignments)
-            ("r" anaconda-mode-find-references)
-            ("s" elpy-doc)
-            ("S" helm-pydoc)
-            ("y" yapfify-buffer)
-            ("v" pyvenv-activate)
-            ("V" pyvenv-deactivate)
-            ("w" venv-workon)
-            ("W" venv-deactivate)
-            ("i" py-isort-buffer)
-            ("f" hydra-flycheck/body)
-            ("x" sphinx-doc)
-            ("p" realgud:pdb)
-            ("t" elpy-hydra/body)
-            ("z" elpy-shell-switch-to-shell)
-            ("c" elpy-shell-send-region-or-buffer)
-            ("C" elpy-shell-send-current-statement))
-            (evil-leader/set-key-for-mode 'python-mode "m" 'hydra-python/body)
-            (evil-leader/set-key-for-mode 'rst-mode "m" 'hydra-python/body)
+      (defhydra hydra-python (:color blue :hint nil)
+      "
+      ^Navigation^                  ^Elpy^                 ^Formatting^
+      -------------------------------------------------------------------------
+      _d_: find definitions      _t_: elpy-test           _y_: yapfify-buffer
+      _a_: find assignments      _z_: switch to shell     _i_: py-isort-buffer
+      _r_: find references       _c_: send region/buffer  _f_: flycheck
+      _s_: show doc              _C_: send statement      _x_: sphinx-doc
+      _v_: pyvenv-activate     
+      _V_: pyvenv-deactivate
+      _w_: venv-workon
+      _W_: venv-deactivate
+      _p_: pdb
+      "
+          ("d" elpy-goto-definition)
+          ("a" anaconda-mode-find-assignments)
+          ("r" anaconda-mode-find-references)
+          ("s" elpy-doc)
+          ("S" helm-pydoc)
+          ("y" yapfify-buffer)
+          ("v" pyvenv-activate)
+          ("V" pyvenv-deactivate)
+          ("w" venv-workon)
+          ("W" venv-deactivate)
+          ("i" py-isort-buffer)
+          ("f" hydra-flycheck/body)
+          ("x" sphinx-doc)
+          ("p" realgud:pdb)
+          ("t" elpy-hydra/body)
+          ("z" elpy-shell-switch-to-shell)
+          ("c" elpy-shell-send-region-or-buffer)
+          ("C" elpy-shell-send-current-statement))
+          (evil-leader/set-key-for-mode 'python-mode "m" 'hydra-python/body)
+          (evil-leader/set-key-for-mode 'rst-mode "m" 'hydra-python/body)
 
-            (use-package anaconda-mode
-              :config (anaconda-eldoc-mode)
-              (add-to-list 'company-backends 'company-anaconda))
+          (use-package anaconda-mode
+            :config (anaconda-eldoc-mode)
+            ;; (add-to-list 'company-backends 'company-anaconda)
+            )
 
-          (use-package sphinx-doc
-            :commands (sphinx-doc)
-            :config (sphinx-doc-mode)) 
+        (use-package sphinx-doc
+          :commands (sphinx-doc)
+          :config (sphinx-doc-mode)) 
 
-        (use-package helm-pydoc :commands helm-pydoc)
+      (use-package helm-pydoc :commands helm-pydoc)
 
-        (use-package py-isort :commands py-isort-buffer
-          :config (require 'py-isort))
+      (use-package py-isort :commands py-isort-buffer
+        :config (require 'py-isort))
 
-        (use-package virtualenvwrapper :commands (venv-workon)
-          :config 
-          (venv-initialize-interactive-shells)
-          (venv-initialize-eshell)
-          (setq venv-location "/Users/andrew/miniconda3/envs"))
+      (use-package virtualenvwrapper :commands (venv-workon)
+        :config 
+        (venv-initialize-interactive-shells)
+        (venv-initialize-eshell)
+        (setq venv-location "/Users/andrew/miniconda3/envs"))
 
-        (use-package elpy
-          :init (with-eval-after-load 'python (elpy-enable))
-          :config 
-          (setq python-shell-interpreter "ipython"
-                python-shell-interpreter-args "-i --simple-prompt")
-          (pyvenv-mode)
-          (defun projectile-pyenv-mode-set ()
-            "Set pyenv version matching project name."
-            (let ((project (projectile-project-name)))
-              (if (member project (pyenv-mode-versions))
-                  (pyenv-mode-set project)
-                (pyenv-mode-unset))))
-          (add-hook 'projectile-after-switch-project-hook 'projectile-pyenv-mode-set)
+      (use-package elpy
+        :init (with-eval-after-load 'python (elpy-enable))
+        :config 
+        (setq python-shell-interpreter "ipython"
+              python-shell-interpreter-args "-i --simple-prompt")
+        (pyvenv-mode)
+        (defun projectile-pyenv-mode-set ()
+          "Set pyenv version matching project name."
+          (let ((project (projectile-project-name)))
+            (if (member project (pyenv-mode-versions))
+                (pyenv-mode-set project)
+              (pyenv-mode-unset))))
+        (add-hook 'projectile-after-switch-project-hook 'projectile-pyenv-mode-set)
 
-          (defhydra elpy-hydra (:color red)
-            "
-            Elpy in venv: %`pyvenv-virtual-env-name
-            "
-            ("t" (progn (call-interactively 'elpy-test-pytest-runner) (elpy-nav-errors/body)) "pytest" :color blue)
-            ("w" (venv-workon) "workon venv…")
-            ("q" nil "quit")
-            ("Q" (kill-buffer "*compilation*") "quit and kill compilation buffer" :color blue))
+        (defhydra elpy-hydra (:color red)
+          "
+          Elpy in venv: %`pyvenv-virtual-env-name
+          "
+          ("t" (progn (call-interactively 'elpy-test-pytest-runner) (elpy-nav-errors/body)) "pytest" :color blue)
+          ("w" (venv-workon) "workon venv…")
+          ("q" nil "quit")
+          ("Q" (kill-buffer "*compilation*") "quit and kill compilation buffer" :color blue))
 
-          (defhydra elpy-nav-errors (:color red)
-            " Navigate errors "
-            ("n" next-error "next error")
-            ("p" previous-error "previous error")
-            ("s" (progn
-                   (switch-to-buffer-other-window "*compilation*")
-                   (goto-char (point-max))) "switch to compilation buffer" :color blue)
-            ("q" nil "quit")
-            ("Q" (kill-buffer "*compilation*") "quit and kill compilation buffer" :color blue))))
+        (defhydra elpy-nav-errors (:color red)
+          " Navigate errors "
+          ("n" next-error "next error")
+          ("p" previous-error "previous error")
+          ("s" (progn
+                 (switch-to-buffer-other-window "*compilation*")
+                 (goto-char (point-max))) "switch to compilation buffer" :color blue)
+          ("q" nil "quit")
+          ("Q" (kill-buffer "*compilation*") "quit and kill compilation buffer" :color blue))))
 
 
  #+end_src
