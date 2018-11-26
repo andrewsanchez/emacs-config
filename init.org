@@ -40,6 +40,7 @@
    (use-package diminish
      :config
      (diminish 'undo-tree-mode))
+   (setq server-socket-dir (expand-file-name "server" user-emacs-directory))
    (server-start)
  #+end_src
 ** Tangle init.el
