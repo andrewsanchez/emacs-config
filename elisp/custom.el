@@ -12,6 +12,7 @@
  '(indent-tabs-mode nil)
  '(initial-frame-alist (quote ((fullscreen . maximized))))
  '(org-agenda-skip-deadline-prewarning-if-scheduled t)
+ '(org-export-backends (quote (ascii html icalendar latex odt freemind)))
  '(org-footnote-section "References")
  '(org-html-postamble nil)
  '(org-src-window-setup (quote current-window))
@@ -19,7 +20,7 @@
  '(org-use-property-inheritance t)
  '(package-selected-packages
    (quote
-    (helm-rg yasnippet-snippets helm-tramp mu4e-multi flycheck-ledger ledger-mode slurm-mode helpful link-hint avy visual-fill-column helm-projectile ob-python gnugo realgud neotree restart-emacs keyfreq elfeed-org elfeed deft flycheck linum-relative google-translate helm-wordnet company solarized-theme projectile exec-path-from-shell yapfify which-key magit zoom-frm golden-ratio org-plus-contrib yasnippet use-package smart-mode-line org-pomodoro ob-ipython hydra helm-descbinds expand-region evil-surround evil-nerd-commenter evil-matchit evil-lisp-state evil-leader)))
+    (ox-freemind helm-rg yasnippet-snippets helm-tramp mu4e-multi flycheck-ledger ledger-mode slurm-mode helpful link-hint avy visual-fill-column helm-projectile ob-python gnugo realgud neotree restart-emacs keyfreq elfeed-org elfeed deft flycheck linum-relative google-translate helm-wordnet company solarized-theme projectile exec-path-from-shell yapfify which-key magit zoom-frm golden-ratio org-plus-contrib yasnippet use-package smart-mode-line org-pomodoro ob-ipython hydra helm-descbinds expand-region evil-surround evil-nerd-commenter evil-matchit evil-lisp-state evil-leader)))
  '(rst-compile-toolsets
    (quote
     ((html "rst2html.py" ".html" nil)
@@ -31,7 +32,7 @@
      (s5 "rst2s5" ".html" nil))))
  '(safe-local-variable-values
    (quote
-    ((pyvenv-activate . "/Users/andrew/anaconda3/envs/genbank-qc")
+    ((pyvenv-activate . "/Users/andrew/miniconda3/envs/genbankqc")
      (projectile-project-test-cmd . "~/anaconda3/envs/genbankfilter/bin/pytest -s test/test_*"))))
  '(truncate-lines t)
  '(vc-follow-symlinks nil))
