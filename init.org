@@ -1029,6 +1029,20 @@ Also look at sensible-defaults
     :config
     (use-package flycheck-ledger))
 #+end_src
+* Music
+#+begin_src elisp
+  (use-package eieio)
+  (use-package lyqi
+    :load-path "~/.emacs.d/packages/lyqi"
+    :mode (("\\.ly$" . lyqi-mode)
+           ("\\.ily$" . lyqi-mode))
+    :config
+    (setq lyqi:prefered-languages '(english)
+          lyqi:pdf-command "open"
+          lyqi:midi-backend 'osx
+          lyqi:pdf-command "open"
+          lyqi:midi-command "open"))
+#+end_src
 * Test
 #+begin_src elisp :tangle no
 #+end_src  
