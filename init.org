@@ -802,7 +802,7 @@ Also look at sensible-defaults
   (setq message-kill-buffer-on-exit t)
 #+end_src
 ** MU4E
- #+begin_src elisp
+ #+begin_src elisp :tangle no
    (add-to-list 'load-path "/usr/local/Cellar/mu/HEAD-65863e4_1/share/emacs/site-lisp")
    (require 'mu4e)
    (add-hook 'message-send-hook (lambda () (mu4e-update-mail-and-index t)))
