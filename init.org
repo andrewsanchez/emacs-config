@@ -679,8 +679,8 @@ Also look at sensible-defaults
   (use-package solarized-theme
     :config
     (evil-leader/set-key "tt" 'toggle-theme))
-  (load-theme 'solarized-light t)
-  (setq active-theme 'solarized-light)
+  (load-theme 'solarized-dark t)
+  (setq active-theme 'solarized-dark)
   (defun toggle-theme ()
     (interactive)
     (if (eq active-theme 'solarized-light)
