@@ -450,8 +450,12 @@ Also look at sensible-defaults
       :interpreter ("python" . python-mode)
       :config
       (load "realgud")
-      (anaconda-mode)
       (flycheck-mode)
+
+      (use-package anaconda-mode
+        :config (anaconda-eldoc-mode) (anaconda-mode)
+        ;; (add-to-list 'company-backends 'company-anaconda)
+        )
 
       ;; (use-package ob-ipython
       ;;   :config (require 'ob-ipython))
@@ -502,11 +506,6 @@ Also look at sensible-defaults
           ("C" elpy-shell-send-current-statement))
           (evil-leader/set-key-for-mode 'python-mode "m" 'hydra-python/body)
           (evil-leader/set-key-for-mode 'rst-mode "m" 'hydra-python/body)
-
-          (use-package anaconda-mode
-            :config (anaconda-eldoc-mode)
-            ;; (add-to-list 'company-backends 'company-anaconda)
-            )
 
         (use-package sphinx-doc
           :commands (sphinx-doc)
